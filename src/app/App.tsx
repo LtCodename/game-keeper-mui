@@ -1,10 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Box, Stack, Typography } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 const App = () => (
-  <div>
-    <Link to="/dashboard">Dashboard</Link> | <Link to="/lists">Lists</Link>
-  </div>
+  <Box>
+    <Stack>
+      <SearchIcon />
+      <Link to="/dashboard">
+        <Typography>Dashboard</Typography>
+      </Link>
+      <Link to="/lists">
+        <Typography>Lists</Typography>
+      </Link>
+    </Stack>
+  </Box>
 );
 
 export default App;
