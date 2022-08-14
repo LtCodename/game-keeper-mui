@@ -8,7 +8,7 @@ import List from "components/list/List";
 import Login from "components/auth/Login";
 import Signup from "components/auth/Signup";
 import Reset from "components/auth/Reset";
-import App from "./app/App";
+import App from "app/App";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
