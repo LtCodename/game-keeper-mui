@@ -2,22 +2,21 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { getGameInformation } from "api/rawgApi";
+// import { getGameInformation } from "api/rawgApi";
 
 const App = () => {
-  const getGameInfo = () => {
-    getGameInformation("Firewatch")
-      .then((res: any) => {
-        console.log(res);
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
-  };
+  // const getGameInfo = () => {
+  //   getGameInformation("Firewatch")
+  //     .then((res: any) => {
+  //       console.log(res);
+  //     })
+  //     .catch((error: any) => {
+  //       console.log(error);
+  //     });
+  // };
 
   useEffect(() => {
-    getGameInfo();
-    console.log("hey");
+    // getGameInfo();
   }, []);
 
   return (
