@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
+    "@firebase/firestore": "^3.4.14",
     "@mui/icons-material": "^5.4.4",
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.4.4",
@@ -28,6 +29,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
+    "firebase": "^9.9.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
