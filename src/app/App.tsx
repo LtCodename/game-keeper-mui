@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const App = () => (
   <div>
-    <span>Game Keeper Mui</span>
+    <Link to="/dashboard">Dashboard</Link> | <Link to="/lists">Lists</Link>
   </div>
 );
 
