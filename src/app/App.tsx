@@ -4,8 +4,12 @@ import { Box, Stack, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 // import db from "api/firebase";
 // import { getDocs, collection } from "@firebase/firestore";
+// import { useDispatch } from "react-redux";
+// import platformsActions from "../redux/platformsReducer";
 
 const App = () => {
+  // const dispatch = useDispatch();
+
   // const getGameInfo = () => {
   //   getGameInformation("Firewatch")
   //     .then((res: any) => {
@@ -20,7 +24,10 @@ const App = () => {
   //   const platformsRef = collection(db, "platforms");
   //   await getDocs(platformsRef)
   //     .then((res: any) => {
-  //       console.log(res.docs);
+  //       dispatch({
+  //         type: platformsActions.actions.PLATFORMS_SET,
+  //         payload: res,
+  //       });
   //     })
   //     .catch((error: any) => {
   //       console.log(error);
