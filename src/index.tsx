@@ -16,20 +16,18 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="lists" element={<Lists />} />
-        <Route path="/lists/:listId" element={<List />} />
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="reset" element={<Reset />} />
-        <Route path="*" element={<p>There is nothing here!</p>} />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="lists" element={<Lists />} />
+      <Route path="/lists/:listId" element={<List />} />
+      <Route path="login" element={<Login />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path="reset" element={<Reset />} />
+      <Route path="*" element={<p>There is nothing here!</p>} />
+    </Routes>
+  </BrowserRouter>
 );
 
 reportWebVitals();
