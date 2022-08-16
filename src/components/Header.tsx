@@ -16,6 +16,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 
+import { Link } from "react-router-dom";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -90,8 +92,19 @@ const Header = () => (
           />
         </Search>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <DashboardIcon sx={{ ml: 2 }} />
-          <LogoutIcon sx={{ ml: 2 }} />
+          <Link
+            to="/"
+            style={{
+              color: "inherit",
+            }}
+          >
+            <IconButton aria-label="dashboard" color="inherit">
+              <DashboardIcon />
+            </IconButton>
+          </Link>
+          <IconButton aria-label="logout" color="inherit">
+            <LogoutIcon />
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>
