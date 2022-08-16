@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -6,7 +6,13 @@ import { IStore, IUserList } from "types/types";
 
 import { Outlet } from "react-router-dom";
 
-import { Box, Typography, Stack } from "@mui/material/";
+import {
+  Box,
+  Typography,
+  Stack,
+  Backdrop,
+  CircularProgress,
+} from "@mui/material/";
 
 import db from "api/firebase";
 
@@ -17,6 +23,8 @@ import { LISTS_SET } from "redux/actions";
 import ListItem from "components/list/ListItem";
 
 const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const userLists: any = useSelector((state: IStore) => state.userLists) || [];
 
   const dispatch = useDispatch();
@@ -47,7 +55,8 @@ const Dashboard = () => {
       })
       .catch((error: any) => {
         console.log(error);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -65,6 +74,12 @@ const Dashboard = () => {
           <ListItem key={list.id} {...list} />
         ))}
       </Stack>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Outlet />
     </Box>
   );
