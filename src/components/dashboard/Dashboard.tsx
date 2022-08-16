@@ -23,7 +23,7 @@ import { LISTS_SET } from "redux/actions";
 import ListItem from "components/list/ListItem";
 
 const Dashboard = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const userLists: any = useSelector((state: IStore) => state.userLists) || [];
 
@@ -61,7 +61,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     // getGameInfo();
-    getData(); // lists, sections, blocks
+    if (!userLists.length) {
+      setIsLoading(true);
+      getData(); // lists, sections, blocks
+    }
   }, []);
 
   return (
@@ -69,7 +72,7 @@ const Dashboard = () => {
       <Typography noWrap>Logged as LtCodename.</Typography>
       <Typography noWrap>This portal uses RAWG API.</Typography>
       <Typography noWrap>Version: 1.001.</Typography>
-      <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap" }}>
+      <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap", my: 2 }}>
         {userLists.map((list: IUserList) => (
           <ListItem key={list.id} {...list} />
         ))}
