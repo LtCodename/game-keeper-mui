@@ -1,8 +1,8 @@
 import { IAction, IPlatform } from "types/types";
 
-const initState: IPlatform[] = [];
+import { PLATFORMS_SET } from "./actions";
 
-const PLATFORMS_SET: string = "PLATFORMS_SET";
+const initState: IPlatform[] = [];
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
 const platformsReducer = (state: IPlatform[] = initState, action: IAction) => {
@@ -22,4 +22,4 @@ const platformsReducer = (state: IPlatform[] = initState, action: IAction) => {
   }
 };
 
-export default { reducer: platformsReducer, actions: { PLATFORMS_SET } };
+export default platformsReducer;

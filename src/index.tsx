@@ -24,7 +24,7 @@ root.render(
       <Header />
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/lists/:listId" element={<List />} />
+        <Route path="/:listId" element={<List />} />
         <Route path="login" element={<Login />} />
         <Route path="*" element={<p>There is nothing here!</p>} />
       </Routes>
