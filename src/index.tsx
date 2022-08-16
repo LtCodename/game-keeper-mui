@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import rootReducer from "redux/rootReducer";
+import Header from "components/Header";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
@@ -20,6 +21,7 @@ const store = createStore(rootReducer, applyMiddleware(thunk));
 root.render(
   <Provider store={store}>
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/lists/:listId" element={<List />} />
