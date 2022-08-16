@@ -1,14 +1,25 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { IPlatform, IStore } from "types/types";
-import { Link, Outlet } from "react-router-dom";
-// import db from "api/firebase";
-// import { getDocs, collection } from "@firebase/firestore";
-// import { useDispatch } from "react-redux";
-// import platformsActions from "../redux/platformsReducer";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import { IStore, IUserList } from "types/types";
+
+import { Outlet } from "react-router-dom";
+
+import { Box, Typography, Stack } from "@mui/material/";
+
+import db from "api/firebase";
+
+import { getDoc, doc } from "@firebase/firestore";
+
+import { LISTS_SET } from "redux/actions";
+
+import ListItem from "components/list/ListItem";
 
 const Dashboard = () => {
-  // const dispatch = useDispatch();
+  const userLists: any = useSelector((state: IStore) => state.userLists) || [];
+
+  const dispatch = useDispatch();
 
   // const getGameInfo = () => {
   //   getGameInformation("Firewatch")
@@ -20,39 +31,42 @@ const Dashboard = () => {
   //     });
   // };
 
-  // const getPlatforms = async () => {
-  //   const platformsRef = collection(db, "platforms");
-  //   await getDocs(platformsRef)
-  //     .then((res: any) => {
-  //       dispatch({
-  //         type: platformsActions.actions.PLATFORMS_SET,
-  //         payload: res,
-  //       });
-  //     })
-  //     .catch((error: any) => {
-  //       console.log(error);
-  //     });
-  // };
+  const getData = async () => {
+    const usersRef = doc(db, "users", "f8CNiv7pLZeHe5jDmnPrO3qQAs32");
+    await getDoc(usersRef)
+      .then((doc: any) => {
+        const allUserData = doc.data() || {};
+
+        dispatch({
+          type: LISTS_SET,
+          payload: allUserData.lists,
+        });
+
+        // this.props.setSectionsToStore(allUserData.sections || []);
+        // this.props.setBlocksToStore(allUserData.blocks || []);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     // getGameInfo();
-    // getPlatforms();
+    getData(); // lists, sections, blocks
   }, []);
 
-  const platforms: IPlatform[] = useSelector(
-    (state: IStore) => state.platforms
-  );
-
-  useEffect(() => {
-    console.log(platforms);
-  }, [platforms]);
-
   return (
-    <div>
-      <div>Dashboard</div>
-      <Link to={`list${6972}`}>To 6972</Link>
+    <Box sx={{ p: 2 }}>
+      <Typography noWrap>Logged as LtCodename.</Typography>
+      <Typography noWrap>This portal uses RAWG API.</Typography>
+      <Typography noWrap>Version: 1.001.</Typography>
+      <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap" }}>
+        {userLists.map((list: IUserList) => (
+          <ListItem key={list.id} {...list} />
+        ))}
+      </Stack>
       <Outlet />
-    </div>
+    </Box>
   );
 };
 

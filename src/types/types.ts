@@ -9,6 +9,16 @@ export interface IPlatform {
 }
 
 /**
+ * User list interface.
+ * @member {string} id User list id.
+ * @member {string} name User list name.
+ */
+export interface IUserList {
+  id: string;
+  name: string;
+}
+
+/**
  * Action interface.
  * @member {string} type Action type. Usually looks like this - DO_SOMETHING. A command for a reducer.
  * @member {string} payload Payload of the dispatch. Can be anything.s
@@ -25,4 +35,5 @@ export interface IAction {
  */
 export interface IStore {
   platforms: IPlatform[];
+  userLists: IUserList[];
 }
