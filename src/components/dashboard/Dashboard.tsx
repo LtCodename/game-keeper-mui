@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
+
 import { useSelector } from "react-redux";
+
 import { IPlatform, IStore } from "types/types";
+
 import { Link, Outlet } from "react-router-dom";
+
+import { Box, Typography } from "@mui/material/";
 // import db from "api/firebase";
 // import { getDocs, collection } from "@firebase/firestore";
 // import { useDispatch } from "react-redux";
@@ -48,11 +53,19 @@ const Dashboard = () => {
   }, [platforms]);
 
   return (
-    <div>
-      <div>Dashboard</div>
+    <Box sx={{ p: 2 }}>
+      <Typography noWrap sx={{}}>
+        Logged as LtCodename.
+      </Typography>
+      <Typography noWrap sx={{}}>
+        This portal uses RAWG API.
+      </Typography>
+      <Typography noWrap sx={{}}>
+        Version: 1.001.
+      </Typography>
       <Link to={`list${6972}`}>To 6972</Link>
       <Outlet />
-    </div>
+    </Box>
   );
 };
 
