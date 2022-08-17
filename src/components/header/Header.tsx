@@ -1,0 +1,120 @@
+import React, { useState } from "react";
+
+import { useTheme } from "@mui/material/styles";
+
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Drawer,
+  Divider,
+} from "@mui/material/";
+
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
+import { Link } from "react-router-dom";
+
+import {
+  DrawerHeader,
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "./styles";
+
+const drawerWidth: number = 240;
+
+const Header = () => {
+  const [isDrawerOpen, setisDrawerOpen] = useState<boolean>(false);
+
+  const theme = useTheme();
+
+  const toggleDrawer = () => {
+    setisDrawerOpen((previousState: boolean) => !previousState);
+  };
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2 }}
+              onClick={toggleDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}
+            >
+              Game Keeper
+            </Typography>
+          </Box>
+          <Search sx={{ minWidth: { xs: "auto", sm: "300px" } }}>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Link
+              to="/"
+              style={{
+                color: "inherit",
+              }}
+            >
+              <IconButton aria-label="dashboard" color="inherit">
+                <DashboardIcon />
+              </IconButton>
+            </Link>
+            <IconButton aria-label="logout" color="inherit">
+              <LogoutIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={isDrawerOpen}
+      >
+        <DrawerHeader>
+          <IconButton onClick={toggleDrawer}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+      </Drawer>
+    </Box>
+  );
+};
+
+export default Header;
