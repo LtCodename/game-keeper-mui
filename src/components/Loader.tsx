@@ -6,7 +6,7 @@ import db from "api/firebase";
 
 import { getDoc, doc } from "@firebase/firestore";
 
-import { LISTS_SET, SECTIONS_SET } from "redux/actions";
+import { LISTS_SET, SECTIONS_SET, BLOCKS_SET } from "redux/actions";
 
 import { Backdrop, CircularProgress } from "@mui/material/";
 
@@ -40,7 +40,10 @@ const Loader = () => {
           payload: allUserData.sections,
         });
 
-        // this.props.setBlocksToStore(allUserData.blocks || []);
+        dispatch({
+          type: BLOCKS_SET,
+          payload: allUserData.blocks,
+        });
       })
       .catch((error: any) => {
         console.log(error);
