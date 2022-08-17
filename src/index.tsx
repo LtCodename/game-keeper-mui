@@ -14,10 +14,10 @@ import thunk from "redux-thunk";
 
 import rootReducer from "redux/rootReducer";
 
-import Header from "components/header/Header";
+import Header from "components/Header/Header";
 import Loader from "components/Loader";
 import Dashboard from "components/Dashboard";
-import List from "components/list/List";
+import List from "components/List/List";
 import Login from "components/Login";
 
 import reportWebVitals from "./reportWebVitals";

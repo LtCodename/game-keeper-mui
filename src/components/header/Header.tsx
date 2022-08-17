@@ -1,51 +1,23 @@
 import React, { useState } from "react";
 
-import { useTheme } from "@mui/material/styles";
-
-import {
-  Box,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Drawer,
-  Divider,
-  Stack,
-} from "@mui/material/";
+import { Box, AppBar, Toolbar, IconButton, Typography } from "@mui/material/";
 
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { Link } from "react-router-dom";
 
-import { IStore, IUserList } from "types";
+import ListSelector from "components/ListSelector/ListSelector";
 
-import ListItem from "components/list/ListItem";
-
-import { useSelector } from "react-redux";
-
-import DRAWER_WIDTH from "constants";
-
-import {
-  DrawerHeader,
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "./styles";
+import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 
 const Header = () => {
-  const [isDrawerOpen, setisDrawerOpen] = useState<boolean>(false);
-
-  const theme = useTheme();
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const toggleDrawer = () => {
-    setisDrawerOpen((previousState: boolean) => !previousState);
+    setIsDrawerOpen((previousState: boolean) => !previousState);
   };
 
   return (
@@ -98,43 +70,10 @@ const Header = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer
-        sx={{
-          width: DRAWER_WIDTH,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: DRAWER_WIDTH,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
+      <ListSelector
         open={isDrawerOpen}
-      >
-        <DrawerHeader>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" }, ml: 1 }}
-          >
-            Lists
-          </Typography>
-          <IconButton onClick={toggleDrawer}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <Stack direction="column" spacing={1} sx={{ flexWrap: "wrap", p: 2 }}>
-          {userLists.map((list: IUserList) => (
-            <ListItem key={list.id} {...list} />
-          ))}
-        </Stack>
-      </Drawer>
+        onClose={() => setIsDrawerOpen(false)}
+      />
     </Box>
   );
 };
