@@ -25,7 +25,8 @@ import ListItem from "components/list/ListItem";
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const userLists: any = useSelector((state: IStore) => state.userLists) || [];
+  const userLists: IUserList[] =
+    useSelector((state: IStore) => state.userLists) || [];
 
   const dispatch = useDispatch();
 
@@ -72,9 +73,11 @@ const Dashboard = () => {
       <Typography noWrap>Logged as LtCodename.</Typography>
       <Typography noWrap>This portal uses RAWG API.</Typography>
       <Typography noWrap>Version: 1.001.</Typography>
-      <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap", my: 2 }}>
+      <Stack direction="row" sx={{ flexWrap: "wrap", my: 2 }}>
         {userLists.map((list: IUserList) => (
-          <ListItem key={list.id} {...list} />
+          <Box sx={{ mr: 2, mb: 2 }} key={list.id}>
+            <ListItem {...list} />
+          </Box>
         ))}
       </Stack>
       <Backdrop

@@ -10,6 +10,7 @@ import {
   Typography,
   Drawer,
   Divider,
+  Stack,
 } from "@mui/material/";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -20,6 +21,12 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { Link } from "react-router-dom";
+
+import { IStore, IUserList } from "types/types";
+
+import ListItem from "components/list/ListItem";
+
+import { useSelector } from "react-redux";
 
 import {
   DrawerHeader,
@@ -34,6 +41,8 @@ const Header = () => {
   const [isDrawerOpen, setisDrawerOpen] = useState<boolean>(false);
 
   const theme = useTheme();
+  const userLists: IUserList[] =
+    useSelector((state: IStore) => state.userLists) || [];
 
   const toggleDrawer = () => {
     setisDrawerOpen((previousState: boolean) => !previousState);
@@ -103,6 +112,14 @@ const Header = () => {
         open={isDrawerOpen}
       >
         <DrawerHeader>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" }, ml: 1 }}
+          >
+            Lists
+          </Typography>
           <IconButton onClick={toggleDrawer}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
@@ -112,6 +129,11 @@ const Header = () => {
           </IconButton>
         </DrawerHeader>
         <Divider />
+        <Stack direction="column" spacing={1} sx={{ flexWrap: "wrap", p: 2 }}>
+          {userLists.map((list: IUserList) => (
+            <ListItem key={list.id} {...list} />
+          ))}
+        </Stack>
       </Drawer>
     </Box>
   );

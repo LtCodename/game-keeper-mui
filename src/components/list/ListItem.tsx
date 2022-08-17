@@ -6,6 +6,8 @@ import { IUserList } from "types/types";
 
 import { Link } from "react-router-dom";
 
+import { yellow } from "@mui/material/colors";
+
 const ListItem = ({ name, id }: IUserList) => {
   const [elevation, setElevation] = useState<number>(1);
 
@@ -16,10 +18,9 @@ const ListItem = ({ name, id }: IUserList) => {
       to={id}
       style={{
         textDecoration: "none",
-        margin: "0 16px 16px 0",
       }}
     >
-      <Paper elevation={elevation} sx={{ p: 2 }}>
+      <Paper elevation={elevation} sx={{ p: 2, backgroundColor: yellow[400] }}>
         {name}
       </Paper>
     </Link>
