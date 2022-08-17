@@ -7,14 +7,15 @@ import { IconButton, Typography, Drawer, Divider, Stack } from "@mui/material/";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-import ListItem from "components/list/ListItem";
+import ListItem from "components/List/ListItem";
 
 import DRAWER_WIDTH from "constants";
 
 import { IStore, IUserList } from "types";
 
 import { useSelector } from "react-redux";
-import { DrawerHeader } from "./header/styles";
+
+import DrawerHeader from "./styles";
 
 interface Props {
   open: boolean;

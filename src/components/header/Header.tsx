@@ -9,7 +9,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { Link } from "react-router-dom";
 
-import ListSelector from "components/ListSelector";
+import ListSelector from "components/ListSelector/ListSelector";
 
 import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 
