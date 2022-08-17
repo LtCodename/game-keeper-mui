@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import rootReducer from "redux/rootReducer";
-import Header from "components/Header";
+import Header from "components/header/Header";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
