@@ -2,7 +2,7 @@ import React from "react";
 
 import { useSelector } from "react-redux";
 
-import { IStore, IUserList } from "types";
+import { IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import { Outlet } from "react-router-dom";
 
@@ -12,13 +12,19 @@ const Dashboard = () => {
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
+  const userSections: IUserSection[] =
+    useSelector((state: IStore) => state.userSections) || [];
+
+  const userBlocks: IUserBlock[] =
+    useSelector((state: IStore) => state.userBlocks) || [];
+
   return (
     <Box sx={{ p: 2 }}>
       <Typography noWrap>Logged as LtCodename.</Typography>
       <Typography noWrap>This portal uses RAWG API.</Typography>
       <Typography
         noWrap
-      >{`There are ${userLists.length} lists in your Game Keeper.`}</Typography>
+      >{`There are ${userLists.length} lists, ${userSections.length} sections and ${userBlocks.length} games in your Game Keeper.`}</Typography>
       <Typography noWrap>Version: 1.001.</Typography>
       <Outlet />
     </Box>

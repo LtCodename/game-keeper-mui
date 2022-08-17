@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useLocation } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { IStore, IUserList, IUserSection } from "types";
 
 import { Box, Typography, Stack } from "@mui/material/";
+
 import Section from "components/Section";
 
 const List = () => {
@@ -22,24 +23,12 @@ const List = () => {
     (list: IUserList) => list.id === listId
   );
 
-  useEffect(() => {
-    console.log(listId);
-  }, [listId]);
-
-  useEffect(() => {
-    console.log(userLists);
-  }, [userLists]);
-
-  useEffect(() => {
-    console.log(sections);
-  }, [sections]);
-
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h5" sx={{ mb: 1 }}>
         {list?.name}
       </Typography>
-      <Stack direction="column" spacing={1} sx={{ flexWrap: "wrap" }}>
+      <Stack direction="column" spacing={2} sx={{ flexWrap: "wrap" }}>
         {sections.map((section: IUserSection) => (
           <Section key={section.id} {...section} />
         ))}
