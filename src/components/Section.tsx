@@ -27,7 +27,7 @@ const Section = ({ name, id, listId }: IUserSection) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography>{name}</Typography>
+        <Typography>{name === "No Section" ? "Roster" : name}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Typography>Game blocks will be rendered here.</Typography>
