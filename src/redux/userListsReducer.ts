@@ -1,4 +1,4 @@
-import { IAction, IUserList } from "types/types";
+import { IAction, IUserList } from "types";
 
 import { LISTS_SET } from "./actions";
 

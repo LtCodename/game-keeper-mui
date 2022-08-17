@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Paper } from "@mui/material/";
 
-import { IUserList } from "types/types";
+import { IUserList } from "types";
 
 import { Link } from "react-router-dom";
 

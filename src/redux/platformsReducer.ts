@@ -1,4 +1,4 @@
-import { IAction, IPlatform } from "types/types";
+import { IAction, IPlatform } from "types";
 
 import { PLATFORMS_SET } from "./actions";
 

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useSelector } from "react-redux";
 
-import { IStore, IUserList } from "types/types";
+import { IStore, IUserList } from "types";
 
 import { Outlet } from "react-router-dom";
 

@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 
-import { IStore, IUserList } from "types/types";
+import { IStore, IUserList } from "types";
 
 const List = () => {
   const location: any = useLocation();

@@ -22,11 +22,13 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { Link } from "react-router-dom";
 
-import { IStore, IUserList } from "types/types";
+import { IStore, IUserList } from "types";
 
 import ListItem from "components/list/ListItem";
 
 import { useSelector } from "react-redux";
+
+import DRAWER_WIDTH from "constants";
 
 import {
   DrawerHeader,
@@ -34,8 +36,6 @@ import {
   SearchIconWrapper,
   StyledInputBase,
 } from "./styles";
-
-const drawerWidth: number = 240;
 
 const Header = () => {
   const [isDrawerOpen, setisDrawerOpen] = useState<boolean>(false);
@@ -100,10 +100,10 @@ const Header = () => {
       </AppBar>
       <Drawer
         sx={{
-          width: drawerWidth,
+          width: DRAWER_WIDTH,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: drawerWidth,
+            width: DRAWER_WIDTH,
             boxSizing: "border-box",
           },
         }}
