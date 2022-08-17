@@ -38,14 +38,14 @@ import {
 } from "./styles";
 
 const Header = () => {
-  const [isDrawerOpen, setisDrawerOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const theme = useTheme();
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
   const toggleDrawer = () => {
-    setisDrawerOpen((previousState: boolean) => !previousState);
+    setIsDrawerOpen((previousState: boolean) => !previousState);
   };
 
   return (
