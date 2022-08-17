@@ -16,9 +16,9 @@ import rootReducer from "redux/rootReducer";
 
 import Header from "components/header/Header";
 import Loader from "components/Loader";
-import Dashboard from "components/dashboard/Dashboard";
+import Dashboard from "components/Dashboard";
 import List from "components/list/List";
-import Login from "components/login/Login";
+import Login from "components/Login";
 
 import reportWebVitals from "./reportWebVitals";
 
