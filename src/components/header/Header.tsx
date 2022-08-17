@@ -13,7 +13,7 @@ import {
   Stack,
 } from "@mui/material/";
 
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
@@ -89,7 +89,7 @@ const Header = () => {
               }}
             >
               <IconButton aria-label="dashboard" color="inherit">
-                <DashboardIcon />
+                <HomeIcon />
               </IconButton>
             </Link>
             <IconButton aria-label="logout" color="inherit">

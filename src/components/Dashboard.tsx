@@ -6,9 +6,7 @@ import { IStore, IUserList } from "types";
 
 import { Outlet } from "react-router-dom";
 
-import { Box, Typography, Stack } from "@mui/material/";
-
-import ListItem from "components/list/ListItem";
+import { Box, Typography } from "@mui/material/";
 
 const Dashboard = () => {
   const userLists: IUserList[] =
@@ -18,14 +16,10 @@ const Dashboard = () => {
     <Box sx={{ p: 2 }}>
       <Typography noWrap>Logged as LtCodename.</Typography>
       <Typography noWrap>This portal uses RAWG API.</Typography>
+      <Typography
+        noWrap
+      >{`There are ${userLists.length} lists in your Game Keeper.`}</Typography>
       <Typography noWrap>Version: 1.001.</Typography>
-      <Stack direction="row" sx={{ flexWrap: "wrap", my: 2 }}>
-        {userLists.map((list: IUserList) => (
-          <Box sx={{ mr: 2, mb: 2 }} key={list.id}>
-            <ListItem {...list} />
-          </Box>
-        ))}
-      </Stack>
       <Outlet />
     </Box>
   );
