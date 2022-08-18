@@ -7,17 +7,32 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import ListSelector from "components/ListSelector/ListSelector";
+
+import { getAuth, signOut } from "firebase/auth";
 
 import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const toggleDrawer = () => {
     setIsDrawerOpen((previousState: boolean) => !previousState);
+  };
+
+  const logout = (): void => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigate("/login", { replace: true });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -64,7 +79,7 @@ const Header = () => {
                 <HomeIcon />
               </IconButton>
             </Link>
-            <IconButton aria-label="logout" color="inherit">
+            <IconButton aria-label="logout" color="inherit" onClick={logout}>
               <LogoutIcon />
             </IconButton>
           </Box>

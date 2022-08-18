@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { useSelector } from "react-redux";
 
 import { IStore, IUserBlock, IUserList, IUserSection } from "types";
 
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import { Box, Typography } from "@mui/material/";
 
 const Dashboard = () => {
-  const [isUserPresent, setIsUserPresent] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -23,12 +23,10 @@ const Dashboard = () => {
     useSelector((state: IStore) => state.userBlocks) || [];
 
   useEffect(() => {
-    setIsUserPresent(!!userData);
-  }, []);
-
-  if (!isUserPresent) {
-    return <Navigate to="/login" />;
-  }
+    if (!userData) {
+      navigate("/login", { replace: true });
+    }
+  }, [userData]);
 
   return (
     <Box sx={{ p: 2 }}>

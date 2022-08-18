@@ -10,32 +10,42 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 
+import { useNavigate } from "react-router-dom";
+
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 const defaultValues: {
-  login: string;
+  email: string;
   password: string;
 } = {
-  login: "",
+  email: "",
   password: "",
 };
 
 const validationSchema = yup.object().shape({
-  login: yup.string().required("Login is a required field"),
+  email: yup.string().required("Email is a required field"),
   password: yup.string().required("Password is a required field"),
 });
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  console.log(isSubmittimg);
 
-  const submitForm = (data: { login: string; password: string }) => {
-    const params = {
-      login: data.login,
-      password: data.password,
-    };
-
+  const submitForm = (data: { email: string; password: string }) => {
     setIsSubmitting(true);
-    console.log(params);
-    // call
+    const auth = getAuth();
+
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(() => {
+        navigate("/", { replace: true });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -68,27 +78,26 @@ const Login = () => {
                 }}
               >
                 <FormControl
-                  error={Boolean(errors.login && touched.login)}
+                  error={Boolean(errors.email && touched.email)}
                   fullWidth
                   sx={{
                     mb: 2,
                   }}
                 >
                   <TextField
-                    id="login"
-                    label="Login"
+                    id="email"
+                    label="Email"
                     defaultValue=""
                     variant="filled"
                     autoFocus
-                    name="login"
+                    name="email"
                     onChange={handleChange}
                   />
 
-                  <ErrorMessage name="login">
+                  <ErrorMessage name="email">
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
                 </FormControl>
-
                 <FormControl
                   error={Boolean(errors.password && touched.password)}
                   fullWidth
@@ -107,7 +116,6 @@ const Login = () => {
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
                 </FormControl>
-
                 <LoadingButton
                   sx={{ mt: 2 }}
                   loading={isSubmittimg}

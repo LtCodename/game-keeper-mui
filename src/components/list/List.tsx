@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 
@@ -11,7 +11,7 @@ import { Box, Typography, Stack } from "@mui/material/";
 import Section from "components/Section";
 
 const List = () => {
-  const [isUserPresent, setIsUserPresent] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -32,12 +32,10 @@ const List = () => {
   );
 
   useEffect(() => {
-    setIsUserPresent(!!userData);
-  }, []);
-
-  if (!isUserPresent) {
-    return <Navigate to="/login" />;
-  }
+    if (!userData) {
+      navigate("/login", { replace: true });
+    }
+  }, [userData]);
 
   return (
     <Box sx={{ p: 2 }}>
