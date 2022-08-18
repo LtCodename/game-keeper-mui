@@ -6,6 +6,10 @@ import { Formik, Form, ErrorMessage } from "formik";
 
 import { Box, FormControl, FormHelperText, TextField } from "@mui/material";
 
+import LoadingButton from "@mui/lab/LoadingButton";
+
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+
 const defaultValues: {
   login: string;
   password: string;
@@ -53,13 +57,16 @@ const Login = () => {
         validateOnBlur={false}
       >
         {({ errors, handleChange, handleSubmit, touched }) => (
-          <Form autoComplete="off" id="article-form" onSubmit={handleSubmit}>
-            <Box
-              sx={{
-                maxWidth: 400,
-              }}
-            >
-              <Box>
+          <Form autoComplete="off" id="login-form" onSubmit={handleSubmit}>
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  minWidth: 300,
+                }}
+              >
                 <FormControl
                   error={Boolean(errors.login && touched.login)}
                   fullWidth
@@ -70,7 +77,7 @@ const Login = () => {
                   <TextField
                     id="login"
                     label="Login"
-                    defaultValue="Enter Login"
+                    defaultValue=""
                     variant="filled"
                     autoFocus
                     name="login"
@@ -89,9 +96,10 @@ const Login = () => {
                   <TextField
                     id="password"
                     label="Password"
-                    defaultValue="Enter Password"
+                    defaultValue=""
                     variant="filled"
                     name="password"
+                    type="password"
                     onChange={handleChange}
                   />
 
@@ -99,6 +107,18 @@ const Login = () => {
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
                 </FormControl>
+
+                <LoadingButton
+                  sx={{ mt: 2 }}
+                  loading={isSubmittimg}
+                  loadingPosition="start"
+                  startIcon={<VpnKeyIcon />}
+                  variant="outlined"
+                  form="login-form"
+                  type="submit"
+                >
+                  Login
+                </LoadingButton>
               </Box>
             </Box>
           </Form>
