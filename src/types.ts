@@ -65,10 +65,12 @@ export interface IAction {
  * @member {IUserList[]} userLists A list of lists created by a user.
  * @member {IUserSection[]} userSections A list of sections created by a user.
  * @member {IUserBlock[]} userBlocks A list of blocks created by a user.
+ * @member {any} userData Info about current user.
  */
 export interface IStore {
   platforms: IPlatform[];
   userLists: IUserList[];
   userSections: IUserSection[];
   userBlocks: IUserBlock[];
+  userData: any;
 }

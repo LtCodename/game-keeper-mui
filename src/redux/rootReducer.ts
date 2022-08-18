@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import platformsReducer from "./platformsReducer";
 import userBlocksReducer from "./userBlocksReducer";
 import userListsReducer from "./userListsReducer";
+import userReducer from "./userReducer";
 import userSectionsReducer from "./userSectionsReducer";
 
 const rootReducer = combineReducers({
@@ -9,7 +10,7 @@ const rootReducer = combineReducers({
   userLists: userListsReducer,
   userSections: userSectionsReducer,
   userBlocks: userBlocksReducer,
-  // userData: userReducer.reducer,
+  userData: userReducer,
   // selectedListIndex: selectedListIndexReducer.reducer,
 });
 

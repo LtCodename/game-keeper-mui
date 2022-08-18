@@ -6,12 +6,14 @@ import db from "api/firebase";
 
 import { getDoc, doc } from "@firebase/firestore";
 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 import { LISTS_SET, SECTIONS_SET, BLOCKS_SET } from "redux/actions";
 
 import { Backdrop, CircularProgress } from "@mui/material/";
 
 const Loader = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   // const getGameInfo = () => {
@@ -24,8 +26,24 @@ const Loader = () => {
   //     });
   // };
 
+  const getUser = async () => {
+    const auth = getAuth();
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("user exists");
+        getData(); // lists, sections, blocks
+      } else {
+        console.log("user does not exist");
+      }
+    });
+  };
+
   const getData = async () => {
+    setIsLoading(true);
+
     const usersRef = doc(db, "users", "f8CNiv7pLZeHe5jDmnPrO3qQAs32");
+
     await getDoc(usersRef)
       .then((doc: any) => {
         const allUserData = doc.data() || {};
@@ -52,7 +70,7 @@ const Loader = () => {
   };
 
   useEffect(() => {
-    getData(); // lists, sections, blocks
+    getUser();
   }, []);
 
   return (
