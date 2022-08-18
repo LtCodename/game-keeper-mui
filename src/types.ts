@@ -1,14 +1,4 @@
 /**
- * Platform interface.
- * @member {string} iconName The name of the icon for the platform.
- * @member {string} name The name of the platform.
- */
-export interface IPlatform {
-  iconName: string;
-  name: string;
-}
-
-/**
  * User list interface.
  * @member {string} id User list id.
  * @member {string} name User list name.
@@ -35,7 +25,6 @@ export interface IUserSection {
  * @member {string} id User block id.
  * @member {string} apiId User block id in RAWG.IO database.
  * @member {string} developers User block developers list.
- * @member {IPlatform[]} platforms User block platforms list.
  * @member {string} releaseDate User block release date.
  * @member {string} sectionId Id of the section this block belongs to.
  */
@@ -44,7 +33,6 @@ export interface IUserBlock {
   apiId: string;
   developers: string;
   name: string;
-  platforms: IPlatform[];
   releaseDate: string;
   sectionId: string;
 }
@@ -61,14 +49,12 @@ export interface IAction {
 
 /**
  * Store interface.
- * @member {IPlatform[]} platforms A list of platforms you can select in a game details modal.
  * @member {IUserList[]} userLists A list of lists created by a user.
  * @member {IUserSection[]} userSections A list of sections created by a user.
  * @member {IUserBlock[]} userBlocks A list of blocks created by a user.
  * @member {any} userData Info about current user.
  */
 export interface IStore {
-  platforms: IPlatform[];
   userLists: IUserList[];
   userSections: IUserSection[];
   userBlocks: IUserBlock[];

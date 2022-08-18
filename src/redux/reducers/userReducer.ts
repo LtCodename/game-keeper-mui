@@ -1,6 +1,6 @@
 import { IAction } from "types";
 
-import { USER_SET } from "./actions";
+import { USER_SET } from "../actions";
 
 const initState: any = null;
 

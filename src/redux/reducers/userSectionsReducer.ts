@@ -1,6 +1,6 @@
 import { IAction, IUserSection } from "types";
 
-import { SECTIONS_SET } from "./actions";
+import { SECTIONS_SET } from "../actions";
 
 const initState: IUserSection[] = [];
 
