@@ -16,7 +16,7 @@ import { IStore, IUserBlock, IUserSection } from "types";
 
 import { yellow } from "@mui/material/colors";
 
-import Block from "./Block";
+import Block from "./Block/Block";
 
 const Section = ({ name, id }: IUserSection) => {
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
@@ -58,7 +58,7 @@ const Section = ({ name, id }: IUserSection) => {
               return 0;
             })
             .map((block: IUserBlock) => (
-              <Block key={block.id} {...block} />
+              <Block key={block.id} block={block} />
             ))}
         </Stack>
       </AccordionDetails>
