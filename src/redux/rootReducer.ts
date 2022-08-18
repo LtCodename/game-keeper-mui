@@ -1,16 +1,14 @@
 import { combineReducers } from "redux";
-import platformsReducer from "./platformsReducer";
-import userBlocksReducer from "./userBlocksReducer";
-import userListsReducer from "./userListsReducer";
-import userSectionsReducer from "./userSectionsReducer";
+import userBlocksReducer from "./reducers/userBlocksReducer";
+import userListsReducer from "./reducers/userListsReducer";
+import userReducer from "./reducers/userReducer";
+import userSectionsReducer from "./reducers/userSectionsReducer";
 
 const rootReducer = combineReducers({
-  platforms: platformsReducer,
   userLists: userListsReducer,
   userSections: userSectionsReducer,
   userBlocks: userBlocksReducer,
-  // userData: userReducer.reducer,
-  // selectedListIndex: selectedListIndexReducer.reducer,
+  userData: userReducer,
 });
 
 export default rootReducer;

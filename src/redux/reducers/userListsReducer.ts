@@ -1,6 +1,6 @@
 import { IAction, IUserList } from "types";
 
-import { LISTS_SET } from "./actions";
+import { LISTS_SET } from "../actions";
 
 const initState: IUserList[] = [];
 

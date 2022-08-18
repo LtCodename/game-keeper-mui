@@ -1,6 +1,6 @@
 import { IAction, IUserBlock } from "types";
 
-import { BLOCKS_SET } from "./actions";
+import { BLOCKS_SET } from "../actions";
 
 const initState: IUserBlock[] = [];
 

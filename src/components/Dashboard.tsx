@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useSelector } from "react-redux";
 
 import { IStore, IUserBlock, IUserList, IUserSection } from "types";
 
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import { Box, Typography } from "@mui/material/";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const userData: any = useSelector((state: IStore) => state.userData) || null;
+
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
@@ -17,6 +21,12 @@ const Dashboard = () => {
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
+
+  useEffect(() => {
+    if (!userData) {
+      navigate("/login", { replace: true });
+    }
+  }, [userData]);
 
   return (
     <Box sx={{ p: 2 }}>
