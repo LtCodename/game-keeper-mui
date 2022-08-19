@@ -13,11 +13,13 @@ export interface IUserList {
  * @member {string} id User section id.
  * @member {string} name User section name.
  * @member {string} listId Id of the list this section belongs to.
+ * @member {string} type User list type.
  */
 export interface IUserSection {
   id: string;
   name: string;
   listId: string;
+  type?: string;
 }
 
 /**

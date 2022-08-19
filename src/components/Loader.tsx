@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import db from "api/firebase";
 
@@ -19,9 +19,13 @@ import Dashboard from "components/Dashboard";
 import List from "components/List/List";
 import Login from "components/Login";
 
+import { IStore } from "types";
+
 const Loader = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
+
+  const userData: any = useSelector((state: IStore) => state.userData) || null;
 
   // const getGameInfo = () => {
   //   getGameInformation("Firewatch")
@@ -33,6 +37,12 @@ const Loader = () => {
   //     });
   // };
 
+  useEffect(() => {
+    if (userData) {
+      getData(); // lists, sections, blocks
+    }
+  }, [userData]);
+
   const userPresenceCheck = () => {
     const auth = getAuth();
 
@@ -42,8 +52,6 @@ const Loader = () => {
           type: USER_SET,
           payload: user,
         });
-
-        getData(); // lists, sections, blocks
       } else {
         dispatch({
           type: USER_SET,
@@ -56,7 +64,7 @@ const Loader = () => {
   };
 
   const getData = async () => {
-    const usersRef = doc(db, "users", "f8CNiv7pLZeHe5jDmnPrO3qQAs32");
+    const usersRef = doc(db, "users", userData.uid);
 
     await getDoc(usersRef)
       .then((doc: any) => {
@@ -64,17 +72,17 @@ const Loader = () => {
 
         dispatch({
           type: LISTS_SET,
-          payload: allUserData.lists,
+          payload: allUserData.lists || [],
         });
 
         dispatch({
           type: SECTIONS_SET,
-          payload: allUserData.sections,
+          payload: allUserData.sections || [],
         });
 
         dispatch({
           type: BLOCKS_SET,
-          payload: allUserData.blocks,
+          payload: allUserData.blocks || [],
         });
       })
       .catch((error: any) => {
