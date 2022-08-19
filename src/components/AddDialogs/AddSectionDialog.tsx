@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Dialog,
@@ -26,27 +26,29 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import { LISTS_SET, SECTIONS_SET } from "redux/actions";
+import { SECTIONS_SET } from "redux/actions";
 
 export interface Props {
   open: boolean;
   handleClose: () => void;
+  list: IUserList | undefined;
 }
 
 const defaultValues: {
-  listName: string;
+  sectionName: string;
 } = {
-  listName: "",
+  sectionName: "",
 };
 
 const validationSchema = yup.object().shape({
-  listName: yup.string().required("List name is a required field"),
+  sectionName: yup.string().required("Section name is a required field"),
 });
 
-const AddListDialog = ({ open, handleClose }: Props) => {
+const AddSectionDialog = ({ open, handleClose, list }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [currentListId, setCurrentListId] = useState<string>("");
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -59,39 +61,30 @@ const AddListDialog = ({ open, handleClose }: Props) => {
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
-  const submitForm = async (data: { listName: string }) => {
+  useEffect(() => {
+    if (list) {
+      setCurrentListId(list.id);
+    }
+  }, [list]);
+
+  const submitForm = async (data: { sectionName: string }) => {
     setIsSubmitting(true);
 
-    const newListId: string = `id${new Date().getTime()}`;
-    const newSectionId: string = `id${new Date().getTime()}1`;
-
-    const newList: IUserList = {
-      id: newListId,
-      name: data.listName,
-    };
-
     const newSection: IUserSection = {
-      id: newSectionId,
-      name: "No Section",
-      listId: newListId,
-      type: "hidden",
+      id: `id${new Date().getTime()}`,
+      name: data.sectionName,
+      listId: currentListId,
     };
 
-    const listsCopy: IUserList[] = [...userLists, newList];
     const sectionsCopy: IUserSection[] = [...userSections, newSection];
 
     await setDoc(doc(db, "users", userData.uid), {
-      lists: listsCopy,
+      lists: userLists,
       sections: sectionsCopy,
       blocks: userBlocks,
     })
       .then(() => {
         handleClose();
-
-        dispatch({
-          type: LISTS_SET,
-          payload: listsCopy,
-        });
 
         dispatch({
           type: SECTIONS_SET,
@@ -108,7 +101,7 @@ const AddListDialog = ({ open, handleClose }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add List</DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Section</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -119,7 +112,11 @@ const AddListDialog = ({ open, handleClose }: Props) => {
           validateOnBlur={false}
         >
           {({ errors, handleChange, handleSubmit, touched }) => (
-            <Form autoComplete="off" id="list-add-form" onSubmit={handleSubmit}>
+            <Form
+              autoComplete="off"
+              id="list-section-form"
+              onSubmit={handleSubmit}
+            >
               <Box
                 sx={{
                   display: "flex",
@@ -129,20 +126,20 @@ const AddListDialog = ({ open, handleClose }: Props) => {
                 }}
               >
                 <FormControl
-                  error={Boolean(errors.listName && touched.listName)}
+                  error={Boolean(errors.sectionName && touched.sectionName)}
                   fullWidth
                 >
                   <TextField
-                    id="listName"
-                    label="List Name"
+                    id="sectionName"
+                    label="Section Name"
                     defaultValue=""
                     variant="filled"
                     autoFocus
-                    name="listName"
+                    name="sectionName"
                     onChange={handleChange}
                   />
 
-                  <ErrorMessage name="listName">
+                  <ErrorMessage name="sectionName">
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
                 </FormControl>
@@ -160,7 +157,7 @@ const AddListDialog = ({ open, handleClose }: Props) => {
                     loadingPosition="start"
                     startIcon={<PublishIcon />}
                     variant="outlined"
-                    form="list-add-form"
+                    form="list-section-form"
                     type="submit"
                   >
                     Add
@@ -175,4 +172,4 @@ const AddListDialog = ({ open, handleClose }: Props) => {
   );
 };
 
-export default AddListDialog;
+export default AddSectionDialog;
