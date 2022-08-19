@@ -62,3 +62,13 @@ export interface IStore {
   userBlocks: IUserBlock[];
   userData: any;
 }
+
+/**
+ * Speed dial interface.
+ * @member {any} icon Icon name for a speed dial action.
+ * @member {string} name Name for a speed dial action.
+ */
+export interface ISpeedDialAction {
+  icon: any;
+  name: string;
+}
