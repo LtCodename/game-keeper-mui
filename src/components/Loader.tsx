@@ -21,6 +21,13 @@ import Login from "components/Login";
 
 import { IStore } from "types";
 
+export const enum GK {
+  drawerWidth = 320,
+  appVersion = "1.001",
+  gameNameLength = 43,
+  gameDevelopersLength = 59,
+}
+
 const Loader = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
