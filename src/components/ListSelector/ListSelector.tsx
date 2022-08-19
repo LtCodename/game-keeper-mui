@@ -17,11 +17,11 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "components/List/ListItem";
 import AddListDialog from "components/AddListDialog";
 
-import DRAWER_WIDTH from "constants";
-
 import { IStore, IUserList } from "types";
 
 import { useSelector } from "react-redux";
+
+import { GK } from "components/Loader";
 
 import DrawerHeader from "./styles";
 
@@ -40,10 +40,10 @@ const ListSelector = ({ open, onClose }: Props) => {
   return (
     <Drawer
       sx={{
-        width: DRAWER_WIDTH,
+        width: GK.drawerWidth,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: DRAWER_WIDTH,
+          width: GK.drawerWidth,
           boxSizing: "border-box",
         },
       }}

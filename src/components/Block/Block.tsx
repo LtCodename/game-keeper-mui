@@ -6,6 +6,8 @@ import { IUserBlock } from "types";
 
 import formatReleaseDate from "logic";
 
+import { GK } from "components/Loader";
+
 import BlockModal from "./BlockModal";
 
 interface Props {
@@ -20,8 +22,8 @@ const Block = ({ block }: Props) => {
   const processDevelopers = (): string => {
     if (!developers || !developers.length) return "";
 
-    if (developers.length >= 59) {
-      return `${developers.substring(0, 59)}...`;
+    if (developers.length >= GK.gameDevelopersLength) {
+      return `${developers.substring(0, GK.gameDevelopersLength)}...`;
     }
     return developers;
   };
@@ -29,8 +31,8 @@ const Block = ({ block }: Props) => {
   const processName = (): string => {
     if (!name || !name.length) return "";
 
-    if (name.length >= 43) {
-      return `${name.substring(0, 43)}...`;
+    if (name.length >= GK.gameNameLength) {
+      return `${name.substring(0, GK.gameNameLength)}...`;
     }
     return name;
   };

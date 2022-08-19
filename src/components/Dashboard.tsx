@@ -7,6 +7,7 @@ import { IStore, IUserBlock, IUserList, IUserSection } from "types";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { Box, Typography } from "@mui/material/";
+import { GK } from "./Loader";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Dashboard = () => {
       <Typography
         noWrap
       >{`There are ${userLists.length} lists, ${userSections.length} sections and ${userBlocks.length} games in your Game Keeper.`}</Typography>
-      <Typography noWrap>Version: 1.001.</Typography>
+      <Typography noWrap>{`Version: ${GK.appVersion}.`}</Typography>
       <Outlet />
     </Box>
   );
