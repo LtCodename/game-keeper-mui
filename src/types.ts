@@ -25,14 +25,14 @@ export interface IUserSection {
 /**
  * User block interface.
  * @member {string} id User block id.
- * @member {string} apiId User block id in RAWG.IO database.
+ * @member {number} apiId User block id in RAWG.IO database.
  * @member {string} developers User block developers list.
  * @member {string} releaseDate User block release date.
  * @member {string} sectionId Id of the section this block belongs to.
  */
 export interface IUserBlock {
   id: string;
-  apiId: string;
+  apiId: number;
   developers: string;
   name: string;
   releaseDate: string;

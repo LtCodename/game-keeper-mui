@@ -18,7 +18,13 @@ import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { IRawgSearchResponce, IStore, IUserBlock, IUserList } from "types";
+import {
+  IRawgSearchResponce,
+  IStore,
+  IUserBlock,
+  IUserList,
+  IUserSection,
+} from "types";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -28,7 +34,7 @@ import db from "api/firebase";
 
 import { BLOCKS_SET } from "redux/actions";
 
-import { searchGamesByName } from "api/rawgApi";
+import { getGameInformation, searchGamesByName } from "api/rawgApi";
 
 import Search from "components/Search/Search";
 
@@ -56,32 +62,37 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<IRawgSearchResponce>();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  const [gameToAdd, setGameToAdd] = useState<IUserBlock>();
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
+  const userSections: IUserSection[] =
+    useSelector((state: IStore) => state.userSections) || [];
+
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
-  const submitForm = async (data: { gameName: string }) => {
+  const submitForm = async () => {
     setIsSubmitting(true);
 
     const newBlock: IUserBlock = {
-      id: `id${new Date().getTime()}`,
-      name: data.gameName,
+      id: gameToAdd?.id || "1",
+      name: gameToAdd?.name || GK.gameAddError,
       sectionId,
-      apiId: "1",
-      developers: "1",
-      releaseDate: "1",
+      apiId: gameToAdd?.apiId || 1,
+      developers: gameToAdd?.developers || GK.gameAddError,
+      releaseDate: gameToAdd?.releaseDate || GK.gameAddError,
     };
 
     const blocksCopy: IUserBlock[] = [...userBlocks, newBlock];
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: userLists,
-      blocks: userBlocks,
+      sections: userSections,
+      blocks: blocksCopy,
     })
       .then(() => {
         handleClose();
@@ -110,20 +121,39 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
       });
   };
 
-  const onGameSelect = (rawgId: string) => {
+  const processDevelopers = (developers: any): string => {
+    if (!developers.length) return "";
+
+    return developers.map((developer: any) => developer.name).join(", ");
+  };
+
+  const onGameSelect = async (rawgId: number) => {
     setIsAddDialogOpen(false);
-    console.log(rawgId);
+
+    await getGameInformation(rawgId)
+      .then((rawgResponse: any) => {
+        setGameToAdd({
+          id: `id${new Date().getTime()}`,
+          name: rawgResponse.name,
+          sectionId,
+          apiId: rawgResponse.id,
+          developers: processDevelopers(rawgResponse.developers),
+          releaseDate: rawgResponse.released,
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
   };
 
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Game</DialogTitle>
+
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: any) => {
-            submitForm(values);
-          }}
+          onSubmit={submitForm}
           validationSchema={validationSchema}
           validateOnBlur={false}
         >
@@ -171,7 +201,7 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
 
                 {isAddDialogOpen && (
                   <Search
-                    onGameSelect={(rawgId: string) => onGameSelect(rawgId)}
+                    onGameSelect={(rawgId: number) => onGameSelect(rawgId)}
                     searchResults={searchResults}
                   />
                 )}

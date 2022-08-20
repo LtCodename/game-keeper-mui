@@ -9,7 +9,7 @@ import { GK } from "components/Loader";
 import SearchItem from "./SearchItem";
 
 export interface Props {
-  onGameSelect: (rawgId: string) => void;
+  onGameSelect: (id: number) => void;
   searchResults: IRawgSearchResponce | undefined;
 }
 
@@ -27,7 +27,7 @@ const Search = ({ onGameSelect, searchResults }: Props) => (
     {searchResults?.results?.map((searchResult: IRawgSearchResult) => (
       <SearchItem
         key={searchResult.id}
-        onClick={() => onGameSelect(searchResult.id)}
+        onClick={() => onGameSelect(Number(searchResult.id))}
         name={searchResult.name}
       />
     ))}

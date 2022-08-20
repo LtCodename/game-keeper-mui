@@ -24,6 +24,7 @@ import { IStore } from "types";
 export const enum GK {
   drawerWidth = 320,
   appVersion = "1.001",
+  gameAddError = "Game was not added!",
   gameNameLength = 43,
   gameDevelopersLength = 59,
   addGameWindowWidth = 368,
@@ -34,16 +35,6 @@ const Loader = () => {
   const dispatch = useDispatch();
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
-
-  // const getGameInfo = () => {
-  //   getGameInformation("Firewatch")
-  //     .then((res: any) => {
-  //       console.log(res);
-  //     })
-  //     .catch((error: any) => {
-  //       console.log(error);
-  //     });
-  // };
 
   useEffect(() => {
     if (userData) {
