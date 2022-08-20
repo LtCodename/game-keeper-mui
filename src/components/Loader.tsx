@@ -22,12 +22,14 @@ import Login from "components/Login";
 import { IStore } from "types";
 
 export const enum GK {
-  drawerWidth = 320,
   appVersion = "1.001",
+  drawerWidth = 320,
   gameAddError = "Game was not added!",
   gameNameLength = 43,
   gameDevelopersLength = 59,
   addGameWindowWidth = 368,
+  demoEmail = "ltcodename92@gmail.com",
+  demoPassword = "22121992",
 }
 
 const Loader = () => {

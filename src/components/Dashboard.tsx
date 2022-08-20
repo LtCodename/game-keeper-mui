@@ -31,12 +31,28 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography noWrap>Logged as LtCodename.</Typography>
-      <Typography noWrap>This portal uses RAWG API.</Typography>
+      {userData?.email === GK.demoEmail && (
+        <Typography sx={{ mb: 2 }}>
+          Hello there! Look around, poke at things, press on stuff. This is a
+          demo profile of Game Keeper. An app, if you will, for tracking your
+          game activity. Create lists and add sections with games to them.
+        </Typography>
+      )}
+
+      <Typography sx={{ mb: 2 }}>
+        Game Keeper was created with React 18.2 (functional components), Redux
+        and MUI 5.4.4. Forms are handled with Formik. All the game data is
+        provided by RAWG API. Database and hosting implemented with Firebase.
+      </Typography>
+      <Typography sx={{ mb: 2 }}>{`Logged as ${
+        userData?.email === GK.demoEmail
+          ? "Captain Picard"
+          : userData?.displayName
+      }.`}</Typography>
       <Typography
-        noWrap
+        sx={{ mb: 2 }}
       >{`There are ${userLists.length} lists, ${userSections.length} sections and ${userBlocks.length} games in your Game Keeper.`}</Typography>
-      <Typography noWrap>{`Version: ${GK.appVersion}.`}</Typography>
+      <Typography sx={{ mb: 2 }}>{`Version: ${GK.appVersion}.`}</Typography>
       <Outlet />
     </Box>
   );
