@@ -8,11 +8,14 @@ import { Box, FormControl, FormHelperText, TextField } from "@mui/material";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { useNavigate } from "react-router-dom";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+import { GK } from "./Loader";
 
 const defaultValues: {
   email: string;
@@ -37,6 +40,22 @@ const Login = () => {
     const auth = getAuth();
 
     signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(() => {
+        navigate("/", { replace: true });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+
+  const demoLogin = () => {
+    setIsSubmitting(true);
+    const auth = getAuth();
+
+    signInWithEmailAndPassword(auth, GK.demoEmail, GK.demoPassword)
       .then(() => {
         navigate("/", { replace: true });
       })
@@ -117,17 +136,29 @@ const Login = () => {
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
                 </FormControl>
-                <LoadingButton
-                  sx={{ mt: 2 }}
-                  loading={isSubmittimg}
-                  loadingPosition="start"
-                  startIcon={<VpnKeyIcon />}
-                  variant="outlined"
-                  form="login-form"
-                  type="submit"
-                >
-                  Login
-                </LoadingButton>
+                <Box>
+                  <LoadingButton
+                    sx={{ mt: 2, mx: 1 }}
+                    loading={isSubmittimg}
+                    loadingPosition="start"
+                    startIcon={<LockOpenIcon />}
+                    variant="outlined"
+                    form="login-form"
+                    type="submit"
+                  >
+                    Login
+                  </LoadingButton>
+                  <LoadingButton
+                    sx={{ mt: 2, mx: 1 }}
+                    loading={isSubmittimg}
+                    loadingPosition="start"
+                    startIcon={<VisibilityIcon />}
+                    variant="outlined"
+                    onClick={demoLogin}
+                  >
+                    Demo
+                  </LoadingButton>
+                </Box>
               </Box>
             </Box>
           </Form>
