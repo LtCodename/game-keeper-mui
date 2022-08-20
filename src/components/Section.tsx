@@ -6,6 +6,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   Stack,
+  Button,
+  Box,
 } from "@mui/material/";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -17,9 +19,12 @@ import { IStore, IUserBlock, IUserSection } from "types";
 import { yellow } from "@mui/material/colors";
 
 import Block from "./Block/Block";
+import AddGameDialog from "./AddDialogs/AddGameDialog";
 
 const Section = ({ name, id }: IUserSection) => {
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  console.log(isAddDialogOpen);
   const blocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks).filter(
       (block: IUserBlock) => block.sectionId === id
@@ -40,7 +45,26 @@ const Section = ({ name, id }: IUserSection) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography>{name === "No Section" ? "Roster" : name}</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Typography>{name === "No Section" ? "Roster" : name}</Typography>
+          <Button
+            variant="contained"
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              event.stopPropagation();
+              setIsAddDialogOpen(true);
+            }}
+            sx={{ mr: 2 }}
+          >
+            Add Game
+          </Button>
+        </Box>
       </AccordionSummary>
       <AccordionDetails sx={{ pt: 0 }}>
         <Stack direction="row" sx={{ flexWrap: "wrap" }}>
@@ -62,6 +86,13 @@ const Section = ({ name, id }: IUserSection) => {
             ))}
         </Stack>
       </AccordionDetails>
+      {isAddDialogOpen && (
+        <AddGameDialog
+          open={isAddDialogOpen}
+          handleClose={() => setIsAddDialogOpen(false)}
+          sectionId={id}
+        />
+      )}
     </Accordion>
   );
 };

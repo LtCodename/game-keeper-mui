@@ -18,7 +18,7 @@ import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { IStore, IUserBlock, IUserList, IUserSection } from "types";
+import { IStore, IUserBlock, IUserList } from "types";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -26,25 +26,25 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import { SECTIONS_SET } from "redux/actions";
+import { BLOCKS_SET } from "redux/actions";
 
 export interface Props {
   open: boolean;
   handleClose: () => void;
-  listId: string;
+  sectionId: string;
 }
 
 const defaultValues: {
-  sectionName: string;
+  gameName: string;
 } = {
-  sectionName: "",
+  gameName: "",
 };
 
 const validationSchema = yup.object().shape({
-  sectionName: yup.string().required("Section name is a required field"),
+  gameName: yup.string().required("Game name is a required field"),
 });
 
-const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
+const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
@@ -54,34 +54,33 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
-  const submitForm = async (data: { sectionName: string }) => {
+  const submitForm = async (data: { gameName: string }) => {
     setIsSubmitting(true);
 
-    const newSection: IUserSection = {
+    const newBlock: IUserBlock = {
       id: `id${new Date().getTime()}`,
-      name: data.sectionName,
-      listId,
+      name: data.gameName,
+      sectionId,
+      apiId: "1",
+      developers: "1",
+      releaseDate: "1",
     };
 
-    const sectionsCopy: IUserSection[] = [...userSections, newSection];
+    const blocksCopy: IUserBlock[] = [...userBlocks, newBlock];
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: userLists,
-      sections: sectionsCopy,
       blocks: userBlocks,
     })
       .then(() => {
         handleClose();
 
         dispatch({
-          type: SECTIONS_SET,
-          payload: sectionsCopy,
+          type: BLOCKS_SET,
+          payload: blocksCopy,
         });
       })
       .catch((error: any) => {
@@ -94,7 +93,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Section</DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Game</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -107,7 +106,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
           {({ errors, handleChange, handleSubmit, touched }) => (
             <Form
               autoComplete="off"
-              id="list-section-form"
+              id="list-game-form"
               onSubmit={handleSubmit}
             >
               <Box
@@ -119,20 +118,20 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
                 }}
               >
                 <FormControl
-                  error={Boolean(errors.sectionName && touched.sectionName)}
+                  error={Boolean(errors.gameName && touched.gameName)}
                   fullWidth
                 >
                   <TextField
-                    id="sectionName"
-                    label="Section Name"
+                    id="gameName"
+                    label="Game Name"
                     defaultValue=""
                     variant="filled"
                     autoFocus
-                    name="sectionName"
+                    name="gameName"
                     onChange={handleChange}
                   />
 
-                  <ErrorMessage name="sectionName">
+                  <ErrorMessage name="gameName">
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
                 </FormControl>
@@ -150,7 +149,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
                     loadingPosition="start"
                     startIcon={<PublishIcon />}
                     variant="outlined"
-                    form="list-section-form"
+                    form="list-game-form"
                     type="submit"
                   >
                     Add
@@ -165,4 +164,4 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
   );
 };
 
-export default AddSectionDialog;
+export default AddGameDialog;

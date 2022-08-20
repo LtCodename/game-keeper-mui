@@ -81,7 +81,7 @@ const List = () => {
         <AddSectionDialog
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
-          list={list}
+          listId={listId}
         />
       )}
     </Box>
