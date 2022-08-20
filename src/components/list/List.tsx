@@ -58,7 +58,7 @@ const List = () => {
       <Typography variant="h5" sx={{ mb: 1 }}>
         {list?.name}
       </Typography>
-      <Stack direction="column" spacing={2} sx={{ flexWrap: "wrap" }}>
+      <Stack direction="column" spacing={2}>
         {sections.map((section: IUserSection) => (
           <Section key={section.id} {...section} />
         ))}
@@ -81,7 +81,7 @@ const List = () => {
         <AddSectionDialog
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
-          list={list}
+          listId={listId}
         />
       )}
     </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
   Dialog,
@@ -31,7 +31,7 @@ import { SECTIONS_SET } from "redux/actions";
 export interface Props {
   open: boolean;
   handleClose: () => void;
-  list: IUserList | undefined;
+  listId: string;
 }
 
 const defaultValues: {
@@ -44,11 +44,10 @@ const validationSchema = yup.object().shape({
   sectionName: yup.string().required("Section name is a required field"),
 });
 
-const AddSectionDialog = ({ open, handleClose, list }: Props) => {
+const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  const [currentListId, setCurrentListId] = useState<string>("");
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -61,19 +60,13 @@ const AddSectionDialog = ({ open, handleClose, list }: Props) => {
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
-  useEffect(() => {
-    if (list) {
-      setCurrentListId(list.id);
-    }
-  }, [list]);
-
   const submitForm = async (data: { sectionName: string }) => {
     setIsSubmitting(true);
 
     const newSection: IUserSection = {
       id: `id${new Date().getTime()}`,
       name: data.sectionName,
-      listId: currentListId,
+      listId,
     };
 
     const sectionsCopy: IUserSection[] = [...userSections, newSection];
