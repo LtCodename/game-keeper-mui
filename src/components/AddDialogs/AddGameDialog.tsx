@@ -18,7 +18,7 @@ import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { IStore, IUserBlock, IUserList } from "types";
+import { IRawgSearchResponce, IStore, IUserBlock, IUserList } from "types";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -27,6 +27,7 @@ import { doc, setDoc } from "firebase/firestore";
 import db from "api/firebase";
 
 import { BLOCKS_SET } from "redux/actions";
+import { searchGamesByName } from "api/rawgApi";
 
 export interface Props {
   open: boolean;
@@ -48,6 +49,12 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState<IRawgSearchResponce>();
+  const [displaySearchResultsModal, setDisplaySearchResultsModal] =
+    useState<boolean>(false);
+
+  console.log(searchResults);
+  console.log(displaySearchResultsModal);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -91,6 +98,17 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
       });
   };
 
+  const searchApi = async (gameName: string) => {
+    await searchGamesByName(gameName)
+      .then((response: IRawgSearchResponce) => {
+        setSearchResults(response);
+        setDisplaySearchResultsModal(true);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Game</DialogTitle>
@@ -128,7 +146,16 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
                     variant="filled"
                     autoFocus
                     name="gameName"
-                    onChange={handleChange}
+                    onChange={(
+                      event: React.FormEvent<
+                        HTMLInputElement | HTMLTextAreaElement
+                      >
+                    ) => {
+                      handleChange(event);
+                      if (event.currentTarget.value.length >= 3) {
+                        searchApi(event.currentTarget.value);
+                      }
+                    }}
                   />
 
                   <ErrorMessage name="gameName">

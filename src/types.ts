@@ -72,3 +72,27 @@ export interface ISpeedDialAction {
   icon: any;
   name: string;
 }
+
+/**
+ * RAWG api idividual search result.
+ * @member {string} id RAWG game id.
+ * @member {string} name RAWG game name.
+ */
+export interface IRawgSearchResult {
+  name: string;
+  id: string;
+}
+
+/**
+ * RRAWG api search result responce.
+ * @member {string} count RAWG api search results total count.
+ * @member {string} next RAWG api search results next page number.
+ * @member {string} previous RAWG api search results prevoius page number.
+ * @member {string} results RAWG api search actual result (array of games).
+ */
+export interface IRawgSearchResponce {
+  count: string;
+  next: number | null;
+  previous: number | null;
+  results: IRawgSearchResult[];
+}
