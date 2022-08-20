@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Dialog,
@@ -8,6 +8,8 @@ import {
   TextField,
   FormHelperText,
   Button,
+  Stack,
+  Typography,
 } from "@mui/material/";
 
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -40,6 +42,8 @@ import Search from "components/Search/Search";
 
 import { GK } from "components/Loader";
 
+import formatReleaseDate from "logic";
+
 export interface Props {
   open: boolean;
   handleClose: () => void;
@@ -61,8 +65,9 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<IRawgSearchResponce>();
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  const [isSearchDisplayed, setIsSearchDisplayed] = useState<boolean>(false);
   const [gameToAdd, setGameToAdd] = useState<IUserBlock>();
+  const [isAdditionalInfo, setIsAdditionalInfo] = useState<boolean>(false);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -74,6 +79,12 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
+
+  useEffect(() => {
+    if (gameToAdd) {
+      setIsAdditionalInfo(true);
+    }
+  }, [gameToAdd]);
 
   const submitForm = async () => {
     setIsSubmitting(true);
@@ -114,7 +125,7 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
     await searchGamesByName(gameName)
       .then((response: IRawgSearchResponce) => {
         setSearchResults(response);
-        setIsAddDialogOpen(true);
+        setIsSearchDisplayed(true);
       })
       .catch((error: any) => {
         console.log(error);
@@ -128,7 +139,7 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
   };
 
   const onGameSelect = async (rawgId: number) => {
-    setIsAddDialogOpen(false);
+    setIsSearchDisplayed(false);
 
     await getGameInformation(rawgId)
       .then((rawgResponse: any) => {
@@ -199,11 +210,25 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
                   </ErrorMessage>
                 </FormControl>
 
-                {isAddDialogOpen && (
+                {isSearchDisplayed && (
                   <Search
                     onGameSelect={(rawgId: number) => onGameSelect(rawgId)}
                     searchResults={searchResults}
                   />
+                )}
+
+                {isAdditionalInfo && !isSearchDisplayed && (
+                  <Stack
+                    direction="column"
+                    spacing={0}
+                    sx={{ mt: 2, width: "100%" }}
+                  >
+                    <Typography>{`Name: ${gameToAdd?.name}`}</Typography>
+                    <Typography>{`Developers: ${gameToAdd?.developers}`}</Typography>
+                    <Typography>{`Release date: ${formatReleaseDate(
+                      gameToAdd?.releaseDate || ""
+                    )}`}</Typography>
+                  </Stack>
                 )}
 
                 <Box sx={{ mt: 2 }}>
