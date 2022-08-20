@@ -30,7 +30,9 @@ import { BLOCKS_SET } from "redux/actions";
 
 import { searchGamesByName } from "api/rawgApi";
 
-import SearchDialog from "components/Search/SearchDialog";
+import Search from "components/Search/Search";
+
+import { GK } from "components/Loader";
 
 export interface Props {
   open: boolean;
@@ -136,7 +138,7 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  minWidth: 300,
+                  width: GK.addGameWindowWidth,
                 }}
               >
                 <FormControl
@@ -167,6 +169,13 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
                   </ErrorMessage>
                 </FormControl>
 
+                {isAddDialogOpen && (
+                  <Search
+                    onGameSelect={(rawgId: string) => onGameSelect(rawgId)}
+                    searchResults={searchResults}
+                  />
+                )}
+
                 <Box sx={{ mt: 2 }}>
                   <Button
                     sx={{ mr: 2 }}
@@ -191,15 +200,6 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
           )}
         </Formik>
       </Box>
-
-      {isAddDialogOpen && (
-        <SearchDialog
-          open={isAddDialogOpen}
-          onGameSelect={(rawgId: string) => onGameSelect(rawgId)}
-          searchResults={searchResults}
-          handleClose={() => setIsAddDialogOpen(false)}
-        />
-      )}
     </Dialog>
   );
 };

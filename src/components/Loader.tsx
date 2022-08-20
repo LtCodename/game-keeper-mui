@@ -26,6 +26,7 @@ export const enum GK {
   appVersion = "1.001",
   gameNameLength = 43,
   gameDevelopersLength = 59,
+  addGameWindowWidth = 368,
 }
 
 const Loader = () => {
