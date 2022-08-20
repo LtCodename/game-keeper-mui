@@ -27,7 +27,10 @@ import { doc, setDoc } from "firebase/firestore";
 import db from "api/firebase";
 
 import { BLOCKS_SET } from "redux/actions";
+
 import { searchGamesByName } from "api/rawgApi";
+
+import SearchDialog from "components/Search/SearchDialog";
 
 export interface Props {
   open: boolean;
@@ -50,11 +53,7 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<IRawgSearchResponce>();
-  const [displaySearchResultsModal, setDisplaySearchResultsModal] =
-    useState<boolean>(false);
-
-  console.log(searchResults);
-  console.log(displaySearchResultsModal);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -102,11 +101,16 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
     await searchGamesByName(gameName)
       .then((response: IRawgSearchResponce) => {
         setSearchResults(response);
-        setDisplaySearchResultsModal(true);
+        setIsAddDialogOpen(true);
       })
       .catch((error: any) => {
         console.log(error);
       });
+  };
+
+  const onGameSelect = (rawgId: string) => {
+    setIsAddDialogOpen(false);
+    console.log(rawgId);
   };
 
   return (
@@ -187,6 +191,15 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
           )}
         </Formik>
       </Box>
+
+      {isAddDialogOpen && (
+        <SearchDialog
+          open={isAddDialogOpen}
+          onGameSelect={(rawgId: string) => onGameSelect(rawgId)}
+          searchResults={searchResults}
+          handleClose={() => setIsAddDialogOpen(false)}
+        />
+      )}
     </Dialog>
   );
 };

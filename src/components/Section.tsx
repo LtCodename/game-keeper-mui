@@ -24,7 +24,7 @@ import AddGameDialog from "./AddDialogs/AddGameDialog";
 const Section = ({ name, id }: IUserSection) => {
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
-  console.log(isAddDialogOpen);
+
   const blocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks).filter(
       (block: IUserBlock) => block.sectionId === id

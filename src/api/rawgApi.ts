@@ -10,7 +10,7 @@ export async function searchGamesByName(name: string) {
         },
       }
     );
-    return data.results;
+    return data;
   } catch (e) {
     throw new Error("Something went wrong!");
   }
