@@ -12,7 +12,7 @@ import {
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import PublishIcon from "@mui/icons-material/Publish";
+import SaveIcon from "@mui/icons-material/Save";
 
 import * as yup from "yup";
 
@@ -35,16 +35,16 @@ export interface Props {
 }
 
 const defaultValues: {
-  sectionName: string;
+  name: string;
 } = {
-  sectionName: "",
+  name: "",
 };
 
 const validationSchema = yup.object().shape({
-  sectionName: yup.string().required("Section name is a required field"),
+  name: yup.string().required("Name is a required field"),
 });
 
-const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
+const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
@@ -54,18 +54,22 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
+  const currentList: IUserList | undefined = userLists.find(
+    (list: IUserList) => list.id === listId
+  );
+
   const userSections: IUserSection[] =
     useSelector((state: IStore) => state.userSections) || [];
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
-  const submitForm = async (data: { sectionName: string }) => {
+  const submitForm = async (data: { name: string }) => {
     setIsSubmitting(true);
 
     const newSection: IUserSection = {
       id: `id${new Date().getTime()}`,
-      name: data.sectionName,
+      name: data.name,
       listId,
     };
 
@@ -94,9 +98,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>
-        Add a section to this list
-      </DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Edit list</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -109,7 +111,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
           {({ errors, handleChange, handleSubmit, touched }) => (
             <Form
               autoComplete="off"
-              id="list-section-form"
+              id="list-edit-form"
               onSubmit={handleSubmit}
             >
               <Box
@@ -121,20 +123,20 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
                 }}
               >
                 <FormControl
-                  error={Boolean(errors.sectionName && touched.sectionName)}
+                  error={Boolean(errors.name && touched.name)}
                   fullWidth
                 >
                   <TextField
-                    id="sectionName"
-                    label="Section Name"
-                    defaultValue=""
+                    id="name"
+                    label="Name"
+                    defaultValue={currentList?.name}
                     variant="filled"
                     autoFocus
-                    name="sectionName"
+                    name="name"
                     onChange={handleChange}
                   />
 
-                  <ErrorMessage name="sectionName">
+                  <ErrorMessage name="name">
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
                 </FormControl>
@@ -150,12 +152,12 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
                   <LoadingButton
                     loading={isSubmittimg}
                     loadingPosition="start"
-                    startIcon={<PublishIcon />}
+                    startIcon={<SaveIcon />}
                     variant="outlined"
-                    form="list-section-form"
+                    form="list-edit-form"
                     type="submit"
                   >
-                    Add
+                    Save changes
                   </LoadingButton>
                 </Box>
               </Box>
@@ -167,4 +169,4 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
   );
 };
 
-export default AddSectionDialog;
+export default EditListDialog;

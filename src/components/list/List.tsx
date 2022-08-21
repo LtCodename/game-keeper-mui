@@ -14,20 +14,25 @@ import {
   SpeedDialAction,
 } from "@mui/material/";
 
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SettingsIcon from "@mui/icons-material/Settings";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
 
 import Section from "components/Section";
 import AddSectionDialog from "components/AddDialogs/AddSectionDialog";
+import EditListDialog from "components/List/EditListDialog";
 
 const speedDialActions: ISpeedDialAction[] = [
   { icon: <AddIcon />, name: "Add section" },
+  { icon: <EditIcon />, name: "Edit list" },
 ];
 
 const List = () => {
   const navigate = useNavigate();
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -66,21 +71,42 @@ const List = () => {
       <SpeedDial
         ariaLabel="list actions"
         sx={{ position: "absolute", bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon />}
+        icon={<SettingsIcon />}
+        openIcon={<CloseIcon />}
       >
-        {speedDialActions.map((action: ISpeedDialAction) => (
+        {speedDialActions.map((action: ISpeedDialAction, index: number) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            onClick={() => setIsAddDialogOpen(true)}
+            onClick={() => {
+              switch (index) {
+                case 0:
+                  setIsAddDialogOpen(true);
+                  break;
+                case 1:
+                  setIsEditDialogOpen(true);
+                  break;
+                default:
+                  setIsAddDialogOpen(true);
+              }
+            }}
           />
         ))}
       </SpeedDial>
+
       {isAddDialogOpen && (
         <AddSectionDialog
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
+          listId={listId}
+        />
+      )}
+
+      {isEditDialogOpen && (
+        <EditListDialog
+          open={isEditDialogOpen}
+          handleClose={() => setIsEditDialogOpen(false)}
           listId={listId}
         />
       )}
