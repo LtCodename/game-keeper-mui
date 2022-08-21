@@ -7,6 +7,7 @@ import { IUserBlock, IStore } from "types";
 import { useSelector } from "react-redux";
 
 import SearchResultItem from "components/SearchResultItem";
+import BlockModal from "components/Block/BlockModal";
 
 import { Box, Stack } from "@mui/material";
 
@@ -16,8 +17,10 @@ import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 
 const HeaderSearchBar = () => {
   const [searchResults, setSearchResults] = useState<IUserBlock[]>([]);
+  const [selectedBlock, setSelectedBlock] = useState<IUserBlock>();
   const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [isResultDisplayed, setIsResultDisplayed] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
@@ -31,7 +34,13 @@ const HeaderSearchBar = () => {
   };
 
   const onGameSelect = (id: string): void => {
-    console.log(id);
+    const selectedBlock: IUserBlock | undefined = userBlocks.find(
+      (block: IUserBlock) => block.id === id
+    );
+
+    setSelectedBlock(selectedBlock);
+    setIsModalOpen(true);
+    setIsResultDisplayed(false);
   };
 
   useEffect(() => {
@@ -106,6 +115,15 @@ const HeaderSearchBar = () => {
           </Stack>
         </Box>
       )}
+
+      <BlockModal
+        block={selectedBlock}
+        open={isModalOpen}
+        handleClose={() => {
+          setIsModalOpen(false);
+          setIsResultDisplayed(true);
+        }}
+      />
     </Search>
   );
 };
