@@ -48,37 +48,35 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 };
 
 interface Props {
-  block: IUserBlock;
+  block: IUserBlock | undefined;
   open: boolean;
   handleClose: () => void;
 }
 
-const BlockModal = ({ block, open, handleClose }: Props) => {
-  const { name, developers, releaseDate } = block;
-
-  return (
-    <BootstrapDialog
-      onClose={handleClose}
-      aria-labelledby="customized-dialog-title"
-      open={open}
-    >
-      <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-        {name}
-      </BootstrapDialogTitle>
-      <DialogContent dividers sx={{ minWidth: 500 }}>
-        <Typography gutterBottom>{formatReleaseDate(releaseDate)}</Typography>
-        <Typography gutterBottom>{developers}</Typography>
-      </DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={handleClose}>
-          Save changes
-        </Button>
-        <Button autoFocus onClick={handleClose}>
-          Close
-        </Button>
-      </DialogActions>
-    </BootstrapDialog>
-  );
-};
+const BlockModal = ({ block, open, handleClose }: Props) => (
+  <BootstrapDialog
+    onClose={handleClose}
+    aria-labelledby="customized-dialog-title"
+    open={open}
+  >
+    <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+      {block?.name}
+    </BootstrapDialogTitle>
+    <DialogContent dividers sx={{ minWidth: 500 }}>
+      <Typography gutterBottom>
+        {formatReleaseDate(block?.releaseDate)}
+      </Typography>
+      <Typography gutterBottom>{block?.developers}</Typography>
+    </DialogContent>
+    <DialogActions>
+      <Button autoFocus onClick={handleClose}>
+        Save changes
+      </Button>
+      <Button autoFocus onClick={handleClose}>
+        Close
+      </Button>
+    </DialogActions>
+  </BootstrapDialog>
+);
 
 export default BlockModal;

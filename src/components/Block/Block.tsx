@@ -61,6 +61,7 @@ const Block = ({ block }: Props) => {
           <Typography color="text.secondary">{processDevelopers()}</Typography>
         </CardContent>
       </Card>
+
       <BlockModal
         block={block}
         open={isModalOpen}

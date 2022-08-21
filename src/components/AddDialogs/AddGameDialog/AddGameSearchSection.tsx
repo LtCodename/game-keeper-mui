@@ -6,14 +6,14 @@ import { IRawgSearchResponce, IRawgSearchResult } from "types";
 
 import { GK } from "components/Loader";
 
-import SearchItem from "./SearchItem";
+import SearchResultItem from "../../SearchResultItem";
 
 export interface Props {
   onGameSelect: (id: number) => void;
   searchResults: IRawgSearchResponce | undefined;
 }
 
-const Search = ({ onGameSelect, searchResults }: Props) => (
+const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
   <Stack
     direction="column"
     spacing={1}
@@ -25,7 +25,7 @@ const Search = ({ onGameSelect, searchResults }: Props) => (
     }}
   >
     {searchResults?.results?.map((searchResult: IRawgSearchResult) => (
-      <SearchItem
+      <SearchResultItem
         key={searchResult.id}
         onClick={() => onGameSelect(Number(searchResult.id))}
         name={searchResult.name}
@@ -34,4 +34,4 @@ const Search = ({ onGameSelect, searchResults }: Props) => (
   </Stack>
 );
 
-export default Search;
+export default AddGameSearchSection;

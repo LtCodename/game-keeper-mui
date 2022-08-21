@@ -1,6 +1,6 @@
 import moment from "moment";
 
-const formatReleaseDate = (releaseDate: string): string =>
+const formatReleaseDate = (releaseDate: string | undefined): string =>
   moment(releaseDate).format("MMMM D YYYY");
 
 export default formatReleaseDate;

@@ -29,6 +29,8 @@ export interface IUserSection {
  * @member {string} developers User block developers list.
  * @member {string} releaseDate User block release date.
  * @member {string} sectionId Id of the section this block belongs to.
+ * @member {string} listName Name of the list this block belongs to.
+ * @member {string} sectionName Name of the section this block belongs to.
  */
 export interface IUserBlock {
   id: string;
@@ -37,6 +39,8 @@ export interface IUserBlock {
   name: string;
   releaseDate: string;
   sectionId: string;
+  listName?: string;
+  sectionName?: string;
 }
 
 /**

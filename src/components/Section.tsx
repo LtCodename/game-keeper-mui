@@ -19,7 +19,7 @@ import { IStore, IUserBlock, IUserSection } from "types";
 import { yellow } from "@mui/material/colors";
 
 import Block from "./Block/Block";
-import AddGameDialog from "./AddDialogs/AddGameDialog";
+import AddGameDialog from "./AddDialogs/AddGameDialog/AddGameDialog";
 
 const Section = ({ name, id }: IUserSection) => {
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
