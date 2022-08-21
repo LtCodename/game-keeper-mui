@@ -38,7 +38,7 @@ import { BLOCKS_SET } from "redux/actions";
 
 import { getGameInformation, searchGamesByName } from "api/rawgApi";
 
-import Search from "components/Search/Search";
+import Search from "components/AddDialogs/AddGameDialog/AddGameSearch";
 
 import { GK } from "components/Loader";
 

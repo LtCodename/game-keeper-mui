@@ -9,7 +9,7 @@ export interface Props {
   name: string;
 }
 
-const SearchItem = ({ onClick, name }: Props) => {
+const SearchResultItem = ({ onClick, name }: Props) => {
   const [elevation, setElevation] = useState<number>(1);
 
   return (
@@ -25,4 +25,4 @@ const SearchItem = ({ onClick, name }: Props) => {
   );
 };
 
-export default SearchItem;
+export default SearchResultItem;
