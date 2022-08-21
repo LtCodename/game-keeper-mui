@@ -5,7 +5,6 @@ import { Box, AppBar, Toolbar, IconButton, Typography } from "@mui/material/";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -16,8 +15,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
 
 import { useDispatch } from "react-redux";
-
-import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
+import SearchBar from "./SearchBar";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -89,15 +87,7 @@ const Header = () => {
               Game Keeper
             </Typography>
           </Box>
-          <Search sx={{ minWidth: { xs: "auto", sm: "300px" } }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          <SearchBar />
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link
               to="/"
