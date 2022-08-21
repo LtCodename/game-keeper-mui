@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
 
-import { IUserBlock, IStore } from "types";
+import { IUserBlock, IStore, IUserSection, IUserList } from "types";
 
 import { useSelector } from "react-redux";
 
@@ -25,26 +25,49 @@ const HeaderSearchBar = () => {
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
+  const userSections: IUserSection[] =
+    useSelector((state: IStore) => state.userSections) || [];
+
+  const userLists: IUserList[] =
+    useSelector((state: IStore) => state.userLists) || [];
+
   const filter = (): void => {
-    const filtered: IUserBlock[] = userBlocks.filter(
-      (game: IUserBlock) =>
-        game.name.toLowerCase().indexOf(searchInputValue.toLowerCase()) > -1
-    );
+    const filtered: IUserBlock[] = userBlocks
+      .filter(
+        (game: IUserBlock) =>
+          game.name.toLowerCase().indexOf(searchInputValue.toLowerCase()) > -1
+      )
+      .map((game: IUserBlock) => {
+        const section: IUserSection | undefined = userSections.find(
+          (section: IUserSection) => section.id === game.sectionId
+        );
+
+        const list: IUserList | undefined = userLists.find(
+          (list: IUserList) => list.id === section?.listId
+        );
+
+        return {
+          ...game,
+          listName: list?.name,
+          sectionName:
+            section?.name === "No Section" ? "Roster" : section?.name,
+        };
+      });
+
     setSearchResults(filtered);
   };
 
   const onGameSelect = (id: string): void => {
-    const selectedBlock: IUserBlock | undefined = userBlocks.find(
+    const block: IUserBlock | undefined = userBlocks.find(
       (block: IUserBlock) => block.id === id
     );
 
-    setSelectedBlock(selectedBlock);
-    setIsModalOpen(true);
+    setSelectedBlock(block);
     setIsResultDisplayed(false);
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
-    Boolean(searchResults.length);
     setIsResultDisplayed(Boolean(searchResults.length));
   }, [searchResults]);
 
@@ -97,8 +120,9 @@ const HeaderSearchBar = () => {
               maxHeight: 600,
             }}
           >
-            {searchResults.map((game: IUserBlock) => (
+            {searchResults.map((block: IUserBlock) => (
               <Box
+                key={block.id}
                 sx={{
                   "&:last-child": {
                     mb: 1,
@@ -106,9 +130,10 @@ const HeaderSearchBar = () => {
                 }}
               >
                 <SearchResultItem
-                  key={game.id}
-                  onClick={() => onGameSelect(game.id)}
-                  name={game.name}
+                  onClick={() => onGameSelect(block.id)}
+                  name={block.name}
+                  listName={block.listName}
+                  sectionName={block.sectionName}
                 />
               </Box>
             ))}

@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 
-import { Paper } from "@mui/material/";
+import { Paper, Typography } from "@mui/material/";
 
-import { yellow } from "@mui/material/colors";
+import { yellow, grey } from "@mui/material/colors";
 
 export interface Props {
   onClick: () => void;
   name: string;
+  listName?: string;
+  sectionName?: string;
 }
 
-const SearchResultItem = ({ onClick, name }: Props) => {
+const SearchResultItem = ({ onClick, name, listName, sectionName }: Props) => {
   const [elevation, setElevation] = useState<number>(1);
 
   return (
@@ -20,7 +22,13 @@ const SearchResultItem = ({ onClick, name }: Props) => {
       elevation={elevation}
       sx={{ p: 2, cursor: "pointer", backgroundColor: yellow[400] }}
     >
-      {name}
+      <Typography>{name}</Typography>
+
+      {listName && sectionName && (
+        <Typography fontSize={16} sx={{ color: grey[700] }}>
+          {`${listName} / ${sectionName}`}
+        </Typography>
+      )}
     </Paper>
   );
 };
