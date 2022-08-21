@@ -13,6 +13,7 @@ import {
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import * as yup from "yup";
 
@@ -150,6 +151,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     Close
                   </Button>
                   <LoadingButton
+                    sx={{ mr: 2 }}
                     loading={isSubmittimg}
                     loadingPosition="start"
                     startIcon={<SaveIcon />}
@@ -157,7 +159,16 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     form="list-edit-form"
                     type="submit"
                   >
-                    Save changes
+                    Save
+                  </LoadingButton>
+                  <LoadingButton
+                    loading={isSubmittimg}
+                    loadingPosition="start"
+                    startIcon={<DeleteIcon />}
+                    variant="outlined"
+                    onClick={handleClose}
+                  >
+                    Delete
                   </LoadingButton>
                 </Box>
               </Box>
