@@ -38,7 +38,7 @@ import { BLOCKS_SET } from "redux/actions";
 
 import { getGameInformation, searchGamesByName } from "api/rawgApi";
 
-import Search from "components/AddDialogs/AddGameDialog/AddGameSearch";
+import AddGameSearchSection from "components/AddDialogs/AddGameDialog/AddGameSearchSection";
 
 import { GK } from "components/Loader";
 
@@ -211,7 +211,7 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
                 </FormControl>
 
                 {isSearchDisplayed && (
-                  <Search
+                  <AddGameSearchSection
                     onGameSelect={(rawgId: number) => onGameSelect(rawgId)}
                     searchResults={searchResults}
                   />

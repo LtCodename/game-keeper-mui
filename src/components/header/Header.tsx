@@ -15,7 +15,8 @@ import { getAuth, signOut } from "firebase/auth";
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
 
 import { useDispatch } from "react-redux";
-import SearchBar from "./SearchBar";
+
+import HeaderSearchBar from "./HeaderSearchBar";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -87,7 +88,9 @@ const Header = () => {
               Game Keeper
             </Typography>
           </Box>
-          <SearchBar />
+
+          <HeaderSearchBar />
+
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link
               to="/"

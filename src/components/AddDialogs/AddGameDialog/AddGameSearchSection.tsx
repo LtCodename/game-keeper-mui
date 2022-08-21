@@ -13,7 +13,7 @@ export interface Props {
   searchResults: IRawgSearchResponce | undefined;
 }
 
-const AddGameSearch = ({ onGameSelect, searchResults }: Props) => (
+const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
   <Stack
     direction="column"
     spacing={1}
@@ -34,4 +34,4 @@ const AddGameSearch = ({ onGameSelect, searchResults }: Props) => (
   </Stack>
 );
 
-export default AddGameSearch;
+export default AddGameSearchSection;
