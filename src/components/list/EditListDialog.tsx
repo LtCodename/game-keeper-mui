@@ -8,7 +8,11 @@ import {
   TextField,
   FormHelperText,
   Button,
+  InputLabel,
+  MenuItem,
 } from "@mui/material/";
+
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -80,6 +84,38 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
       setCurrentListIndex(userLists.indexOf(currentList));
     }
   }, [currentList, userLists]);
+
+  const handlePositionChange = async (event: SelectChangeEvent) => {
+    setIsSubmitting(true);
+
+    const listsCopy: IUserList[] = [...userLists];
+
+    if (currentListIndex.toString() === event.target.value) {
+      return;
+    }
+
+    const splicedLists: IUserList[] = listsCopy.splice(currentListIndex, 1);
+
+    listsCopy.splice(Number(event.target.value), 0, splicedLists[0]);
+
+    await setDoc(doc(db, "users", userData.uid), {
+      lists: listsCopy,
+      sections: userSections,
+      blocks: userBlocks,
+    })
+      .then(() => {
+        dispatch({
+          type: LISTS_SET,
+          payload: listsCopy,
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
 
   const confirmDelete = async () => {
     setIsDeleteAlertDisplayed(true);
@@ -222,6 +258,22 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                   <ErrorMessage name="name">
                     {(msg) => <FormHelperText error>{msg}</FormHelperText>}
                   </ErrorMessage>
+                </FormControl>
+
+                <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
+                  <InputLabel id="position">Position</InputLabel>
+                  <Select
+                    labelId="listPosition"
+                    id="listPosition"
+                    value={currentListIndex.toString()}
+                    onChange={handlePositionChange}
+                  >
+                    {userLists.map((list: IUserList, index: number) => (
+                      <MenuItem key={list.id} value={index}>
+                        {index + 1}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
 
                 <Box sx={{ mt: 2 }}>
