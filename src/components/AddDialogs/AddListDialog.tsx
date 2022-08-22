@@ -78,6 +78,7 @@ const AddListDialog = ({ open, handleClose }: Props) => {
     };
 
     const listsCopy: IUserList[] = [...userLists, newList];
+
     const sectionsCopy: IUserSection[] = [...userSections, newSection];
 
     await setDoc(doc(db, "users", userData.uid), {

@@ -22,7 +22,7 @@ import Block from "./Block/Block";
 import AddGameDialog from "./AddDialogs/AddGameDialog/AddGameDialog";
 
 const Section = ({ name, id }: IUserSection) => {
-  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
+  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
 
   const blocks: IUserBlock[] =

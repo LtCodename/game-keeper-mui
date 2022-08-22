@@ -27,7 +27,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import { SECTIONS_SET } from "redux/actions";
+import { LISTS_SET } from "redux/actions";
 
 export interface Props {
   open: boolean;
@@ -68,25 +68,30 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const submitForm = async (data: { name: string }) => {
     setIsSubmitting(true);
 
-    const newSection: IUserSection = {
-      id: `id${new Date().getTime()}`,
+    const listsCopy: IUserList[] = [...userLists];
+
+    let listIndex: number = 0;
+
+    if (currentList) {
+      listIndex = listsCopy.indexOf(currentList);
+    }
+
+    listsCopy[listIndex] = {
+      ...listsCopy[listIndex],
       name: data.name,
-      listId,
     };
 
-    const sectionsCopy: IUserSection[] = [...userSections, newSection];
-
     await setDoc(doc(db, "users", userData.uid), {
-      lists: userLists,
-      sections: sectionsCopy,
+      lists: listsCopy,
+      sections: userSections,
       blocks: userBlocks,
     })
       .then(() => {
         handleClose();
 
         dispatch({
-          type: SECTIONS_SET,
-          payload: sectionsCopy,
+          type: LISTS_SET,
+          payload: listsCopy,
         });
       })
       .catch((error: any) => {
