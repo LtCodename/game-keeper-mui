@@ -13,9 +13,10 @@ interface Props {
   message: string;
   open: boolean;
   onClose: () => void;
+  onAction?: () => void;
 }
 
-const Alert = ({ message, onClose, open }: Props) => (
+const Alert = ({ message, onClose, open, onAction }: Props) => (
   <Dialog
     open={open}
     onClose={onClose}
@@ -30,6 +31,11 @@ const Alert = ({ message, onClose, open }: Props) => (
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose}>Close</Button>
+      {onAction && (
+        <Button color="success" onClick={onAction}>
+          Proceed
+        </Button>
+      )}
     </DialogActions>
   </Dialog>
 );

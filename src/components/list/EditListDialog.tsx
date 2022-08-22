@@ -29,7 +29,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import Alert from "components/Alert";
+import AlertDialog from "components/AlertDialog";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
 
@@ -55,7 +55,10 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [currentListIndex, setCurrentListIndex] = useState<number>(0);
-  const [isAlertDisplayed, setIsAlertDisplayed] = useState<boolean>(false);
+  const [isLastAlertDisplayed, setIsLastAlertDisplayed] =
+    useState<boolean>(false);
+  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
+    useState<boolean>(false);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -78,9 +81,15 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
     }
   }, [currentList, userLists]);
 
+  const confirmDelete = async () => {
+    setIsDeleteAlertDisplayed(true);
+  };
+
   const deleteList = async () => {
+    setIsDeleteAlertDisplayed(false);
+
     if (userLists.length === 1) {
-      setIsAlertDisplayed(true);
+      setIsLastAlertDisplayed(true);
       return;
     }
 
@@ -241,7 +250,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     startIcon={<DeleteIcon />}
                     variant="outlined"
                     color="error"
-                    onClick={deleteList}
+                    onClick={confirmDelete}
                   >
                     Delete
                   </LoadingButton>
@@ -252,10 +261,17 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         </Formik>
       </Box>
 
-      <Alert
-        onClose={() => setIsAlertDisplayed(false)}
+      <AlertDialog
+        onClose={() => setIsLastAlertDisplayed(false)}
         message="Sorry, for now, I can't let you delete the last list in your Game Keeper. Just rename and repopulate it."
-        open={isAlertDisplayed}
+        open={isLastAlertDisplayed}
+      />
+
+      <AlertDialog
+        onClose={() => setIsDeleteAlertDisplayed(false)}
+        message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?."
+        open={isDeleteAlertDisplayed}
+        onAction={() => deleteList()}
       />
     </Dialog>
   );
