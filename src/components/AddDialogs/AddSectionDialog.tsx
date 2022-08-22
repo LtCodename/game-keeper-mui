@@ -94,7 +94,9 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Section</DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>
+        Add a section to this list
+      </DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -152,6 +154,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
                     variant="outlined"
                     form="list-section-form"
                     type="submit"
+                    color="success"
                   >
                     Add
                   </LoadingButton>

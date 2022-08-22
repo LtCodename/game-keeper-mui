@@ -49,8 +49,7 @@ const HeaderSearchBar = () => {
         return {
           ...game,
           listName: list?.name,
-          sectionName:
-            section?.name === "No Section" ? "Roster" : section?.name,
+          sectionName: section?.name,
         };
       });
 

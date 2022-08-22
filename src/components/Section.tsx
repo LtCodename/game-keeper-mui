@@ -22,7 +22,7 @@ import Block from "./Block/Block";
 import AddGameDialog from "./AddDialogs/AddGameDialog/AddGameDialog";
 
 const Section = ({ name, id }: IUserSection) => {
-  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
+  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
 
   const blocks: IUserBlock[] =
@@ -53,7 +53,7 @@ const Section = ({ name, id }: IUserSection) => {
             width: "100%",
           }}
         >
-          <Typography>{name === "No Section" ? "Roster" : name}</Typography>
+          <Typography>{name}</Typography>
           <Button
             variant="contained"
             onClick={(event: React.MouseEvent<HTMLElement>) => {
