@@ -2,13 +2,14 @@ import React, { useState } from "react";
 
 import { Box, AppBar, Toolbar, IconButton, Typography } from "@mui/material/";
 
-import HomeIcon from "@mui/icons-material/Home";
+import HelpIcon from "@mui/icons-material/Help";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import ListSelector from "components/ListSelector/ListSelector";
+import InfoDialog from "components/InfoDialog";
 
 import { getAuth, signOut } from "firebase/auth";
 
@@ -23,6 +24,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isInfoDisplayed, setIsInfoDisplayed] = useState<boolean>(false);
 
   const toggleDrawer = () => {
     setIsDrawerOpen((previousState: boolean) => !previousState);
@@ -92,26 +94,31 @@ const Header = () => {
           <HeaderSearchBar />
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Link
-              to="/"
-              style={{
-                color: "inherit",
-              }}
+            <IconButton
+              aria-label="dashboard"
+              color="inherit"
+              onClick={() => setIsInfoDisplayed(true)}
             >
-              <IconButton aria-label="dashboard" color="inherit">
-                <HomeIcon />
-              </IconButton>
-            </Link>
+              <HelpIcon />
+            </IconButton>
             <IconButton aria-label="logout" color="inherit" onClick={logout}>
               <LogoutIcon />
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
+
       <ListSelector
         open={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
       />
+
+      {isInfoDisplayed && (
+        <InfoDialog
+          open={isInfoDisplayed}
+          onClose={() => setIsInfoDisplayed(false)}
+        />
+      )}
     </Box>
   );
 };

@@ -21,7 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import Section from "components/Section";
 import AddSectionDialog from "components/AddDialogs/AddSectionDialog";
-import EditListDialog from "components/List/EditListDialog";
+import EditListDialog from "./EditListDialog";
 
 const speedDialActions: ISpeedDialAction[] = [
   { icon: <AddIcon />, name: "Add section" },
