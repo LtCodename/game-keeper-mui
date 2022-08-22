@@ -29,6 +29,8 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
+import Alert from "components/Alert";
+
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
 
 export interface Props {
@@ -53,6 +55,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [currentListIndex, setCurrentListIndex] = useState<number>(0);
+  const [isAlertDisplayed, setIsAlertDisplayed] = useState<boolean>(false);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -76,9 +79,12 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   }, [currentList, userLists]);
 
   const deleteList = async () => {
-    setIsSubmitting(true);
+    if (userLists.length === 1) {
+      setIsAlertDisplayed(true);
+      return;
+    }
 
-    console.log("delete");
+    setIsSubmitting(true);
 
     const deletedSectionsIds: string[] = [];
     const listsCopy: IUserList[] = [...userLists];
@@ -245,6 +251,12 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           )}
         </Formik>
       </Box>
+
+      <Alert
+        onClose={() => setIsAlertDisplayed(false)}
+        message="Sorry, for now, I can't let you delete the last list in your Game Keeper. Just rename and repopulate it."
+        open={isAlertDisplayed}
+      />
     </Dialog>
   );
 };
