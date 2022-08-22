@@ -53,7 +53,7 @@ const Section = ({ name, id }: IUserSection) => {
             width: "100%",
           }}
         >
-          <Typography>{name === "No Section" ? "Roster" : name}</Typography>
+          <Typography>{name}</Typography>
           <Button
             variant="contained"
             onClick={(event: React.MouseEvent<HTMLElement>) => {

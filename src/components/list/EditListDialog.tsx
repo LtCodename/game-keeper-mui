@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Dialog,
@@ -15,6 +15,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+import { useNavigate } from "react-router-dom";
+
 import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
@@ -27,7 +29,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import { LISTS_SET } from "redux/actions";
+import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
 
 export interface Props {
   open: boolean;
@@ -47,8 +49,10 @@ const validationSchema = yup.object().shape({
 
 const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [currentListIndex, setCurrentListIndex] = useState<number>(0);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -65,19 +69,77 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
+  useEffect(() => {
+    if (currentList && userLists.length) {
+      setCurrentListIndex(userLists.indexOf(currentList));
+    }
+  }, [currentList, userLists]);
+
+  const deleteList = async () => {
+    setIsSubmitting(true);
+
+    console.log("delete");
+
+    const deletedSectionsIds: string[] = [];
+    const listsCopy: IUserList[] = [...userLists];
+
+    const sectionsCopy: IUserSection[] = [...userSections].filter(
+      (section: IUserSection) => {
+        if (section.listId !== listsCopy[currentListIndex].id) {
+          return true;
+          // eslint-disable-next-line no-else-return
+        } else {
+          deletedSectionsIds.push(section.id);
+          return false;
+        }
+      }
+    );
+
+    const blocksCopy: IUserBlock[] = [...userBlocks].filter(
+      (block: IUserBlock) => deletedSectionsIds.indexOf(block.sectionId) === -1
+    );
+
+    listsCopy.splice(currentListIndex, 1);
+
+    await setDoc(doc(db, "users", userData.uid), {
+      lists: listsCopy,
+      sections: sectionsCopy,
+      blocks: blocksCopy,
+    })
+      .then(() => {
+        handleClose();
+        navigate("/", { replace: true });
+
+        dispatch({
+          type: LISTS_SET,
+          payload: listsCopy,
+        });
+
+        dispatch({
+          type: SECTIONS_SET,
+          payload: sectionsCopy,
+        });
+
+        dispatch({
+          type: BLOCKS_SET,
+          payload: blocksCopy,
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+
   const submitForm = async (data: { name: string }) => {
     setIsSubmitting(true);
 
     const listsCopy: IUserList[] = [...userLists];
 
-    let listIndex: number = 0;
-
-    if (currentList) {
-      listIndex = listsCopy.indexOf(currentList);
-    }
-
-    listsCopy[listIndex] = {
-      ...listsCopy[listIndex],
+    listsCopy[currentListIndex] = {
+      ...listsCopy[currentListIndex],
       name: data.name,
     };
 
@@ -162,6 +224,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     startIcon={<SaveIcon />}
                     variant="outlined"
                     form="list-edit-form"
+                    color="success"
                     type="submit"
                   >
                     Save
@@ -171,7 +234,8 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     loadingPosition="start"
                     startIcon={<DeleteIcon />}
                     variant="outlined"
-                    onClick={handleClose}
+                    color="error"
+                    onClick={deleteList}
                   >
                     Delete
                   </LoadingButton>

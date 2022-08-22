@@ -154,6 +154,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
                     variant="outlined"
                     form="list-section-form"
                     type="submit"
+                    color="success"
                   >
                     Add
                   </LoadingButton>

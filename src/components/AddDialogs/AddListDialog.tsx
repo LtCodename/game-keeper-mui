@@ -26,7 +26,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import { LISTS_SET, SECTIONS_SET } from "redux/actions";
+import { LISTS_SET } from "redux/actions";
 
 export interface Props {
   open: boolean;
@@ -63,27 +63,17 @@ const AddListDialog = ({ open, handleClose }: Props) => {
     setIsSubmitting(true);
 
     const newListId: string = `id${new Date().getTime()}`;
-    const newSectionId: string = `id${new Date().getTime()}1`;
 
     const newList: IUserList = {
       id: newListId,
       name: data.listName,
     };
 
-    const newSection: IUserSection = {
-      id: newSectionId,
-      name: "No Section",
-      listId: newListId,
-      type: "hidden",
-    };
-
     const listsCopy: IUserList[] = [...userLists, newList];
-
-    const sectionsCopy: IUserSection[] = [...userSections, newSection];
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: listsCopy,
-      sections: sectionsCopy,
+      sections: userSections,
       blocks: userBlocks,
     })
       .then(() => {
@@ -92,11 +82,6 @@ const AddListDialog = ({ open, handleClose }: Props) => {
         dispatch({
           type: LISTS_SET,
           payload: listsCopy,
-        });
-
-        dispatch({
-          type: SECTIONS_SET,
-          payload: sectionsCopy,
         });
       })
       .catch((error: any) => {
@@ -163,6 +148,7 @@ const AddListDialog = ({ open, handleClose }: Props) => {
                     variant="outlined"
                     form="list-add-form"
                     type="submit"
+                    color="success"
                   >
                     Add
                   </LoadingButton>
