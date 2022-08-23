@@ -50,7 +50,7 @@ interface IGameMeta {
   name: string;
 }
 
-const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
+const EditBlockDialog = ({ block, open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
@@ -302,4 +302,4 @@ const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
   );
 };
 
-export default BlockEditDialog;
+export default EditBlockDialog;
