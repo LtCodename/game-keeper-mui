@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 
 import {
-  DialogTitle,
-  Button,
-  Dialog,
   Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Typography,
+  Button,
+  DialogTitle,
+  Dialog,
   IconButton,
+  InputLabel,
+  FormControl,
+  MenuItem,
   Tooltip,
+  Typography,
 } from "@mui/material/";
 
 import { IUserBlock, IStore, IUserList, IUserSection } from "types";

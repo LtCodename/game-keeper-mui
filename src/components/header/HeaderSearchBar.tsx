@@ -86,6 +86,7 @@ const HeaderSearchBar = () => {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
+
       <StyledInputBase
         placeholder="Search games"
         inputProps={{ "aria-label": "search" }}
