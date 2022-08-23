@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   DialogTitle,
@@ -7,10 +7,12 @@ import {
   Box,
   FormControl,
   InputLabel,
-  Select,
+  MenuItem,
 } from "@mui/material/";
 
 import { IUserBlock, IStore, IUserList, IUserSection } from "types";
+
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -39,6 +41,10 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
+  const [selectedListSections, setSelectedListSections] =
+    useState<IUserSection[]>();
+  const [listSelectorValue, setListSelectorValue] = useState<string>("");
+  const [sectionSelectorValue, setSectionSelectorValue] = useState<string>("");
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -50,6 +56,31 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
 
   const userSections: IUserSection[] =
     useSelector((state: IStore) => state.userSections) || [];
+
+  useEffect(() => {
+    if (block && userLists?.length) {
+      const section: IUserSection | undefined = userSections.find(
+        (section: IUserSection) => section.id === block?.sectionId
+      );
+
+      const list: IUserList | undefined = userLists.find(
+        (list: IUserList) => list.id === section?.listId
+      );
+
+      setListSelectorValue(list?.id || "");
+      setSectionSelectorValue(block?.sectionId);
+    }
+  }, [block, userLists]);
+
+  useEffect(() => {
+    if (listSelectorValue.length) {
+      const selectedListSections: IUserSection[] = userSections.filter(
+        (section: IUserSection) => section.listId === listSelectorValue
+      );
+
+      setSelectedListSections(selectedListSections);
+    }
+  }, [listSelectorValue]);
 
   const confirmDelete = async () => {
     setIsDeleteAlertDisplayed(true);
@@ -91,6 +122,14 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
       });
   };
 
+  const handleListChange = async (event: SelectChangeEvent) => {
+    setListSelectorValue(event.target.value);
+  };
+
+  const handleSectionChange = async (event: SelectChangeEvent) => {
+    setSectionSelectorValue(event.target.value);
+  };
+
   const handleSave = async () => {
     setIsSubmitting(true);
   };
@@ -101,37 +140,38 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
       <Box
         sx={{
           p: 2,
+          width: 400,
         }}
       >
-        <FormControl variant="filled" sx={{ minWidth: 130, mr: 2 }}>
-          <InputLabel id="sectionPosition">List</InputLabel>
+        <FormControl variant="filled" sx={{ width: `100%`, mb: 2 }}>
+          <InputLabel id="game-list">List</InputLabel>
           <Select
-            labelId="sectionPosition"
-            id="sectionPosition"
-            // value={currentSectionIndexLocal.toString()}
-            // onChange={handlePositionChange}
+            labelId="game-list"
+            id="game-list"
+            value={listSelectorValue}
+            onChange={handleListChange}
           >
-            {/* {userSectionsLocal.map((section: IUserSection, index: number) => (
-              <MenuItem key={section.id} value={index}>
-                {index + 1}
+            {userLists.map((list: IUserList) => (
+              <MenuItem key={list.id} value={list.id}>
+                {list.name}
               </MenuItem>
-            ))} */}
+            ))}
           </Select>
         </FormControl>
 
-        <FormControl variant="filled" sx={{ minWidth: 130 }}>
-          <InputLabel id="sectionPosition">Section</InputLabel>
+        <FormControl variant="filled" sx={{ width: `100%` }}>
+          <InputLabel id="game-section">Section</InputLabel>
           <Select
-            labelId="sectionPosition"
-            id="sectionPosition"
-            // value={currentSectionIndexLocal.toString()}
-            // onChange={handlePositionChange}
+            labelId="game-section"
+            id="game-section"
+            value={sectionSelectorValue}
+            onChange={handleSectionChange}
           >
-            {/* {userSectionsLocal.map((section: IUserSection, index: number) => (
-              <MenuItem key={section.id} value={index}>
-                {index + 1}
+            {selectedListSections?.map((section: IUserSection) => (
+              <MenuItem key={section.id} value={section.id}>
+                {section.name}
               </MenuItem>
-            ))} */}
+            ))}
           </Select>
         </FormControl>
       </Box>
