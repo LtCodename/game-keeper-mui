@@ -12,9 +12,10 @@ import BlockEditDialog from "./BlockEditDialog";
 
 interface Props {
   block: IUserBlock;
+  listId: string | undefined;
 }
 
-const Block = ({ block }: Props) => {
+const Block = ({ block, listId }: Props) => {
   const { name, developers, releaseDate } = block;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -66,6 +67,7 @@ const Block = ({ block }: Props) => {
         block={block}
         open={isModalOpen}
         handleClose={() => setIsModalOpen(false)}
+        listId={listId}
       />
     </>
   );

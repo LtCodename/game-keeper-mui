@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
   DialogTitle,
@@ -33,18 +33,21 @@ interface Props {
   block: IUserBlock | undefined;
   open: boolean;
   handleClose: () => void;
+  listId?: string | undefined;
 }
 
-const BlockModal = ({ block, open, handleClose }: Props) => {
+const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
-  const [selectedListSections, setSelectedListSections] =
-    useState<IUserSection[]>();
-  const [listSelectorValue, setListSelectorValue] = useState<string>("");
-  const [sectionSelectorValue, setSectionSelectorValue] = useState<string>("");
+  const [listSelectorValue, setListSelectorValue] = useState<
+    string | undefined
+  >(listId);
+  const [sectionSelectorValue, setSectionSelectorValue] = useState<
+    string | undefined
+  >(block?.sectionId);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -57,30 +60,11 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
   const userSections: IUserSection[] =
     useSelector((state: IStore) => state.userSections) || [];
 
-  useEffect(() => {
-    if (block && userLists?.length) {
-      const section: IUserSection | undefined = userSections.find(
-        (section: IUserSection) => section.id === block?.sectionId
-      );
-
-      const list: IUserList | undefined = userLists.find(
-        (list: IUserList) => list.id === section?.listId
-      );
-
-      setListSelectorValue(list?.id || "");
-      setSectionSelectorValue(block?.sectionId);
-    }
-  }, [block, userLists]);
-
-  useEffect(() => {
-    if (listSelectorValue.length) {
-      const selectedListSections: IUserSection[] = userSections.filter(
-        (section: IUserSection) => section.listId === listSelectorValue
-      );
-
-      setSelectedListSections(selectedListSections);
-    }
-  }, [listSelectorValue]);
+  const beforeClosing = () => {
+    setListSelectorValue(listId);
+    setSectionSelectorValue(block?.sectionId);
+    handleClose();
+  };
 
   const confirmDelete = async () => {
     setIsDeleteAlertDisplayed(true);
@@ -106,7 +90,7 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
       blocks: blocksCopy,
     })
       .then(() => {
-        handleClose();
+        beforeClosing();
 
         dispatch({
           type: BLOCKS_SET,
@@ -118,15 +102,20 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
       })
       .finally(() => {
         setIsSubmitting(false);
-        handleClose();
+        beforeClosing();
       });
   };
 
-  const handleListChange = async (event: SelectChangeEvent) => {
+  const handleListChange = (event: SelectChangeEvent) => {
+    const sections: IUserSection[] = userSections.filter(
+      (section: IUserSection) => section.listId === event.target.value
+    );
+
     setListSelectorValue(event.target.value);
+    setSectionSelectorValue(sections[0].id);
   };
 
-  const handleSectionChange = async (event: SelectChangeEvent) => {
+  const handleSectionChange = (event: SelectChangeEvent) => {
     setSectionSelectorValue(event.target.value);
   };
 
@@ -135,7 +124,7 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={beforeClosing} open={open}>
       <DialogTitle sx={{ pl: 2, pb: 0 }}>{block?.name}</DialogTitle>
       <Box
         sx={{
@@ -167,17 +156,21 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
             value={sectionSelectorValue}
             onChange={handleSectionChange}
           >
-            {selectedListSections?.map((section: IUserSection) => (
-              <MenuItem key={section.id} value={section.id}>
-                {section.name}
-              </MenuItem>
-            ))}
+            {userSections
+              .filter(
+                (section: IUserSection) => section.listId === listSelectorValue
+              )
+              .map((section: IUserSection) => (
+                <MenuItem key={section.id} value={section.id}>
+                  {section.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
       </Box>
 
       <Box sx={{ p: 2, pt: 0 }}>
-        <Button sx={{ mr: 2 }} variant="outlined" onClick={handleClose}>
+        <Button sx={{ mr: 2 }} variant="outlined" onClick={beforeClosing}>
           Close
         </Button>
         <LoadingButton
@@ -213,4 +206,4 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
   );
 };
 
-export default BlockModal;
+export default BlockEditDialog;

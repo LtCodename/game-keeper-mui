@@ -104,7 +104,7 @@ const Section = ({ section, listId }: Props) => {
               return 0;
             })
             .map((block: IUserBlock) => (
-              <Block key={block.id} block={block} />
+              <Block key={block.id} block={block} listId={listId} />
             ))}
         </Stack>
       </AccordionDetails>
