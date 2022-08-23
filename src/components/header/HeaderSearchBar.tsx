@@ -7,7 +7,7 @@ import { IUserBlock, IStore, IUserSection, IUserList } from "types";
 import { useSelector } from "react-redux";
 
 import SearchResultItem from "components/SearchResultItem";
-import BlockModal from "components/Block/BlockModal";
+import BlockEditDialog from "components/Block/BlockEditDialog";
 
 import { Box, Stack } from "@mui/material";
 
@@ -140,7 +140,7 @@ const HeaderSearchBar = () => {
         </Box>
       )}
 
-      <BlockModal
+      <BlockEditDialog
         block={selectedBlock}
         open={isModalOpen}
         handleClose={() => {

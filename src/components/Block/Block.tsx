@@ -8,7 +8,7 @@ import formatReleaseDate from "logic";
 
 import { GK } from "components/Loader";
 
-import BlockModal from "./BlockModal";
+import BlockEditDialog from "./BlockEditDialog";
 
 interface Props {
   block: IUserBlock;
@@ -62,7 +62,7 @@ const Block = ({ block }: Props) => {
         </CardContent>
       </Card>
 
-      <BlockModal
+      <BlockEditDialog
         block={block}
         open={isModalOpen}
         handleClose={() => setIsModalOpen(false)}
