@@ -35,12 +35,13 @@ import db from "api/firebase";
 
 import AlertDialog from "components/AlertDialog";
 
-import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
+import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
 
 export interface Props {
   open: boolean;
   handleClose: () => void;
-  listId: string;
+  sectionId: string;
+  listId: string | undefined;
 }
 
 const defaultValues: {
@@ -53,14 +54,15 @@ const validationSchema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
 });
 
-const EditListDialog = ({ open, handleClose, listId }: Props) => {
+const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  const [currentListIndex, setCurrentListIndex] = useState<number>(0);
-  const [isLastAlertDisplayed, setIsLastAlertDisplayed] =
-    useState<boolean>(false);
+  const [currentSectionIndexGlobal, setCurrentSectionIndexGlobal] =
+    useState<number>(0);
+  const [currentSectionIndexLocal, setCurrentSectionIndexLocal] =
+    useState<number>(0);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
 
@@ -69,44 +71,59 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
-  const currentList: IUserList | undefined = userLists.find(
-    (list: IUserList) => list.id === listId
-  );
-
   const userSections: IUserSection[] =
     useSelector((state: IStore) => state.userSections) || [];
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
 
+  const currentSection: IUserSection | undefined = userSections.find(
+    (section: IUserSection) => section.id === sectionId
+  );
+
+  const userSectionsLocal: IUserSection[] | undefined = userSections.filter(
+    (section: IUserSection) => section.listId === listId
+  );
+
   useEffect(() => {
-    if (currentList && userLists.length) {
-      setCurrentListIndex(userLists.indexOf(currentList));
+    if (currentSection && userSections?.length && userSectionsLocal?.length) {
+      setCurrentSectionIndexGlobal(userSections.indexOf(currentSection));
+
+      setCurrentSectionIndexLocal(userSectionsLocal.indexOf(currentSection));
     }
-  }, [currentList, userLists]);
+  }, [currentSection, userSections, userSectionsLocal]);
 
   const handlePositionChange = async (event: SelectChangeEvent) => {
     setIsSubmitting(true);
 
-    const listsCopy: IUserList[] = [...userLists];
+    const sectionsCopy: IUserSection[] = [...userSections];
 
-    if (currentListIndex.toString() === event.target.value) {
-      return;
-    }
+    const oldSectionPosition: number = sectionsCopy.findIndex(
+      (section: IUserSection) =>
+        section.id === userSectionsLocal[currentSectionIndexLocal].id
+    );
 
-    const splicedLists: IUserList[] = listsCopy.splice(currentListIndex, 1);
+    const newSectionPosition: number = sectionsCopy.findIndex(
+      (section: IUserSection) =>
+        section.id === userSectionsLocal[Number(event.target.value)].id
+    );
 
-    listsCopy.splice(Number(event.target.value), 0, splicedLists[0]);
+    const splicedSections: IUserSection[] = sectionsCopy.splice(
+      oldSectionPosition,
+      1
+    );
+
+    sectionsCopy.splice(newSectionPosition, 0, splicedSections[0]);
 
     await setDoc(doc(db, "users", userData.uid), {
-      lists: listsCopy,
-      sections: userSections,
+      lists: userLists,
+      sections: sectionsCopy,
       blocks: userBlocks,
     })
       .then(() => {
         dispatch({
-          type: LISTS_SET,
-          payload: listsCopy,
+          type: SECTIONS_SET,
+          payload: sectionsCopy,
         });
       })
       .catch((error: any) => {
@@ -121,50 +138,27 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
     setIsDeleteAlertDisplayed(true);
   };
 
-  const deleteList = async () => {
+  const deleteSection = async () => {
     setIsDeleteAlertDisplayed(false);
-
-    if (userLists.length === 1) {
-      setIsLastAlertDisplayed(true);
-      return;
-    }
 
     setIsSubmitting(true);
 
-    const deletedSectionsIds: string[] = [];
-    const listsCopy: IUserList[] = [...userLists];
-
-    const sectionsCopy: IUserSection[] = [...userSections].filter(
-      (section: IUserSection) => {
-        if (section.listId !== listsCopy[currentListIndex].id) {
-          return true;
-          // eslint-disable-next-line no-else-return
-        } else {
-          deletedSectionsIds.push(section.id);
-          return false;
-        }
-      }
-    );
+    const sectionsCopy: IUserSection[] = [...userSections];
 
     const blocksCopy: IUserBlock[] = [...userBlocks].filter(
-      (block: IUserBlock) => deletedSectionsIds.indexOf(block.sectionId) === -1
+      (block: IUserBlock) => block.sectionId !== sectionId
     );
 
-    listsCopy.splice(currentListIndex, 1);
+    sectionsCopy.splice(currentSectionIndexGlobal, 1);
 
     await setDoc(doc(db, "users", userData.uid), {
-      lists: listsCopy,
+      lists: userLists,
       sections: sectionsCopy,
       blocks: blocksCopy,
     })
       .then(() => {
         handleClose();
         navigate("/", { replace: true });
-
-        dispatch({
-          type: LISTS_SET,
-          payload: listsCopy,
-        });
 
         dispatch({
           type: SECTIONS_SET,
@@ -187,24 +181,27 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const submitForm = async (data: { name: string }) => {
     setIsSubmitting(true);
 
-    const listsCopy: IUserList[] = [...userLists];
+    const sectionsCopy: IUserSection[] = [...userSections];
 
-    listsCopy[currentListIndex] = {
-      ...listsCopy[currentListIndex],
-      name: data.name,
-    };
+    const targetSection: IUserSection | undefined = sectionsCopy.find(
+      (section: IUserSection) => section.id === sectionId
+    );
+
+    if (targetSection) {
+      targetSection.name = data.name;
+    }
 
     await setDoc(doc(db, "users", userData.uid), {
-      lists: listsCopy,
-      sections: userSections,
+      lists: userLists,
+      sections: sectionsCopy,
       blocks: userBlocks,
     })
       .then(() => {
         handleClose();
 
         dispatch({
-          type: LISTS_SET,
-          payload: listsCopy,
+          type: SECTIONS_SET,
+          payload: sectionsCopy,
         });
       })
       .catch((error: any) => {
@@ -217,7 +214,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>Edit List</DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Edit Section</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -230,7 +227,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           {({ errors, handleChange, handleSubmit, touched }) => (
             <Form
               autoComplete="off"
-              id="list-edit-form"
+              id="section-edit-form"
               onSubmit={handleSubmit}
             >
               <Box
@@ -248,7 +245,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                   <TextField
                     id="name"
                     label="Name"
-                    defaultValue={currentList?.name}
+                    defaultValue={currentSection?.name}
                     variant="filled"
                     autoFocus
                     name="name"
@@ -261,18 +258,20 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                 </FormControl>
 
                 <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
-                  <InputLabel id="listPosition">Position</InputLabel>
+                  <InputLabel id="sectionPosition">Position</InputLabel>
                   <Select
-                    labelId="listPosition"
-                    id="listPosition"
-                    value={currentListIndex.toString()}
+                    labelId="sectionPosition"
+                    id="sectionPosition"
+                    value={currentSectionIndexLocal.toString()}
                     onChange={handlePositionChange}
                   >
-                    {userLists.map((list: IUserList, index: number) => (
-                      <MenuItem key={list.id} value={index}>
-                        {index + 1}
-                      </MenuItem>
-                    ))}
+                    {userSectionsLocal.map(
+                      (section: IUserSection, index: number) => (
+                        <MenuItem key={section.id} value={index}>
+                          {index + 1}
+                        </MenuItem>
+                      )
+                    )}
                   </Select>
                 </FormControl>
 
@@ -290,7 +289,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     loadingPosition="start"
                     startIcon={<SaveIcon />}
                     variant="outlined"
-                    form="list-edit-form"
+                    form="section-edit-form"
                     color="success"
                     type="submit"
                   >
@@ -314,19 +313,13 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
       </Box>
 
       <AlertDialog
-        onClose={() => setIsLastAlertDisplayed(false)}
-        message="Sorry, for now, I can't let you delete the last list in your Game Keeper. Just rename and repopulate it."
-        open={isLastAlertDisplayed}
-      />
-
-      <AlertDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
-        message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?"
+        message="You're about to delete the whole section. All the games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}
-        onAction={() => deleteList()}
+        onAction={() => deleteSection()}
       />
     </Dialog>
   );
 };
 
-export default EditListDialog;
+export default EditSectionDialog;

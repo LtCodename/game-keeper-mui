@@ -18,12 +18,21 @@ import { IStore, IUserBlock, IUserSection } from "types";
 
 import { yellow } from "@mui/material/colors";
 
-import Block from "./Block/Block";
-import AddGameDialog from "./AddDialogs/AddGameDialog/AddGameDialog";
+import Block from "../Block/Block";
+import AddGameDialog from "../AddDialogs/AddGameDialog/AddGameDialog";
+import EditSectionDialog from "./EditSectionDialog";
 
-const Section = ({ name, id }: IUserSection) => {
+interface Props {
+  section: IUserSection;
+  listId: string | undefined;
+}
+
+const Section = ({ section, listId }: Props) => {
+  const { name, id } = section;
+
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
 
   const blocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks).filter(
@@ -54,18 +63,31 @@ const Section = ({ name, id }: IUserSection) => {
           }}
         >
           <Typography>{name}</Typography>
-          <Button
-            variant="contained"
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              event.stopPropagation();
-              setIsAddDialogOpen(true);
-            }}
-            sx={{ mr: 2 }}
-          >
-            Add Game
-          </Button>
+          <Box>
+            <Button
+              variant="contained"
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                event.stopPropagation();
+                setIsAddDialogOpen(true);
+              }}
+              sx={{ mr: 2 }}
+            >
+              Add Game
+            </Button>
+            <Button
+              variant="contained"
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                event.stopPropagation();
+                setIsEditDialogOpen(true);
+              }}
+              sx={{ mr: 2 }}
+            >
+              Edit
+            </Button>
+          </Box>
         </Box>
       </AccordionSummary>
+
       <AccordionDetails sx={{ pt: 0 }}>
         <Stack direction="row" sx={{ flexWrap: "wrap" }}>
           {blocks
@@ -86,11 +108,21 @@ const Section = ({ name, id }: IUserSection) => {
             ))}
         </Stack>
       </AccordionDetails>
+
       {isAddDialogOpen && (
         <AddGameDialog
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
           sectionId={id}
+        />
+      )}
+
+      {isEditDialogOpen && (
+        <EditSectionDialog
+          open={isEditDialogOpen}
+          handleClose={() => setIsEditDialogOpen(false)}
+          sectionId={id}
+          listId={listId}
         />
       )}
     </Accordion>
