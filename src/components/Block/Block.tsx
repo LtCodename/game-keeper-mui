@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 
-import { Card, Typography, CardContent } from "@mui/material/";
+import { Card, CardContent, Typography } from "@mui/material/";
 
 import { IUserBlock } from "types";
 
-import formatReleaseDate from "logic";
+import { formatReleaseDate } from "logic";
 
 import { GK } from "components/Loader";
 
-import BlockModal from "./BlockModal";
+import EditBlockDialog from "./EditBlockDialog";
 
 interface Props {
   block: IUserBlock;
+  listId: string | undefined;
 }
 
-const Block = ({ block }: Props) => {
+const Block = ({ block, listId }: Props) => {
   const { name, developers, releaseDate } = block;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -62,10 +63,11 @@ const Block = ({ block }: Props) => {
         </CardContent>
       </Card>
 
-      <BlockModal
+      <EditBlockDialog
         block={block}
         open={isModalOpen}
         handleClose={() => setIsModalOpen(false)}
+        listId={listId}
       />
     </>
   );

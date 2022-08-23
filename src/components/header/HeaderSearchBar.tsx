@@ -7,20 +7,21 @@ import { IUserBlock, IStore, IUserSection, IUserList } from "types";
 import { useSelector } from "react-redux";
 
 import SearchResultItem from "components/SearchResultItem";
-import BlockModal from "components/Block/BlockModal";
 
 import { Box, Stack } from "@mui/material";
 
 import { grey } from "@mui/material/colors";
 
+import { useNavigate } from "react-router-dom";
+
 import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 
 const HeaderSearchBar = () => {
+  const navigate = useNavigate();
+
   const [searchResults, setSearchResults] = useState<IUserBlock[]>([]);
-  const [selectedBlock, setSelectedBlock] = useState<IUserBlock>();
   const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [isResultDisplayed, setIsResultDisplayed] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
@@ -61,9 +62,11 @@ const HeaderSearchBar = () => {
       (block: IUserBlock) => block.id === id
     );
 
-    setSelectedBlock(block);
-    setIsResultDisplayed(false);
-    setIsModalOpen(true);
+    const section: IUserSection | undefined = userSections.find(
+      (section: IUserSection) => section.id === block?.sectionId
+    );
+
+    navigate(`/${section?.listId}`, { replace: true });
   };
 
   useEffect(() => {
@@ -83,6 +86,7 @@ const HeaderSearchBar = () => {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
+
       <StyledInputBase
         placeholder="Search games"
         inputProps={{ "aria-label": "search" }}
@@ -139,15 +143,6 @@ const HeaderSearchBar = () => {
           </Stack>
         </Box>
       )}
-
-      <BlockModal
-        block={selectedBlock}
-        open={isModalOpen}
-        handleClose={() => {
-          setIsModalOpen(false);
-          setIsResultDisplayed(true);
-        }}
-      />
     </Search>
   );
 };

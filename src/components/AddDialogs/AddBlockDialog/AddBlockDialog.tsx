@@ -38,11 +38,11 @@ import { BLOCKS_SET } from "redux/actions";
 
 import { getGameInformation, searchGamesByName } from "api/rawgApi";
 
-import AddGameSearchSection from "components/AddDialogs/AddGameDialog/AddGameSearchSection";
+import AddBlockSearchSection from "components/AddDialogs/AddBlockDialog/AddBlockSearchSection";
 
 import { GK } from "components/Loader";
 
-import formatReleaseDate from "logic";
+import { formatReleaseDate, processDevelopers } from "logic";
 
 export interface Props {
   open: boolean;
@@ -60,7 +60,7 @@ const validationSchema = yup.object().shape({
   gameName: yup.string().required("Game name is a required field"),
 });
 
-const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
+const AddBlockDialog = ({ open, handleClose, sectionId }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
@@ -130,12 +130,6 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
       .catch((error: any) => {
         console.log(error);
       });
-  };
-
-  const processDevelopers = (developers: any): string => {
-    if (!developers.length) return "";
-
-    return developers.map((developer: any) => developer.name).join(", ");
   };
 
   const onGameSelect = async (rawgId: number) => {
@@ -211,7 +205,7 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
                 </FormControl>
 
                 {isSearchDisplayed && (
-                  <AddGameSearchSection
+                  <AddBlockSearchSection
                     onGameSelect={(rawgId: number) => onGameSelect(rawgId)}
                     searchResults={searchResults}
                   />
@@ -259,4 +253,4 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
   );
 };
 
-export default AddGameDialog;
+export default AddBlockDialog;

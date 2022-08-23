@@ -15,7 +15,7 @@ export async function searchGamesByName(name: string) {
     throw new Error("Something went wrong!");
   }
 }
-export async function getGameInformation(id: number) {
+export async function getGameInformation(id: number | undefined) {
   try {
     const { data } = await axios.get(
       `https://api.rawg.io/api/games/${id}?key=${"81d6a9bfb35d4a1c8fa5b2ad3b3b97fb"}`,
