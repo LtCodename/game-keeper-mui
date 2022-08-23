@@ -4,7 +4,7 @@ import { Card, Typography, CardContent } from "@mui/material/";
 
 import { IUserBlock } from "types";
 
-import formatReleaseDate from "logic";
+import { formatReleaseDate } from "logic";
 
 import { GK } from "components/Loader";
 

@@ -95,7 +95,7 @@ const Header = () => {
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
-              aria-label="dashboard"
+              aria-label="help"
               color="inherit"
               onClick={() => setIsInfoDisplayed(true)}
             >

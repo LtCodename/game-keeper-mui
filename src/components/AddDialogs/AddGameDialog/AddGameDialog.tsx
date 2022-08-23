@@ -42,7 +42,7 @@ import AddGameSearchSection from "components/AddDialogs/AddGameDialog/AddGameSea
 
 import { GK } from "components/Loader";
 
-import formatReleaseDate from "logic";
+import { formatReleaseDate, processDevelopers } from "logic";
 
 export interface Props {
   open: boolean;
@@ -130,12 +130,6 @@ const AddGameDialog = ({ open, handleClose, sectionId }: Props) => {
       .catch((error: any) => {
         console.log(error);
       });
-  };
-
-  const processDevelopers = (developers: any): string => {
-    if (!developers.length) return "";
-
-    return developers.map((developer: any) => developer.name).join(", ");
   };
 
   const onGameSelect = async (rawgId: number) => {

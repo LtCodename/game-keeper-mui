@@ -8,6 +8,9 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Typography,
+  IconButton,
+  Tooltip,
 } from "@mui/material/";
 
 import { IUserBlock, IStore, IUserList, IUserSection } from "types";
@@ -16,6 +19,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -29,11 +33,21 @@ import db from "api/firebase";
 
 import { BLOCKS_SET } from "redux/actions";
 
+import { formatReleaseDate, processDevelopers } from "logic";
+
+import { getGameInformation } from "api/rawgApi";
+
 interface Props {
   block: IUserBlock | undefined;
   open: boolean;
   handleClose: () => void;
   listId?: string | undefined;
+}
+
+interface IGameMeta {
+  developers: string;
+  releaseDate: string;
+  name: string;
 }
 
 const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
@@ -48,6 +62,11 @@ const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
   const [sectionSelectorValue, setSectionSelectorValue] = useState<
     string | undefined
   >(block?.sectionId);
+  const [gameMeta, setGameMeta] = useState<IGameMeta>({
+    developers: block?.developers || "",
+    releaseDate: block?.releaseDate || "",
+    name: block?.name || "",
+  });
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -59,6 +78,25 @@ const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
 
   const userSections: IUserSection[] =
     useSelector((state: IStore) => state.userSections) || [];
+
+  const refreshGameInfo = async () => {
+    setIsSubmitting(true);
+
+    await getGameInformation(block?.apiId)
+      .then((rawgResponse: any) => {
+        setGameMeta({
+          developers: processDevelopers(rawgResponse.developers),
+          releaseDate: rawgResponse.released,
+          name: rawgResponse.name,
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
 
   const beforeClosing = () => {
     setListSelectorValue(listId);
@@ -130,6 +168,9 @@ const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
 
     if (targetBlock && sectionSelectorValue) {
       targetBlock.sectionId = sectionSelectorValue;
+      targetBlock.name = gameMeta.name;
+      targetBlock.developers = gameMeta.developers;
+      targetBlock.releaseDate = gameMeta.releaseDate;
     }
 
     await setDoc(doc(db, "users", userData.uid), {
@@ -153,13 +194,40 @@ const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
 
   return (
     <Dialog onClose={beforeClosing} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>{block?.name}</DialogTitle>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          width: "95%",
+          justifyContent: "space-between",
+          pl: 2,
+          pb: 0,
+          pt: 1,
+        }}
+      >
+        <DialogTitle sx={{ p: 0 }}>{gameMeta?.name}</DialogTitle>
+        <Tooltip title="Refresh meta data">
+          <IconButton
+            aria-label="refresh"
+            color="primary"
+            onClick={refreshGameInfo}
+          >
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+
       <Box
         sx={{
           p: 2,
           width: 400,
         }}
       >
+        <Typography color="text.secondary">{gameMeta?.developers}</Typography>
+        <Typography color="text.secondary" sx={{ mb: 1 }}>
+          {formatReleaseDate(gameMeta?.releaseDate)}
+        </Typography>
         <FormControl variant="filled" sx={{ width: `100%`, mb: 2 }}>
           <InputLabel id="game-list">List</InputLabel>
           <Select
