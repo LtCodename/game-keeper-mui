@@ -19,7 +19,7 @@ import { IStore, IUserBlock, IUserSection } from "types";
 import { yellow } from "@mui/material/colors";
 
 import Block from "../Block/Block";
-import AddGameDialog from "../AddDialogs/AddGameDialog/AddGameDialog";
+import AddBlockDialog from "../AddDialogs/AddBlockDialog/AddBlockDialog";
 import EditSectionDialog from "./EditSectionDialog";
 
 interface Props {
@@ -110,7 +110,7 @@ const Section = ({ section, listId }: Props) => {
       </AccordionDetails>
 
       {isAddDialogOpen && (
-        <AddGameDialog
+        <AddBlockDialog
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
           sectionId={id}
