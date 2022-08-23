@@ -217,7 +217,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>Edit list</DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Edit List</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -261,7 +261,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                 </FormControl>
 
                 <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
-                  <InputLabel id="position">Position</InputLabel>
+                  <InputLabel id="listPosition">Position</InputLabel>
                   <Select
                     labelId="listPosition"
                     id="listPosition"

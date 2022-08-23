@@ -214,7 +214,7 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>Edit list</DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Edit Section</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -227,7 +227,7 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
           {({ errors, handleChange, handleSubmit, touched }) => (
             <Form
               autoComplete="off"
-              id="list-edit-form"
+              id="section-edit-form"
               onSubmit={handleSubmit}
             >
               <Box
@@ -258,10 +258,10 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
                 </FormControl>
 
                 <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
-                  <InputLabel id="position">Position</InputLabel>
+                  <InputLabel id="sectionPosition">Position</InputLabel>
                   <Select
-                    labelId="listPosition"
-                    id="listPosition"
+                    labelId="sectionPosition"
+                    id="sectionPosition"
                     value={currentSectionIndexLocal.toString()}
                     onChange={handlePositionChange}
                   >
@@ -289,7 +289,7 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
                     loadingPosition="start"
                     startIcon={<SaveIcon />}
                     variant="outlined"
-                    form="list-edit-form"
+                    form="section-edit-form"
                     color="success"
                     type="submit"
                   >
