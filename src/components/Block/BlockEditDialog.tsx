@@ -121,6 +121,34 @@ const BlockEditDialog = ({ block, open, handleClose, listId }: Props) => {
 
   const handleSave = async () => {
     setIsSubmitting(true);
+
+    const blocksCopy: IUserBlock[] = [...userBlocks];
+
+    const targetBlock: IUserBlock | undefined = blocksCopy.find(
+      (iterator: IUserBlock) => iterator.id === block?.id
+    );
+
+    if (targetBlock && sectionSelectorValue) {
+      targetBlock.sectionId = sectionSelectorValue;
+    }
+
+    await setDoc(doc(db, "users", userData.uid), {
+      lists: userLists,
+      sections: userSections,
+      blocks: blocksCopy,
+    })
+      .then(() => {
+        dispatch({
+          type: BLOCKS_SET,
+          payload: blocksCopy,
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
