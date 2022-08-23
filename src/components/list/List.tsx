@@ -19,7 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 
-import Section from "components/Section";
+import Section from "components/Section/Section";
 import AddSectionDialog from "components/AddDialogs/AddSectionDialog";
 import EditListDialog from "./EditListDialog";
 
