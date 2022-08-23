@@ -10,7 +10,7 @@ import {
   Select,
 } from "@mui/material/";
 
-import { IUserBlock } from "types";
+import { IUserBlock, IStore, IUserList, IUserSection } from "types";
 
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,6 +19,14 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import AlertDialog from "components/AlertDialog";
 
+import { useSelector, useDispatch } from "react-redux";
+
+import { doc, setDoc } from "firebase/firestore";
+
+import db from "api/firebase";
+
+import { BLOCKS_SET } from "redux/actions";
+
 interface Props {
   block: IUserBlock | undefined;
   open: boolean;
@@ -26,9 +34,22 @@ interface Props {
 }
 
 const BlockModal = ({ block, open, handleClose }: Props) => {
+  const dispatch = useDispatch();
+
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
+
+  const userData: any = useSelector((state: IStore) => state.userData) || null;
+
+  const userBlocks: IUserBlock[] =
+    useSelector((state: IStore) => state.userBlocks) || [];
+
+  const userLists: IUserList[] =
+    useSelector((state: IStore) => state.userLists) || [];
+
+  const userSections: IUserSection[] =
+    useSelector((state: IStore) => state.userSections) || [];
 
   const confirmDelete = async () => {
     setIsDeleteAlertDisplayed(true);
@@ -37,6 +58,37 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
   const deleteBlock = async () => {
     setIsDeleteAlertDisplayed(false);
     setIsSubmitting(true);
+
+    const blocksCopy: IUserBlock[] = [...userBlocks];
+
+    const targetBlockIndex: number = blocksCopy.findIndex(
+      (blockToRemove: IUserBlock) => blockToRemove.id === block?.id
+    );
+
+    if (targetBlockIndex > -1) {
+      blocksCopy.splice(targetBlockIndex, 1);
+    }
+
+    await setDoc(doc(db, "users", userData.uid), {
+      lists: userLists,
+      sections: userSections,
+      blocks: blocksCopy,
+    })
+      .then(() => {
+        handleClose();
+
+        dispatch({
+          type: BLOCKS_SET,
+          payload: blocksCopy,
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+        handleClose();
+      });
   };
 
   const handleSave = async () => {
@@ -113,7 +165,7 @@ const BlockModal = ({ block, open, handleClose }: Props) => {
 
       <AlertDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
-        message="You're about to delete this game from the section. Are you sure about it?"
+        message="You're about to delete this game. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteBlock()}
       />
