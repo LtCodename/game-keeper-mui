@@ -321,7 +321,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
 
       <AlertDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
-        message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?."
+        message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteList()}
       />

@@ -35,7 +35,7 @@ import db from "api/firebase";
 
 import AlertDialog from "components/AlertDialog";
 
-import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
+import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
 
 export interface Props {
   open: boolean;
@@ -59,25 +59,23 @@ const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [currentListIndex, setCurrentListIndex] = useState<number>(0);
-  const [isLastAlertDisplayed, setIsLastAlertDisplayed] =
-    useState<boolean>(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
-  const userSectons: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const currentSection: IUserSection | undefined = userSectons.find(
-    (section: IUserSection) => section.id === sectionId
-  );
+  const userLists: IUserList[] =
+    useSelector((state: IStore) => state.userLists) || [];
 
   const userSections: IUserSection[] =
     useSelector((state: IStore) => state.userSections) || [];
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
+
+  const currentSection: IUserSection | undefined = userSections.find(
+    (section: IUserSection) => section.id === sectionId
+  );
 
   useEffect(() => {
     if (currentSection && userSections.length) {
@@ -124,50 +122,27 @@ const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
     setIsDeleteAlertDisplayed(true);
   };
 
-  const deleteList = async () => {
+  const deleteSection = async () => {
     setIsDeleteAlertDisplayed(false);
-
-    if (userSections.length === 1) {
-      setIsLastAlertDisplayed(true);
-      return;
-    }
 
     setIsSubmitting(true);
 
-    const deletedSectionsIds: string[] = [];
-    const listsCopy: IUserList[] = [...userSections];
-
-    const sectionsCopy: IUserSection[] = [...userSections].filter(
-      (section: IUserSection) => {
-        if (section.listId !== listsCopy[currentListIndex].id) {
-          return true;
-          // eslint-disable-next-line no-else-return
-        } else {
-          deletedSectionsIds.push(section.id);
-          return false;
-        }
-      }
-    );
+    const sectionsCopy: IUserSection[] = [...userSections];
 
     const blocksCopy: IUserBlock[] = [...userBlocks].filter(
-      (block: IUserBlock) => deletedSectionsIds.indexOf(block.sectionId) === -1
+      (block: IUserBlock) => block.sectionId !== sectionId
     );
 
-    listsCopy.splice(currentListIndex, 1);
+    sectionsCopy.splice(currentListIndex, 1);
 
     await setDoc(doc(db, "users", userData.uid), {
-      lists: listsCopy,
+      lists: userLists,
       sections: sectionsCopy,
       blocks: blocksCopy,
     })
       .then(() => {
         handleClose();
         navigate("/", { replace: true });
-
-        dispatch({
-          type: LISTS_SET,
-          payload: listsCopy,
-        });
 
         dispatch({
           type: SECTIONS_SET,
@@ -189,34 +164,36 @@ const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
 
   const submitForm = async (data: { name: string }) => {
     setIsSubmitting(true);
-    console.log(data.name);
 
-    // const listsCopy: IUserList[] = [...userLists];
+    const sectionsCopy: IUserSection[] = [...userSections];
 
-    // listsCopy[currentListIndex] = {
-    //   ...listsCopy[currentListIndex],
-    //   name: data.name,
-    // };
+    const targetSection: IUserSection | undefined = sectionsCopy.find(
+      (section: IUserSection) => section.id === sectionId
+    );
 
-    // await setDoc(doc(db, "users", userData.uid), {
-    //   lists: listsCopy,
-    //   sections: userSections,
-    //   blocks: userBlocks,
-    // })
-    //   .then(() => {
-    //     handleClose();
+    if (targetSection) {
+      targetSection.name = data.name;
+    }
 
-    //     dispatch({
-    //       type: LISTS_SET,
-    //       payload: listsCopy,
-    //     });
-    //   })
-    //   .catch((error: any) => {
-    //     console.log(error);
-    //   })
-    //   .finally(() => {
-    //     setIsSubmitting(false);
-    //   });
+    await setDoc(doc(db, "users", userData.uid), {
+      lists: userLists,
+      sections: sectionsCopy,
+      blocks: userBlocks,
+    })
+      .then(() => {
+        handleClose();
+
+        dispatch({
+          type: SECTIONS_SET,
+          payload: sectionsCopy,
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -320,16 +297,10 @@ const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
       </Box>
 
       <AlertDialog
-        onClose={() => setIsLastAlertDisplayed(false)}
-        message="Sorry, for now, I can't let you delete the last list in your Game Keeper. Just rename and repopulate it."
-        open={isLastAlertDisplayed}
-      />
-
-      <AlertDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
-        message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?."
+        message="You're about to delete the whole section. All the games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}
-        onAction={() => deleteList()}
+        onAction={() => deleteSection()}
       />
     </Dialog>
   );
