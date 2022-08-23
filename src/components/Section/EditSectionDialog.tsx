@@ -41,6 +41,7 @@ export interface Props {
   open: boolean;
   handleClose: () => void;
   sectionId: string;
+  listId: string | undefined;
 }
 
 const defaultValues: {
@@ -53,12 +54,15 @@ const validationSchema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
 });
 
-const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
+const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  const [currentListIndex, setCurrentListIndex] = useState<number>(0);
+  const [currentSectionIndexGlobal, setCurrentSectionIndexGlobal] =
+    useState<number>(0);
+  const [currentSectionIndexLocal, setCurrentSectionIndexLocal] =
+    useState<number>(0);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
 
@@ -77,31 +81,43 @@ const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
     (section: IUserSection) => section.id === sectionId
   );
 
+  const userSectionsLocal: IUserSection[] | undefined = userSections.filter(
+    (section: IUserSection) => section.listId === listId
+  );
+
   useEffect(() => {
-    if (currentSection && userSections.length) {
-      setCurrentListIndex(userSections.indexOf(currentSection));
+    if (currentSection && userSections?.length && userSectionsLocal?.length) {
+      setCurrentSectionIndexGlobal(userSections.indexOf(currentSection));
+
+      setCurrentSectionIndexLocal(userSectionsLocal.indexOf(currentSection));
     }
-  }, [currentSection, userSections]);
+  }, [currentSection, userSections, userSectionsLocal]);
 
   const handlePositionChange = async (event: SelectChangeEvent) => {
     setIsSubmitting(true);
 
     const sectionsCopy: IUserSection[] = [...userSections];
 
-    if (currentListIndex.toString() === event.target.value) {
-      return;
-    }
+    const oldSectionPosition: number = sectionsCopy.findIndex(
+      (section: IUserSection) =>
+        section.id === userSectionsLocal[currentSectionIndexLocal].id
+    );
+
+    const newSectionPosition: number = sectionsCopy.findIndex(
+      (section: IUserSection) =>
+        section.id === userSectionsLocal[Number(event.target.value)].id
+    );
 
     const splicedSections: IUserSection[] = sectionsCopy.splice(
-      currentListIndex,
+      oldSectionPosition,
       1
     );
 
-    sectionsCopy.splice(Number(event.target.value), 0, splicedSections[0]);
+    sectionsCopy.splice(newSectionPosition, 0, splicedSections[0]);
 
     await setDoc(doc(db, "users", userData.uid), {
-      lists: sectionsCopy,
-      sections: userSections,
+      lists: userLists,
+      sections: sectionsCopy,
       blocks: userBlocks,
     })
       .then(() => {
@@ -133,7 +149,7 @@ const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
       (block: IUserBlock) => block.sectionId !== sectionId
     );
 
-    sectionsCopy.splice(currentListIndex, 1);
+    sectionsCopy.splice(currentSectionIndexGlobal, 1);
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: userLists,
@@ -246,10 +262,10 @@ const EditSectionDialog = ({ open, handleClose, sectionId }: Props) => {
                   <Select
                     labelId="listPosition"
                     id="listPosition"
-                    value={currentListIndex.toString()}
+                    value={currentSectionIndexLocal.toString()}
                     onChange={handlePositionChange}
                   >
-                    {userSections.map(
+                    {userSectionsLocal.map(
                       (section: IUserSection, index: number) => (
                         <MenuItem key={section.id} value={index}>
                           {index + 1}

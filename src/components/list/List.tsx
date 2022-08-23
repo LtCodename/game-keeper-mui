@@ -65,7 +65,7 @@ const List = () => {
       </Typography>
       <Stack direction="column" spacing={2}>
         {sections.map((section: IUserSection) => (
-          <Section key={section.id} {...section} />
+          <Section key={section.id} section={section} listId={list?.id} />
         ))}
       </Stack>
       <SpeedDial

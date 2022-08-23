@@ -22,7 +22,14 @@ import Block from "../Block/Block";
 import AddGameDialog from "../AddDialogs/AddGameDialog/AddGameDialog";
 import EditSectionDialog from "./EditSectionDialog";
 
-const Section = ({ name, id }: IUserSection) => {
+interface Props {
+  section: IUserSection;
+  listId: string | undefined;
+}
+
+const Section = ({ section, listId }: Props) => {
+  const { name, id } = section;
+
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
@@ -115,6 +122,7 @@ const Section = ({ name, id }: IUserSection) => {
           open={isEditDialogOpen}
           handleClose={() => setIsEditDialogOpen(false)}
           sectionId={id}
+          listId={listId}
         />
       )}
     </Accordion>
