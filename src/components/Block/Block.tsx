@@ -6,9 +6,10 @@ import { ISnackbar, IUserBlock } from "types";
 
 import { formatReleaseDate } from "logic";
 
-import { GK } from "components/Loader";
 import EditBlockDialog from "components/Block/EditBlockDialog";
 import Toast from "components/Toast";
+
+import { DEVELOPER_LENGTH, NAME_LENGTH } from "config";
 
 interface Props {
   block: IUserBlock;
@@ -30,8 +31,8 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
   const processDevelopers = (): string => {
     if (!developers || !developers.length) return "";
 
-    if (developers.length >= GK.gameDevelopersLength) {
-      return `${developers.substring(0, GK.gameDevelopersLength)}...`;
+    if (developers.length >= DEVELOPER_LENGTH) {
+      return `${developers.substring(0, DEVELOPER_LENGTH)}...`;
     }
     return developers;
   };
@@ -39,8 +40,8 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
   const processName = (): string => {
     if (!name || !name.length) return "";
 
-    if (name.length >= GK.gameNameLength) {
-      return `${name.substring(0, GK.gameNameLength)}...`;
+    if (name.length >= NAME_LENGTH) {
+      return `${name.substring(0, NAME_LENGTH)}...`;
     }
     return name;
   };

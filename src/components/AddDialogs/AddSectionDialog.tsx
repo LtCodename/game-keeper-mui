@@ -28,8 +28,9 @@ import db from "api/firebase";
 
 import { SECTIONS_SET } from "redux/actions";
 
-import { GK } from "components/Loader";
 import Toast from "components/Toast";
+
+import { SNACKBAR_SUCCESS } from "config";
 
 export interface Props {
   open: boolean;
@@ -88,7 +89,7 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
       .then(() => {
         handleClose();
 
-        callback(false, GK.snackbarSuccessMessage);
+        callback(false, SNACKBAR_SUCCESS);
 
         dispatch({
           type: SECTIONS_SET,

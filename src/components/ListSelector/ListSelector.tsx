@@ -22,7 +22,7 @@ import { ISnackbar, IStore, IUserList } from "types";
 
 import { useSelector } from "react-redux";
 
-import { GK } from "components/Loader";
+import { DRAWER_WIDTH } from "config";
 
 import DrawerHeader from "./styles";
 
@@ -48,10 +48,10 @@ const ListSelector = ({ open, onClose }: Props) => {
   return (
     <Drawer
       sx={{
-        width: GK.drawerWidth,
+        width: DRAWER_WIDTH,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: GK.drawerWidth,
+          width: DRAWER_WIDTH,
           boxSizing: "border-box",
         },
       }}

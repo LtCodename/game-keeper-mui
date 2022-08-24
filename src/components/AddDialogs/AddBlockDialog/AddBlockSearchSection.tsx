@@ -4,8 +4,9 @@ import { Stack } from "@mui/material/";
 
 import { IRawgSearchResponce, IRawgSearchResult } from "types";
 
-import { GK } from "components/Loader";
 import SearchResultItem from "components/SearchResultItem";
+
+import { ADD_GAME_WINDOW_WIDTH } from "config";
 
 export interface Props {
   onGameSelect: (id: number) => void;
@@ -20,7 +21,7 @@ const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
       p: 2,
       overflowY: "auto",
       maxHeight: 300,
-      width: GK.addGameWindowWidth,
+      width: ADD_GAME_WINDOW_WIDTH,
     }}
   >
     {searchResults?.results?.map((searchResult: IRawgSearchResult) => (

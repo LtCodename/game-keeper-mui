@@ -23,7 +23,6 @@ import SaveIcon from "@mui/icons-material/Save";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import { GK } from "components/Loader";
 import Toast from "components/Toast";
 import WarningDialog from "components/WarningDialog";
 
@@ -38,6 +37,8 @@ import { BLOCKS_SET } from "redux/actions";
 import { formatReleaseDate, processDevelopers } from "logic";
 
 import { getGameInformation } from "api/rawgApi";
+
+import { SNACKBAR_SUCCESS } from "config";
 
 interface Props {
   block: IUserBlock | undefined;
@@ -111,7 +112,7 @@ const EditBlockDialog = ({
         setSnackbarState({
           isError: false,
           open: true,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch(() => {
@@ -158,7 +159,7 @@ const EditBlockDialog = ({
       .then(() => {
         beforeClosing();
 
-        callback(false, GK.snackbarSuccessMessage);
+        callback(false, SNACKBAR_SUCCESS);
 
         dispatch({
           type: BLOCKS_SET,
@@ -220,7 +221,7 @@ const EditBlockDialog = ({
         setSnackbarState({
           isError: false,
           open: true,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: any) => {

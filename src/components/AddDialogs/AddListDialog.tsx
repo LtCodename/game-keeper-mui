@@ -28,8 +28,9 @@ import db from "api/firebase";
 
 import { LISTS_SET } from "redux/actions";
 
-import { GK } from "components/Loader";
 import Toast from "components/Toast";
+
+import { SNACKBAR_SUCCESS } from "config";
 
 export interface Props {
   open: boolean;
@@ -89,7 +90,7 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
       .then(() => {
         handleClose();
 
-        callback(false, GK.snackbarSuccessMessage);
+        callback(false, SNACKBAR_SUCCESS);
 
         dispatch({
           type: LISTS_SET,

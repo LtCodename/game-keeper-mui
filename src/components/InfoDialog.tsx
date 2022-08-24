@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material/";
 
-import { GK } from "./Loader";
+import { APP_VERSION, DEMO_EMAIL } from "config";
 
 interface Props {
   open: boolean;
@@ -43,7 +43,7 @@ const InfoDialog = ({ onClose, open }: Props) => {
       <DialogTitle id="info-dialog-title">Hello there!</DialogTitle>
       <DialogContent sx={{ pb: 0 }}>
         <Box>
-          {userData?.email === GK.demoEmail && (
+          {userData?.email === DEMO_EMAIL && (
             <>
               <Typography sx={{ mb: 2 }}>
                 Look around, poke at things, press on stuff. This is a demo
@@ -60,14 +60,14 @@ const InfoDialog = ({ onClose, open }: Props) => {
           )}
 
           <Typography sx={{ mb: 2 }}>{`Logged as ${
-            userData?.email === GK.demoEmail
+            userData?.email === DEMO_EMAIL
               ? "Captain Picard"
               : userData?.displayName
           }.`}</Typography>
           <Typography
             sx={{ mb: 2 }}
           >{`There are ${userLists.length} lists, ${userSections.length} sections and ${userBlocks.length} games in your Game Keeper.`}</Typography>
-          <Typography>{`Version: ${GK.appVersion}.`}</Typography>
+          <Typography>{`Version: ${APP_VERSION}.`}</Typography>
         </Box>
       </DialogContent>
       <DialogActions>

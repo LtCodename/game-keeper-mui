@@ -31,11 +31,12 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import { GK } from "components/Loader";
 import Toast from "components/Toast";
 import WarningDialog from "components/WarningDialog";
 
 import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
+
+import { SNACKBAR_SUCCESS } from "config";
 
 export interface Props {
   open: boolean;
@@ -144,7 +145,7 @@ const EditSectionDialog = ({
         setSnackbarState({
           open: true,
           isError: false,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: any) => {
@@ -192,7 +193,7 @@ const EditSectionDialog = ({
           payload: blocksCopy,
         });
 
-        callback(false, GK.snackbarSuccessMessage);
+        callback(false, SNACKBAR_SUCCESS);
 
         handleClose();
       })
@@ -230,7 +231,7 @@ const EditSectionDialog = ({
         setSnackbarState({
           open: true,
           isError: false,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
 
         dispatch({

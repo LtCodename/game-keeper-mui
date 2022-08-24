@@ -39,11 +39,16 @@ import { BLOCKS_SET } from "redux/actions";
 
 import { getGameInformation, searchGamesByName } from "api/rawgApi";
 
-import { GK } from "components/Loader";
 import AddBlockSearchSection from "components/AddDialogs/AddBlockDialog/AddBlockSearchSection";
 import Toast from "components/Toast";
 
 import { formatReleaseDate, processDevelopers } from "logic";
+
+import {
+  ADD_GAME_ERROR,
+  ADD_GAME_WINDOW_WIDTH,
+  SNACKBAR_SUCCESS,
+} from "config";
 
 export interface Props {
   open: boolean;
@@ -98,11 +103,11 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
 
     const newBlock: IUserBlock = {
       id: gameToAdd?.id || "1",
-      name: gameToAdd?.name || GK.gameAddError,
+      name: gameToAdd?.name || ADD_GAME_ERROR,
       sectionId,
       apiId: gameToAdd?.apiId || 1,
-      developers: gameToAdd?.developers || GK.gameAddError,
-      releaseDate: gameToAdd?.releaseDate || GK.gameAddError,
+      developers: gameToAdd?.developers || ADD_GAME_ERROR,
+      releaseDate: gameToAdd?.releaseDate || ADD_GAME_ERROR,
     };
 
     const blocksCopy: IUserBlock[] = [...userBlocks, newBlock];
@@ -115,7 +120,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
       .then(() => {
         handleClose();
 
-        callback(false, GK.snackbarSuccessMessage);
+        callback(false, SNACKBAR_SUCCESS);
 
         dispatch({
           type: BLOCKS_SET,
@@ -194,7 +199,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  width: GK.addGameWindowWidth,
+                  width: ADD_GAME_WINDOW_WIDTH,
                 }}
               >
                 <FormControl

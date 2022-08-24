@@ -22,18 +22,6 @@ import List from "components/List/List";
 import Login from "components/Login";
 import Toast from "components/Toast";
 
-export const enum GK {
-  appVersion = "1.001",
-  drawerWidth = 320,
-  gameAddError = "Game was not added!",
-  gameNameLength = 43,
-  gameDevelopersLength = 59,
-  addGameWindowWidth = 368,
-  demoEmail = "ltcodename92@gmail.com",
-  demoPassword = "22121992",
-  snackbarSuccessMessage = "Success!",
-}
-
 const Loader = () => {
   const dispatch = useDispatch();
 
