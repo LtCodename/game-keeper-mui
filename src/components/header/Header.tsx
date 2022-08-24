@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Box, AppBar, Toolbar, IconButton, Typography } from "@mui/material/";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material/";
 
 import HelpIcon from "@mui/icons-material/Help";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -16,10 +16,10 @@ import { useDispatch } from "react-redux";
 
 import { ISnackbar } from "types";
 
-import ListSelector from "components/ListSelector/ListSelector";
+import HeaderSearchBar from "components/Header/HeaderSearchBar";
 import InfoDialog from "components/InfoDialog";
+import ListSelector from "components/ListSelector/ListSelector";
 import Toast from "components/Toast";
-import HeaderSearchBar from "./HeaderSearchBar";
 
 const Header = () => {
   const navigate = useNavigate();

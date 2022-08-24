@@ -29,6 +29,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "firebase": "^9.9.2",
     "formik": "^2.2.9",
     "moment": "^2.29.4",

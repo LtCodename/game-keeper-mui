@@ -14,21 +14,21 @@ import {
 
 import {
   Box,
-  Typography,
-  Stack,
   SpeedDial,
   SpeedDialAction,
+  Stack,
+  Typography,
 } from "@mui/material/";
 
-import SettingsIcon from "@mui/icons-material/Settings";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+import SettingsIcon from "@mui/icons-material/Settings";
 
+import AddSectionDialog from "components/AddDialogs/AddSectionDialog";
+import EditListDialog from "components/List/EditListDialog";
 import Section from "components/Section/Section";
 import Toast from "components/Toast";
-import AddSectionDialog from "components/AddDialogs/AddSectionDialog";
-import EditListDialog from "./EditListDialog";
 
 const speedDialActions: ISpeedDialAction[] = [
   { icon: <AddIcon />, name: "Add section" },

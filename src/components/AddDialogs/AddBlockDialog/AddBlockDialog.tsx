@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
+  Box,
+  Button,
   Dialog,
   DialogTitle,
-  Box,
   FormControl,
-  TextField,
   FormHelperText,
-  Button,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material/";
 
@@ -18,7 +18,7 @@ import PublishIcon from "@mui/icons-material/Publish";
 
 import * as yup from "yup";
 
-import { Formik, Form, ErrorMessage } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 
 import {
   IRawgSearchResponce,
@@ -29,7 +29,7 @@ import {
   IUserSection,
 } from "types";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -39,9 +39,9 @@ import { BLOCKS_SET } from "redux/actions";
 
 import { getGameInformation, searchGamesByName } from "api/rawgApi";
 
+import { GK } from "components/Loader";
 import AddBlockSearchSection from "components/AddDialogs/AddBlockDialog/AddBlockSearchSection";
 import Toast from "components/Toast";
-import { GK } from "components/Loader";
 
 import { formatReleaseDate, processDevelopers } from "logic";
 

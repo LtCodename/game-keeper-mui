@@ -2,15 +2,15 @@ import React from "react";
 
 import { useSelector } from "react-redux";
 
-import { IStore, IUserList, IUserSection, IUserBlock } from "types";
+import { IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
   Box,
-  DialogActions,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Typography,
 } from "@mui/material/";
 

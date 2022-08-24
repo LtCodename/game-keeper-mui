@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Paper, Typography } from "@mui/material/";
 
-import { yellow, grey } from "@mui/material/colors";
+import { grey, yellow } from "@mui/material/colors";
 
 export interface Props {
   onClick: () => void;

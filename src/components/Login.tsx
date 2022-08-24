@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import * as yup from "yup";
 
-import { Formik, Form, ErrorMessage } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 
 import { Box, FormControl, FormHelperText, TextField } from "@mui/material";
 
@@ -17,9 +17,8 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { ISnackbar } from "types";
 
-import { GK } from "./Loader";
-
-import Toast from "./Toast";
+import { GK } from "components/Loader";
+import Toast from "components/Toast";
 
 const defaultValues: {
   email: string;

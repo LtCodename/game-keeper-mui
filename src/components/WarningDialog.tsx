@@ -1,12 +1,12 @@
 import React from "react";
 
 import {
+  Button,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  DialogActions,
-  Button,
+  DialogTitle,
 } from "@mui/material/";
 
 interface Props {

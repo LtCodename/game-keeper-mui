@@ -7,8 +7,8 @@ import { ISnackbar, IUserBlock } from "types";
 import { formatReleaseDate } from "logic";
 
 import { GK } from "components/Loader";
+import EditBlockDialog from "components/Block/EditBlockDialog";
 import Toast from "components/Toast";
-import EditBlockDialog from "./EditBlockDialog";
 
 interface Props {
   block: IUserBlock;

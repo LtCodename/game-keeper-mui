@@ -5,8 +5,7 @@ import { Stack } from "@mui/material/";
 import { IRawgSearchResponce, IRawgSearchResult } from "types";
 
 import { GK } from "components/Loader";
-
-import SearchResultItem from "../../SearchResultItem";
+import SearchResultItem from "components/SearchResultItem";
 
 export interface Props {
   onGameSelect: (id: number) => void;
