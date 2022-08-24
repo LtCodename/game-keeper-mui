@@ -14,10 +14,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { useSelector } from "react-redux";
 
-import { IStore, IUserBlock, IUserSection } from "types";
+import { ISnackbar, IStore, IUserBlock, IUserSection } from "types";
 
 import { yellow } from "@mui/material/colors";
 
+import Toast from "components/Toast";
 import Block from "../Block/Block";
 import AddBlockDialog from "../AddDialogs/AddBlockDialog/AddBlockDialog";
 import EditSectionDialog from "./EditSectionDialog";
@@ -33,6 +34,11 @@ const Section = ({ section, listId }: Props) => {
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
+  });
 
   const blocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks).filter(
@@ -114,6 +120,13 @@ const Section = ({ section, listId }: Props) => {
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
           sectionId={id}
+          callback={(isError, message) =>
+            setSnackbarState({
+              isError,
+              message,
+              open: true,
+            })
+          }
         />
       )}
 
@@ -125,6 +138,18 @@ const Section = ({ section, listId }: Props) => {
           listId={listId}
         />
       )}
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
+      />
     </Accordion>
   );
 };
