@@ -33,7 +33,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import AlertDialog from "components/AlertDialog";
+import WarningDialog from "components/WarningDialog";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
 
@@ -313,13 +313,13 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         </Formik>
       </Box>
 
-      <AlertDialog
+      <WarningDialog
         onClose={() => setIsLastAlertDisplayed(false)}
         message="Sorry, for now, I can't let you delete the last list in your Game Keeper. Just rename and repopulate it."
         open={isLastAlertDisplayed}
       />
 
-      <AlertDialog
+      <WarningDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
         message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}

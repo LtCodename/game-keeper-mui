@@ -33,7 +33,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import AlertDialog from "components/AlertDialog";
+import WarningDialog from "components/WarningDialog";
 
 import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
 
@@ -312,7 +312,7 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
         </Formik>
       </Box>
 
-      <AlertDialog
+      <WarningDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
         message="You're about to delete the whole section. All the games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}

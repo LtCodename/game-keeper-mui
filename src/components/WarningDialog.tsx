@@ -16,7 +16,7 @@ interface Props {
   onAction?: () => void;
 }
 
-const AlertDialog = ({ message, onClose, open, onAction }: Props) => (
+const WarningDialog = ({ message, onClose, open, onAction }: Props) => (
   <Dialog
     open={open}
     onClose={onClose}
@@ -40,4 +40,4 @@ const AlertDialog = ({ message, onClose, open, onAction }: Props) => (
   </Dialog>
 );
 
-export default AlertDialog;
+export default WarningDialog;

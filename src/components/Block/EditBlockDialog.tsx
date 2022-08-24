@@ -23,7 +23,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import AlertDialog from "components/AlertDialog";
+import WarningDialog from "components/WarningDialog";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -292,7 +292,7 @@ const EditBlockDialog = ({ block, open, handleClose, listId }: Props) => {
         </LoadingButton>
       </Box>
 
-      <AlertDialog
+      <WarningDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
         message="You're about to delete this game. Are you sure about it?"
         open={isDeleteAlertDisplayed}
