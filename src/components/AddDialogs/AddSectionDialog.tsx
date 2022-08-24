@@ -18,7 +18,7 @@ import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { IStore, IUserBlock, IUserList, IUserSection } from "types";
+import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -28,10 +28,14 @@ import db from "api/firebase";
 
 import { SECTIONS_SET } from "redux/actions";
 
+import { GK } from "components/Loader";
+import Toast from "components/Toast";
+
 export interface Props {
   open: boolean;
   handleClose: () => void;
   listId: string;
+  callback: (isError: boolean, message: string) => void;
 }
 
 const defaultValues: {
@@ -44,10 +48,15 @@ const validationSchema = yup.object().shape({
   sectionName: yup.string().required("Section name is a required field"),
 });
 
-const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
+const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
+  });
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -79,13 +88,19 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
       .then(() => {
         handleClose();
 
+        callback(false, GK.snackbarSuccessMessage);
+
         dispatch({
           type: SECTIONS_SET,
           payload: sectionsCopy,
         });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -94,9 +109,7 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>
-        Add a section to this list
-      </DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Secton</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
@@ -164,6 +177,18 @@ const AddSectionDialog = ({ open, handleClose, listId }: Props) => {
           )}
         </Formik>
       </Box>
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
+      />
     </Dialog>
   );
 };

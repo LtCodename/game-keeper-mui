@@ -16,8 +16,9 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import ListItem from "components/List/ListItem";
 import AddListDialog from "components/AddDialogs/AddListDialog";
+import Toast from "components/Toast";
 
-import { IStore, IUserList } from "types";
+import { ISnackbar, IStore, IUserList } from "types";
 
 import { useSelector } from "react-redux";
 
@@ -32,10 +33,17 @@ interface Props {
 
 const ListSelector = ({ open, onClose }: Props) => {
   const theme = useTheme();
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
+  });
+
+  const userLists: IUserList[] =
+    useSelector((state: IStore) => state.userLists) || [];
 
   return (
     <Drawer
@@ -75,18 +83,40 @@ const ListSelector = ({ open, onClose }: Props) => {
           )}
         </IconButton>
       </DrawerHeader>
+
       <Divider />
+
       <Stack direction="column" spacing={1} sx={{ flexWrap: "wrap", p: 2 }}>
         {userLists.map((list: IUserList) => (
           <ListItem key={list.id} list={list} onClose={() => onClose()} />
         ))}
       </Stack>
+
       {isAddDialogOpen && (
         <AddListDialog
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
+          callback={(isError, message) =>
+            setSnackbarState({
+              isError,
+              message,
+              open: true,
+            })
+          }
         />
       )}
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
+      />
     </Drawer>
   );
 };

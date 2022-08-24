@@ -14,12 +14,14 @@ import { Backdrop, CircularProgress } from "@mui/material/";
 
 import { Routes, Route } from "react-router-dom";
 
+import { ISnackbar, IStore } from "types";
+
 import Header from "components/Header/Header";
 import Dashboard from "components/Dashboard";
 import List from "components/List/List";
 import Login from "components/Login";
 
-import { IStore } from "types";
+import Toast from "./Toast";
 
 export const enum GK {
   appVersion = "1.001",
@@ -30,11 +32,18 @@ export const enum GK {
   addGameWindowWidth = 368,
   demoEmail = "ltcodename92@gmail.com",
   demoPassword = "22121992",
+  snackbarSuccessMessage = "Success!",
 }
 
 const Loader = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: true,
+    message: "",
+  });
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -87,7 +96,11 @@ const Loader = () => {
         });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState((previousState: ISnackbar) => ({
+          ...previousState,
+          open: true,
+          message: error.toString(),
+        }));
       })
       .finally(() => {
         setTimeout(() => {
@@ -120,6 +133,18 @@ const Loader = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
+      />
     </>
   );
 };

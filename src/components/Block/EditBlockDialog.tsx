@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material/";
 
-import { IUserBlock, IStore, IUserList, IUserSection } from "types";
+import { IUserBlock, IStore, IUserList, IUserSection, ISnackbar } from "types";
 
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
@@ -23,7 +23,9 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import AlertDialog from "components/AlertDialog";
+import WarningDialog from "components/WarningDialog";
+import Toast from "components/Toast";
+import { GK } from "components/Loader";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -42,6 +44,7 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   listId?: string | undefined;
+  callback: (isError: boolean, message: string) => void;
 }
 
 interface IGameMeta {
@@ -50,22 +53,37 @@ interface IGameMeta {
   name: string;
 }
 
-const EditBlockDialog = ({ block, open, handleClose, listId }: Props) => {
+const EditBlockDialog = ({
+  block,
+  open,
+  handleClose,
+  listId,
+  callback,
+}: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
+
   const [listSelectorValue, setListSelectorValue] = useState<
     string | undefined
   >(listId);
+
   const [sectionSelectorValue, setSectionSelectorValue] = useState<
     string | undefined
   >(block?.sectionId);
+
   const [gameMeta, setGameMeta] = useState<IGameMeta>({
     developers: block?.developers || "",
     releaseDate: block?.releaseDate || "",
     name: block?.name || "",
+  });
+
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
   });
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
@@ -89,9 +107,19 @@ const EditBlockDialog = ({ block, open, handleClose, listId }: Props) => {
           releaseDate: rawgResponse.released,
           name: rawgResponse.name,
         });
+
+        setSnackbarState({
+          isError: false,
+          open: true,
+          message: GK.snackbarSuccessMessage.toString(),
+        });
       })
-      .catch((error: any) => {
-        console.log(error);
+      .catch(() => {
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: "RAWG failed to return game details",
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -130,17 +158,22 @@ const EditBlockDialog = ({ block, open, handleClose, listId }: Props) => {
       .then(() => {
         beforeClosing();
 
+        callback(false, GK.snackbarSuccessMessage);
+
         dispatch({
           type: BLOCKS_SET,
           payload: blocksCopy,
         });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          isError: true,
+          open: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
-        beforeClosing();
       });
   };
 
@@ -183,9 +216,19 @@ const EditBlockDialog = ({ block, open, handleClose, listId }: Props) => {
           type: BLOCKS_SET,
           payload: blocksCopy,
         });
+
+        setSnackbarState({
+          isError: false,
+          open: true,
+          message: GK.snackbarSuccessMessage.toString(),
+        });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          isError: true,
+          open: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -292,11 +335,23 @@ const EditBlockDialog = ({ block, open, handleClose, listId }: Props) => {
         </LoadingButton>
       </Box>
 
-      <AlertDialog
+      <WarningDialog
         onClose={() => setIsDeleteAlertDisplayed(false)}
         message="You're about to delete this game. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteBlock()}
+      />
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
       />
     </Dialog>
   );

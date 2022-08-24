@@ -18,7 +18,7 @@ import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { IStore, IUserBlock, IUserList, IUserSection } from "types";
+import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -28,9 +28,14 @@ import db from "api/firebase";
 
 import { LISTS_SET } from "redux/actions";
 
+import Toast from "components/Toast";
+
+import { GK } from "components/Loader";
+
 export interface Props {
   open: boolean;
   handleClose: () => void;
+  callback: (isError: boolean, message: string) => void;
 }
 
 const defaultValues: {
@@ -43,10 +48,16 @@ const validationSchema = yup.object().shape({
   listName: yup.string().required("List name is a required field"),
 });
 
-const AddListDialog = ({ open, handleClose }: Props) => {
+const AddListDialog = ({ open, handleClose, callback }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
+  });
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -79,13 +90,19 @@ const AddListDialog = ({ open, handleClose }: Props) => {
       .then(() => {
         handleClose();
 
+        callback(false, GK.snackbarSuccessMessage);
+
         dispatch({
           type: LISTS_SET,
           payload: listsCopy,
         });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -158,6 +175,18 @@ const AddListDialog = ({ open, handleClose }: Props) => {
           )}
         </Formik>
       </Box>
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
+      />
     </Dialog>
   );
 };
