@@ -37,7 +37,7 @@ const Loader = () => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -45,6 +45,10 @@ const Loader = () => {
     if (userData) {
       getData(); // lists, sections, blocks
     }
+
+    return () => {
+      setSnackbarMessage("");
+    };
   }, [userData]);
 
   const userPresenceCheck = () => {
@@ -90,7 +94,7 @@ const Loader = () => {
         });
       })
       .catch((error: any) => {
-        setErrorMessage(error.toString());
+        setSnackbarMessage(error.toString());
       })
       .finally(() => {
         setTimeout(() => {
@@ -124,18 +128,18 @@ const Loader = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {Boolean(errorMessage.length) && (
+      {Boolean(snackbarMessage.length) && (
         <Snackbar
-          open={Boolean(errorMessage.length)}
+          open={Boolean(snackbarMessage.length)}
           autoHideDuration={6000}
-          onClose={() => setErrorMessage("")}
+          onClose={() => setSnackbarMessage("")}
         >
           <Alert
-            onClose={() => setErrorMessage("")}
+            onClose={() => setSnackbarMessage("")}
             severity="error"
             sx={{ width: "100%" }}
           >
-            {errorMessage}
+            {snackbarMessage}
           </Alert>
         </Snackbar>
       )}

@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { Box, FormControl, FormHelperText, TextField } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  FormHelperText,
+  TextField,
+  Snackbar,
+} from "@mui/material";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -16,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { GK } from "./Loader";
+
+import Alert from "./Alert";
 
 const defaultValues: {
   email: string;
@@ -34,6 +42,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+
+  useEffect(() => () => setSnackbarMessage(""), []);
 
   const submitForm = (data: { email: string; password: string }) => {
     setIsSubmitting(true);
@@ -44,7 +55,7 @@ const Login = () => {
         navigate("/", { replace: true });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarMessage(error.toString());
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -60,7 +71,7 @@ const Login = () => {
         navigate("/", { replace: true });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarMessage(error.toString());
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -164,6 +175,22 @@ const Login = () => {
           </Form>
         )}
       </Formik>
+
+      {Boolean(snackbarMessage.length) && (
+        <Snackbar
+          open={Boolean(snackbarMessage.length)}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarMessage("")}
+        >
+          <Alert
+            onClose={() => setSnackbarMessage("")}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 };
