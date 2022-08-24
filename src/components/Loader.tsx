@@ -124,7 +124,7 @@ const Loader = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {errorMessage.length && (
+      {Boolean(errorMessage.length) && (
         <Snackbar
           open={Boolean(errorMessage.length)}
           autoHideDuration={6000}
