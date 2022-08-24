@@ -8,15 +8,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import { useNavigate } from "react-router-dom";
 
-import ListSelector from "components/ListSelector/ListSelector";
-import InfoDialog from "components/InfoDialog";
-
 import { getAuth, signOut } from "firebase/auth";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
 
 import { useDispatch } from "react-redux";
 
+import { ISnackbar } from "types";
+
+import ListSelector from "components/ListSelector/ListSelector";
+import InfoDialog from "components/InfoDialog";
+import Toast from "components/Toast";
 import HeaderSearchBar from "./HeaderSearchBar";
 
 const Header = () => {
@@ -24,7 +26,14 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
   const [isInfoDisplayed, setIsInfoDisplayed] = useState<boolean>(false);
+
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: true,
+    message: "",
+  });
 
   const toggleDrawer = () => {
     setIsDrawerOpen((previousState: boolean) => !previousState);
@@ -62,7 +71,11 @@ const Header = () => {
         }, 100);
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState((previousState: ISnackbar) => ({
+          ...previousState,
+          open: true,
+          message: error.toString(),
+        }));
       });
   };
 
@@ -119,6 +132,18 @@ const Header = () => {
           onClose={() => setIsInfoDisplayed(false)}
         />
       )}
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
+      />
     </Box>
   );
 };
