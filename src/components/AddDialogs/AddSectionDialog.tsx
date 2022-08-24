@@ -80,7 +80,7 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
 
     const sectionsCopy: IUserSection[] = [...userSections, newSection];
 
-    await setDoc(doc(db, "usfers", userData.uid), {
+    await setDoc(doc(db, "users", userData.uid), {
       lists: userLists,
       sections: sectionsCopy,
       blocks: userBlocks,

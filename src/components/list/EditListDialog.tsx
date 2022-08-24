@@ -25,7 +25,7 @@ import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { IStore, IUserBlock, IUserList, IUserSection } from "types";
+import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -34,6 +34,8 @@ import { doc, setDoc } from "firebase/firestore";
 import db from "api/firebase";
 
 import WarningDialog from "components/WarningDialog";
+import { GK } from "components/Loader";
+import Toast from "components/Toast";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
 
@@ -58,11 +60,20 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const navigate = useNavigate();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+
   const [currentListIndex, setCurrentListIndex] = useState<number>(0);
+
   const [isLastAlertDisplayed, setIsLastAlertDisplayed] =
     useState<boolean>(false);
+
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
+
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
+  });
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -108,9 +119,19 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           type: LISTS_SET,
           payload: listsCopy,
         });
+
+        setSnackbarState({
+          open: true,
+          isError: false,
+          message: GK.snackbarSuccessMessage.toString(),
+        });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -158,9 +179,6 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
       blocks: blocksCopy,
     })
       .then(() => {
-        handleClose();
-        navigate("/", { replace: true });
-
         dispatch({
           type: LISTS_SET,
           payload: listsCopy,
@@ -175,9 +193,16 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           type: BLOCKS_SET,
           payload: blocksCopy,
         });
+
+        handleClose();
+        navigate("/", { replace: true });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -200,15 +225,23 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
       blocks: userBlocks,
     })
       .then(() => {
-        handleClose();
-
         dispatch({
           type: LISTS_SET,
           payload: listsCopy,
         });
+
+        setSnackbarState({
+          open: true,
+          isError: false,
+          message: GK.snackbarSuccessMessage.toString(),
+        });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -324,6 +357,18 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteList()}
+      />
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
       />
     </Dialog>
   );

@@ -52,6 +52,7 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
     isError: false,
