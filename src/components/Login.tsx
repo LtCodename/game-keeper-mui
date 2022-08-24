@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import * as yup from "yup";
 
-import { Formik, Form, ErrorMessage } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 
 import { Box, FormControl, FormHelperText, TextField } from "@mui/material";
 
@@ -17,9 +17,9 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { ISnackbar } from "types";
 
-import { GK } from "./Loader";
+import Toast from "components/Toast";
 
-import Toast from "./Toast";
+import { DEMO_EMAIL, DEMO_PASSWORD } from "config";
 
 const defaultValues: {
   email: string;
@@ -69,7 +69,7 @@ const Login = () => {
     setIsSubmitting(true);
     const auth = getAuth();
 
-    signInWithEmailAndPassword(auth, GK.demoEmail, GK.demoPassword)
+    signInWithEmailAndPassword(auth, DEMO_EMAIL, DEMO_PASSWORD)
       .then(() => {
         navigate("/", { replace: true });
       })

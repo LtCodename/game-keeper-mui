@@ -4,36 +4,23 @@ import { useDispatch, useSelector } from "react-redux";
 
 import db from "api/firebase";
 
-import { getDoc, doc } from "@firebase/firestore";
+import { doc, getDoc } from "@firebase/firestore";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { LISTS_SET, SECTIONS_SET, BLOCKS_SET, USER_SET } from "redux/actions";
+import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
 
 import { Backdrop, CircularProgress } from "@mui/material/";
 
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { ISnackbar, IStore } from "types";
 
-import Header from "components/Header/Header";
 import Dashboard from "components/Dashboard";
+import Header from "components/Header/Header";
 import List from "components/List/List";
 import Login from "components/Login";
-
-import Toast from "./Toast";
-
-export const enum GK {
-  appVersion = "1.001",
-  drawerWidth = 320,
-  gameAddError = "Game was not added!",
-  gameNameLength = 43,
-  gameDevelopersLength = 59,
-  addGameWindowWidth = 368,
-  demoEmail = "ltcodename92@gmail.com",
-  demoPassword = "22121992",
-  snackbarSuccessMessage = "Success!",
-}
+import Toast from "components/Toast";
 
 const Loader = () => {
   const dispatch = useDispatch();

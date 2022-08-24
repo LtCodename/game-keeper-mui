@@ -3,31 +3,30 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
-  DialogTitle,
   Dialog,
+  DialogTitle,
+  FormControl,
   IconButton,
   InputLabel,
-  FormControl,
   MenuItem,
   Tooltip,
   Typography,
 } from "@mui/material/";
 
-import { IUserBlock, IStore, IUserList, IUserSection, ISnackbar } from "types";
+import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import SaveIcon from "@mui/icons-material/Save";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import WarningDialog from "components/WarningDialog";
 import Toast from "components/Toast";
-import { GK } from "components/Loader";
+import WarningDialog from "components/WarningDialog";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -38,6 +37,8 @@ import { BLOCKS_SET } from "redux/actions";
 import { formatReleaseDate, processDevelopers } from "logic";
 
 import { getGameInformation } from "api/rawgApi";
+
+import { SNACKBAR_SUCCESS } from "config";
 
 interface Props {
   block: IUserBlock | undefined;
@@ -111,7 +112,7 @@ const EditBlockDialog = ({
         setSnackbarState({
           isError: false,
           open: true,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch(() => {
@@ -158,7 +159,7 @@ const EditBlockDialog = ({
       .then(() => {
         beforeClosing();
 
-        callback(false, GK.snackbarSuccessMessage);
+        callback(false, SNACKBAR_SUCCESS);
 
         dispatch({
           type: BLOCKS_SET,
@@ -220,7 +221,7 @@ const EditBlockDialog = ({
         setSnackbarState({
           isError: false,
           open: true,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: any) => {

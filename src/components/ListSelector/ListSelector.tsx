@@ -3,26 +3,26 @@ import React, { useState } from "react";
 import { useTheme } from "@mui/material/styles";
 
 import {
-  IconButton,
-  Typography,
-  Drawer,
-  Divider,
-  Stack,
   Button,
+  Divider,
+  Drawer,
+  IconButton,
+  Stack,
+  Typography,
 } from "@mui/material/";
 
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-import ListItem from "components/List/ListItem";
 import AddListDialog from "components/AddDialogs/AddListDialog";
+import ListItem from "components/List/ListItem";
 import Toast from "components/Toast";
 
 import { ISnackbar, IStore, IUserList } from "types";
 
 import { useSelector } from "react-redux";
 
-import { GK } from "components/Loader";
+import { DRAWER_WIDTH } from "config";
 
 import DrawerHeader from "./styles";
 
@@ -48,10 +48,10 @@ const ListSelector = ({ open, onClose }: Props) => {
   return (
     <Drawer
       sx={{
-        width: GK.drawerWidth,
+        width: DRAWER_WIDTH,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: GK.drawerWidth,
+          width: DRAWER_WIDTH,
           boxSizing: "border-box",
         },
       }}

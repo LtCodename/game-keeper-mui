@@ -2,12 +2,12 @@ import React, { useState } from "react";
 
 import {
   Accordion,
-  Typography,
-  AccordionSummary,
   AccordionDetails,
-  Stack,
-  Button,
+  AccordionSummary,
   Box,
+  Button,
+  Stack,
+  Typography,
 } from "@mui/material/";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -18,10 +18,10 @@ import { ISnackbar, IStore, IUserBlock, IUserSection } from "types";
 
 import { yellow } from "@mui/material/colors";
 
+import AddBlockDialog from "components/AddDialogs/AddBlockDialog/AddBlockDialog";
+import Block from "components/Block/Block";
+import EditSectionDialog from "components/Section/EditSectionDialog";
 import Toast from "components/Toast";
-import Block from "../Block/Block";
-import AddBlockDialog from "../AddDialogs/AddBlockDialog/AddBlockDialog";
-import EditSectionDialog from "./EditSectionDialog";
 
 interface Props {
   section: IUserSection;

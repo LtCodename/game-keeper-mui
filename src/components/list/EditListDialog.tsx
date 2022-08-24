@@ -1,43 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
+  Box,
+  Button,
   Dialog,
   DialogTitle,
-  Box,
   FormControl,
-  TextField,
   FormHelperText,
-  Button,
   InputLabel,
   MenuItem,
+  TextField,
 } from "@mui/material/";
 
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
 
 import { useNavigate } from "react-router-dom";
 
 import * as yup from "yup";
 
-import { Formik, Form, ErrorMessage } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 
 import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import WarningDialog from "components/WarningDialog";
-import { GK } from "components/Loader";
 import Toast from "components/Toast";
+import WarningDialog from "components/WarningDialog";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
+
+import { SNACKBAR_SUCCESS } from "config";
 
 export interface Props {
   open: boolean;
@@ -123,7 +124,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         setSnackbarState({
           open: true,
           isError: false,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: any) => {
@@ -233,7 +234,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         setSnackbarState({
           open: true,
           isError: false,
-          message: GK.snackbarSuccessMessage.toString(),
+          message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: any) => {

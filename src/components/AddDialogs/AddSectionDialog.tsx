@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
 import {
+  Box,
+  Button,
   Dialog,
   DialogTitle,
-  Box,
   FormControl,
-  TextField,
   FormHelperText,
-  Button,
+  TextField,
 } from "@mui/material/";
 
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -16,11 +16,11 @@ import PublishIcon from "@mui/icons-material/Publish";
 
 import * as yup from "yup";
 
-import { Formik, Form, ErrorMessage } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 
 import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -28,8 +28,9 @@ import db from "api/firebase";
 
 import { SECTIONS_SET } from "redux/actions";
 
-import { GK } from "components/Loader";
 import Toast from "components/Toast";
+
+import { SNACKBAR_SUCCESS } from "config";
 
 export interface Props {
   open: boolean;
@@ -88,7 +89,7 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
       .then(() => {
         handleClose();
 
-        callback(false, GK.snackbarSuccessMessage);
+        callback(false, SNACKBAR_SUCCESS);
 
         dispatch({
           type: SECTIONS_SET,

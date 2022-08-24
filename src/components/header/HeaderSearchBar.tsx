@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
 
-import { IUserBlock, IStore, IUserSection, IUserList } from "types";
+import { IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import { useSelector } from "react-redux";
 
