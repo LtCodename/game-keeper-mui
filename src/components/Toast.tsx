@@ -16,14 +16,11 @@ interface Props {
   message: string;
   onClose: () => void;
   isError?: boolean;
+  open: boolean;
 }
 
-const Toast = ({ onClose, message, isError = false }: Props) => (
-  <Snackbar
-    open={Boolean(message.length)}
-    autoHideDuration={6000}
-    onClose={onClose}
-  >
+const Toast = ({ onClose, message, isError = false, open }: Props) => (
+  <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
     <Alert
       onClose={onClose}
       severity={isError ? "error" : "success"}

@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
+import { ISnackbar } from "types";
+
 import { GK } from "./Loader";
 
 import Toast from "./Toast";
@@ -36,7 +38,11 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: true,
+    message: "",
+  });
 
   const submitForm = (data: { email: string; password: string }) => {
     setIsSubmitting(true);
@@ -47,7 +53,11 @@ const Login = () => {
         navigate("/", { replace: true });
       })
       .catch((error: any) => {
-        setSnackbarMessage(error.toString());
+        setSnackbarState((previousState: ISnackbar) => ({
+          ...previousState,
+          open: true,
+          message: error.toString(),
+        }));
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -63,7 +73,11 @@ const Login = () => {
         navigate("/", { replace: true });
       })
       .catch((error: any) => {
-        setSnackbarMessage(error.toString());
+        setSnackbarState((previousState: ISnackbar) => ({
+          ...previousState,
+          open: true,
+          message: error.toString(),
+        }));
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -169,9 +183,15 @@ const Login = () => {
       </Formik>
 
       <Toast
-        isError
-        message={snackbarMessage}
-        onClose={() => setSnackbarMessage("")}
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
       />
     </Box>
   );

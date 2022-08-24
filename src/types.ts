@@ -100,3 +100,15 @@ export interface IRawgSearchResponce {
   previous: number | null;
   results: IRawgSearchResult[];
 }
+
+/**
+ * Snackbar state properties.
+ * @member {string} message Snackbar message.
+ * @member {boolean} isError Is it a success or error?
+ * @member {boolean} open Is snackbar displayed?
+ */
+export interface ISnackbar {
+  message: string;
+  isError: boolean;
+  open: boolean;
+}
