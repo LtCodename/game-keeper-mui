@@ -10,7 +10,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { LISTS_SET, SECTIONS_SET, BLOCKS_SET, USER_SET } from "redux/actions";
 
-import { Backdrop, CircularProgress, Snackbar } from "@mui/material/";
+import { Backdrop, CircularProgress } from "@mui/material/";
 
 import { Routes, Route } from "react-router-dom";
 
@@ -20,7 +20,7 @@ import Header from "components/Header/Header";
 import Dashboard from "components/Dashboard";
 import List from "components/List/List";
 import Login from "components/Login";
-import Alert from "./Alert";
+import Toast from "./Toast";
 
 export const enum GK {
   appVersion = "1.001",
@@ -45,10 +45,6 @@ const Loader = () => {
     if (userData) {
       getData(); // lists, sections, blocks
     }
-
-    return () => {
-      setSnackbarMessage("");
-    };
   }, [userData]);
 
   const userPresenceCheck = () => {
@@ -128,21 +124,11 @@ const Loader = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {Boolean(snackbarMessage.length) && (
-        <Snackbar
-          open={Boolean(snackbarMessage.length)}
-          autoHideDuration={6000}
-          onClose={() => setSnackbarMessage("")}
-        >
-          <Alert
-            onClose={() => setSnackbarMessage("")}
-            severity="error"
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      )}
+      <Toast
+        isError
+        message={snackbarMessage}
+        onClose={() => setSnackbarMessage("")}
+      />
     </>
   );
 };

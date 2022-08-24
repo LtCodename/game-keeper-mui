@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import {
-  Box,
-  FormControl,
-  FormHelperText,
-  TextField,
-  Snackbar,
-} from "@mui/material";
+import { Box, FormControl, FormHelperText, TextField } from "@mui/material";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -23,7 +17,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { GK } from "./Loader";
 
-import Alert from "./Alert";
+import Toast from "./Toast";
 
 const defaultValues: {
   email: string;
@@ -43,8 +37,6 @@ const Login = () => {
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
-
-  useEffect(() => () => setSnackbarMessage(""), []);
 
   const submitForm = (data: { email: string; password: string }) => {
     setIsSubmitting(true);
@@ -176,21 +168,11 @@ const Login = () => {
         )}
       </Formik>
 
-      {Boolean(snackbarMessage.length) && (
-        <Snackbar
-          open={Boolean(snackbarMessage.length)}
-          autoHideDuration={6000}
-          onClose={() => setSnackbarMessage("")}
-        >
-          <Alert
-            onClose={() => setSnackbarMessage("")}
-            severity="error"
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      )}
+      <Toast
+        isError
+        message={snackbarMessage}
+        onClose={() => setSnackbarMessage("")}
+      />
     </Box>
   );
 };
