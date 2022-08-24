@@ -33,15 +33,17 @@ interface Props {
 
 const ListSelector = ({ open, onClose }: Props) => {
   const theme = useTheme();
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
     isError: false,
     message: "",
   });
+
+  const userLists: IUserList[] =
+    useSelector((state: IStore) => state.userLists) || [];
 
   return (
     <Drawer

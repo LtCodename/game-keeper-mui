@@ -2,23 +2,30 @@ import React, { useState } from "react";
 
 import { Card, CardContent, Typography } from "@mui/material/";
 
-import { IUserBlock } from "types";
+import { ISnackbar, IUserBlock } from "types";
 
 import { formatReleaseDate } from "logic";
 
 import { GK } from "components/Loader";
-
+import Toast from "components/Toast";
 import EditBlockDialog from "./EditBlockDialog";
 
 interface Props {
   block: IUserBlock;
   listId: string | undefined;
+  deleteBlockCallback: (isError: boolean, message: string) => void;
 }
 
-const Block = ({ block, listId }: Props) => {
+const Block = ({ block, listId, deleteBlockCallback }: Props) => {
   const { name, developers, releaseDate } = block;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
+  });
 
   const processDevelopers = (): string => {
     if (!developers || !developers.length) return "";
@@ -68,6 +75,19 @@ const Block = ({ block, listId }: Props) => {
         open={isModalOpen}
         handleClose={() => setIsModalOpen(false)}
         listId={listId}
+        callback={(isError, message) => deleteBlockCallback(isError, message)}
+      />
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
       />
     </>
   );

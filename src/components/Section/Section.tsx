@@ -110,7 +110,18 @@ const Section = ({ section, listId }: Props) => {
               return 0;
             })
             .map((block: IUserBlock) => (
-              <Block key={block.id} block={block} listId={listId} />
+              <Block
+                key={block.id}
+                block={block}
+                listId={listId}
+                deleteBlockCallback={(isError, message) =>
+                  setSnackbarState({
+                    isError,
+                    message,
+                    open: true,
+                  })
+                }
+              />
             ))}
         </Stack>
       </AccordionDetails>
