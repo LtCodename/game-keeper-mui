@@ -10,16 +10,17 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { LISTS_SET, SECTIONS_SET, BLOCKS_SET, USER_SET } from "redux/actions";
 
-import { Backdrop, CircularProgress } from "@mui/material/";
+import { Backdrop, CircularProgress, Snackbar } from "@mui/material/";
 
 import { Routes, Route } from "react-router-dom";
+
+import { IStore } from "types";
 
 import Header from "components/Header/Header";
 import Dashboard from "components/Dashboard";
 import List from "components/List/List";
 import Login from "components/Login";
-
-import { IStore } from "types";
+import Alert from "./Alert";
 
 export const enum GK {
   appVersion = "1.001",
@@ -33,8 +34,10 @@ export const enum GK {
 }
 
 const Loader = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -87,7 +90,7 @@ const Loader = () => {
         });
       })
       .catch((error: any) => {
-        console.log(error);
+        setErrorMessage(error.toString());
       })
       .finally(() => {
         setTimeout(() => {
@@ -120,6 +123,22 @@ const Loader = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+
+      {errorMessage.length && (
+        <Snackbar
+          open={Boolean(errorMessage.length)}
+          autoHideDuration={6000}
+          onClose={() => setErrorMessage("")}
+        >
+          <Alert
+            onClose={() => setErrorMessage("")}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };
