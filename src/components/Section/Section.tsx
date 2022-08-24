@@ -26,9 +26,10 @@ import EditSectionDialog from "./EditSectionDialog";
 interface Props {
   section: IUserSection;
   listId: string | undefined;
+  deleteSectionCallback: (isError: boolean, message: string) => void;
 }
 
-const Section = ({ section, listId }: Props) => {
+const Section = ({ section, listId, deleteSectionCallback }: Props) => {
   const { name, id } = section;
 
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(true);
@@ -147,6 +148,9 @@ const Section = ({ section, listId }: Props) => {
           handleClose={() => setIsEditDialogOpen(false)}
           sectionId={id}
           listId={listId}
+          callback={(isError, message) =>
+            deleteSectionCallback(isError, message)
+          }
         />
       )}
 

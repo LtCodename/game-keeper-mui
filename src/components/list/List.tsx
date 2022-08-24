@@ -78,7 +78,18 @@ const List = () => {
       </Typography>
       <Stack direction="column" spacing={2}>
         {sections.map((section: IUserSection) => (
-          <Section key={section.id} section={section} listId={list?.id} />
+          <Section
+            key={section.id}
+            section={section}
+            listId={list?.id}
+            deleteSectionCallback={(isError, message) =>
+              setSnackbarState({
+                isError,
+                message,
+                open: true,
+              })
+            }
+          />
         ))}
       </Stack>
       <SpeedDial

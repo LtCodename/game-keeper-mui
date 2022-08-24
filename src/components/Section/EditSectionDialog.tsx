@@ -19,13 +19,11 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { useNavigate } from "react-router-dom";
-
 import * as yup from "yup";
 
 import { Formik, Form, ErrorMessage } from "formik";
 
-import { IStore, IUserBlock, IUserList, IUserSection } from "types";
+import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -34,6 +32,8 @@ import { doc, setDoc } from "firebase/firestore";
 import db from "api/firebase";
 
 import WarningDialog from "components/WarningDialog";
+import { GK } from "components/Loader";
+import Toast from "components/Toast";
 
 import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
 
@@ -42,6 +42,7 @@ export interface Props {
   handleClose: () => void;
   sectionId: string;
   listId: string | undefined;
+  callback: (isError: boolean, message: string) => void;
 }
 
 const defaultValues: {
@@ -54,17 +55,31 @@ const validationSchema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
 });
 
-const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
+const EditSectionDialog = ({
+  open,
+  handleClose,
+  sectionId,
+  listId,
+  callback,
+}: Props) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+
   const [currentSectionIndexGlobal, setCurrentSectionIndexGlobal] =
     useState<number>(0);
+
   const [currentSectionIndexLocal, setCurrentSectionIndexLocal] =
     useState<number>(0);
+
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
+
+  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+    open: false,
+    isError: false,
+    message: "",
+  });
 
   const userData: any = useSelector((state: IStore) => state.userData) || null;
 
@@ -125,9 +140,19 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
           type: SECTIONS_SET,
           payload: sectionsCopy,
         });
+
+        setSnackbarState({
+          open: true,
+          isError: false,
+          message: GK.snackbarSuccessMessage.toString(),
+        });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -157,9 +182,6 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
       blocks: blocksCopy,
     })
       .then(() => {
-        handleClose();
-        navigate("/", { replace: true });
-
         dispatch({
           type: SECTIONS_SET,
           payload: sectionsCopy,
@@ -169,9 +191,17 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
           type: BLOCKS_SET,
           payload: blocksCopy,
         });
+
+        callback(false, GK.snackbarSuccessMessage);
+
+        handleClose();
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -197,7 +227,11 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
       blocks: userBlocks,
     })
       .then(() => {
-        handleClose();
+        setSnackbarState({
+          open: true,
+          isError: false,
+          message: GK.snackbarSuccessMessage.toString(),
+        });
 
         dispatch({
           type: SECTIONS_SET,
@@ -205,7 +239,11 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
         });
       })
       .catch((error: any) => {
-        console.log(error);
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -317,6 +355,18 @@ const EditSectionDialog = ({ open, handleClose, sectionId, listId }: Props) => {
         message="You're about to delete the whole section. All the games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteSection()}
+      />
+
+      <Toast
+        isError={snackbarState.isError}
+        message={snackbarState.message}
+        open={snackbarState.open}
+        onClose={() =>
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: false,
+          }))
+        }
       />
     </Dialog>
   );
