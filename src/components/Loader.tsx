@@ -10,6 +10,16 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
 
+/**
+ * Copyright (c) 2022 Yevhen Chernenko.
+ * All rights reserved.
+ *
+ * https://github.com/LtCodename/game-keeper-mui
+ * https://gamekeeper.ltcodename.com
+ * https://www.linkedin.com/in/yevhen-chernenko
+ * https://ltcodename.com
+ */
+
 import { Backdrop, CircularProgress } from "@mui/material/";
 
 import { Route, Routes } from "react-router-dom";

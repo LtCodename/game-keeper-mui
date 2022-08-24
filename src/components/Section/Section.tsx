@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2022 Yevhen Chernenko.
+ * All rights reserved.
+ *
+ * https://github.com/LtCodename/game-keeper-mui
+ * https://gamekeeper.ltcodename.com
+ * https://www.linkedin.com/in/yevhen-chernenko
+ * https://ltcodename.com
+ */
+
 import React, { useState } from "react";
 
 import {
@@ -32,7 +42,7 @@ interface Props {
 const Section = ({ section, listId, deleteSectionCallback }: Props) => {
   const { name, id } = section;
 
-  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(true);
+  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
