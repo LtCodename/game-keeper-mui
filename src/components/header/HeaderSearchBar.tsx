@@ -24,6 +24,8 @@ import { grey } from "@mui/material/colors";
 
 import { useNavigate } from "react-router-dom";
 
+import { SHADE_OF_GREY } from "config";
+
 import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 
 const HeaderSearchBar = () => {
@@ -112,10 +114,10 @@ const HeaderSearchBar = () => {
           sx={{
             position: "absolute",
             zIndex: 9999,
-            px: 2,
+            pl: 2,
             pt: 2,
             pb: 1,
-            backgroundColor: grey[300],
+            backgroundColor: grey[SHADE_OF_GREY],
             borderRadius: "4px",
             minWidth: { xs: "auto", sm: "350px" },
             left: "-40px",
@@ -131,6 +133,7 @@ const HeaderSearchBar = () => {
             sx={{
               overflowY: "auto",
               maxHeight: 600,
+              pr: 2,
             }}
           >
             {searchResults.map((block: IUserBlock) => (

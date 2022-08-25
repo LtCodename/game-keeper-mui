@@ -209,7 +209,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  width: ADD_GAME_WINDOW_WIDTH,
+                  minWidth: ADD_GAME_WINDOW_WIDTH,
                 }}
               >
                 <FormControl

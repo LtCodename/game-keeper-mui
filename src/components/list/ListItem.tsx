@@ -16,7 +16,9 @@ import { IUserList } from "types";
 
 import { Link } from "react-router-dom";
 
-import { yellow } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
+
+import { SHADE_OF_GREY } from "config";
 
 interface Props {
   onClose: () => void;
@@ -25,6 +27,7 @@ interface Props {
 
 const ListItem = ({ list, onClose }: Props) => {
   const [elevation, setElevation] = useState<number>(1);
+
   const { name, id } = list;
 
   return (
@@ -37,7 +40,13 @@ const ListItem = ({ list, onClose }: Props) => {
       }}
       onClick={onClose}
     >
-      <Paper elevation={elevation} sx={{ p: 2, backgroundColor: yellow[400] }}>
+      <Paper
+        elevation={elevation}
+        sx={{
+          p: 2,
+          backgroundColor: grey[SHADE_OF_GREY],
+        }}
+      >
         {name}
       </Paper>
     </Link>

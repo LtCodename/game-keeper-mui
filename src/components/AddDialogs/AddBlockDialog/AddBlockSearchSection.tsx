@@ -16,7 +16,9 @@ import { IRawgSearchResponce, IRawgSearchResult } from "types";
 
 import SearchResultItem from "components/SearchResultItem";
 
-import { ADD_GAME_WINDOW_WIDTH } from "config";
+import { ADD_GAME_WINDOW_WIDTH, SHADE_OF_GREY } from "config";
+
+import { grey } from "@mui/material/colors";
 
 export interface Props {
   onGameSelect: (id: number) => void;
@@ -29,9 +31,11 @@ const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
     spacing={1}
     sx={{
       p: 2,
+      mt: 2,
       overflowY: "auto",
       maxHeight: 300,
       width: ADD_GAME_WINDOW_WIDTH,
+      backgroundColor: grey[SHADE_OF_GREY],
     }}
   >
     {searchResults?.results?.map((searchResult: IRawgSearchResult) => (

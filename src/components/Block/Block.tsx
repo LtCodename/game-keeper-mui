@@ -19,7 +19,7 @@ import { formatReleaseDate } from "logic";
 import EditBlockDialog from "components/Block/EditBlockDialog";
 import Toast from "components/Toast";
 
-import { DEVELOPER_LENGTH, NAME_LENGTH } from "config";
+import { NAME_LENGTH } from "config";
 
 interface Props {
   block: IUserBlock;
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const Block = ({ block, listId, deleteBlockCallback }: Props) => {
-  const { name, developers, releaseDate } = block;
+  const { name, releaseDate } = block;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -37,15 +37,6 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
     isError: false,
     message: "",
   });
-
-  const processDevelopers = (): string => {
-    if (!developers || !developers.length) return "";
-
-    if (developers.length >= DEVELOPER_LENGTH) {
-      return `${developers.substring(0, DEVELOPER_LENGTH)}...`;
-    }
-    return developers;
-  };
 
   const processName = (): string => {
     if (!name || !name.length) return "";
@@ -71,13 +62,12 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
             },
           }}
         >
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {formatReleaseDate(releaseDate)}
-          </Typography>
-          <Typography variant="h5" component="div">
+          <Typography variant="h6" component="div">
             {processName()}
           </Typography>
-          <Typography color="text.secondary">{processDevelopers()}</Typography>
+          <Typography sx={{ mb: 0 }} color="text.secondary" gutterBottom>
+            {formatReleaseDate(releaseDate)}
+          </Typography>
         </CardContent>
       </Card>
 

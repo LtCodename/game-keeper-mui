@@ -12,7 +12,7 @@ import React, { useState } from "react";
 
 import { Paper, Typography } from "@mui/material/";
 
-import { grey, yellow } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 
 export interface Props {
   onClick: () => void;
@@ -30,7 +30,7 @@ const SearchResultItem = ({ onClick, name, listName, sectionName }: Props) => {
       onMouseLeave={() => setElevation(1)}
       onClick={onClick}
       elevation={elevation}
-      sx={{ p: 2, cursor: "pointer", backgroundColor: yellow[400] }}
+      sx={{ p: 2, cursor: "pointer" }}
     >
       <Typography>{name}</Typography>
 

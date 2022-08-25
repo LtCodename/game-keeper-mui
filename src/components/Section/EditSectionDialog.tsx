@@ -306,7 +306,7 @@ const EditSectionDialog = ({
                   </ErrorMessage>
                 </FormControl>
 
-                <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
+                <FormControl variant="filled" sx={{ mt: 1, width: "100%" }}>
                   <InputLabel id="sectionPosition">Position</InputLabel>
                   <Select
                     labelId="sectionPosition"
