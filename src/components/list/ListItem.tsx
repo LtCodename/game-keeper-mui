@@ -16,9 +16,7 @@ import { IUserList } from "types";
 
 import { Link } from "react-router-dom";
 
-import { grey } from "@mui/material/colors";
-
-import { SHADE_OF_GREY } from "config";
+import { useTheme } from "@mui/material/styles";
 
 interface Props {
   onClose: () => void;
@@ -26,6 +24,8 @@ interface Props {
 }
 
 const ListItem = ({ list, onClose }: Props) => {
+  const theme = useTheme();
+
   const [elevation, setElevation] = useState<number>(1);
 
   const { name, id } = list;
@@ -44,7 +44,8 @@ const ListItem = ({ list, onClose }: Props) => {
         elevation={elevation}
         sx={{
           p: 2,
-          backgroundColor: grey[SHADE_OF_GREY],
+          backgroundColor: theme.palette.secondary.light,
+          color: theme.palette.common.white,
         }}
       >
         {name}
