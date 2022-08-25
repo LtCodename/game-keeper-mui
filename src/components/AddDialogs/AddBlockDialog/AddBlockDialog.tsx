@@ -54,11 +54,7 @@ import Toast from "components/Toast";
 
 import { formatReleaseDate, processDevelopers } from "sharedLogic";
 
-import {
-  ADD_GAME_ERROR,
-  ADD_GAME_WINDOW_WIDTH,
-  SNACKBAR_SUCCESS,
-} from "config";
+import { ADD_GAME_WINDOW_WIDTH, SNACKBAR_SUCCESS } from "config";
 
 export interface Props {
   open: boolean;
@@ -109,15 +105,25 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
   }, [gameToAdd]);
 
   const submitForm = async () => {
+    if (!gameToAdd) {
+      setSnackbarState({
+        open: true,
+        isError: true,
+        message: "RAWG failed to return game details",
+      });
+
+      return;
+    }
+
     setIsSubmitting(true);
 
     const newBlock: IUserBlock = {
-      id: gameToAdd?.id || "1",
-      name: gameToAdd?.name || ADD_GAME_ERROR,
+      id: gameToAdd?.id,
+      name: gameToAdd?.name,
       sectionId,
-      apiId: gameToAdd?.apiId || 1,
-      developers: gameToAdd?.developers || ADD_GAME_ERROR,
-      releaseDate: gameToAdd?.releaseDate || ADD_GAME_ERROR,
+      apiId: gameToAdd?.apiId,
+      developers: gameToAdd?.developers,
+      releaseDate: gameToAdd?.releaseDate,
     };
 
     const blocksCopy: IUserBlock[] = [...userBlocks, newBlock];

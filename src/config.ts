@@ -14,7 +14,6 @@ const NAME_LENGTH = 43;
 const DEVELOPER_LENGTH = 59;
 const ADD_GAME_WINDOW_WIDTH = 320;
 const SHADE_OF_GREY = 300;
-const ADD_GAME_ERROR = "Game was not added!";
 const DEMO_EMAIL = "ltcodename92@gmail.com";
 const DEMO_PASSWORD = "22121992";
 const SNACKBAR_SUCCESS = "Success!";
@@ -25,7 +24,6 @@ export {
   NAME_LENGTH,
   DEVELOPER_LENGTH,
   ADD_GAME_WINDOW_WIDTH,
-  ADD_GAME_ERROR,
   DEMO_EMAIL,
   DEMO_PASSWORD,
   SNACKBAR_SUCCESS,
