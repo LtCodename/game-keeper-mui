@@ -8,7 +8,7 @@
  * https://ltcodename.com
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Accordion,
@@ -26,12 +26,12 @@ import { useSelector } from "react-redux";
 
 import { ISnackbar, IStore, IUserBlock, IUserSection } from "types";
 
-import { yellow } from "@mui/material/colors";
-
 import AddBlockDialog from "components/AddDialogs/AddBlockDialog/AddBlockDialog";
 import Block from "components/Block/Block";
 import EditSectionDialog from "components/Section/EditSectionDialog";
 import Toast from "components/Toast";
+
+import { useTheme } from "@mui/material/styles";
 
 interface Props {
   section: IUserSection;
@@ -40,11 +40,16 @@ interface Props {
 }
 
 const Section = ({ section, listId, deleteSectionCallback }: Props) => {
+  const theme = useTheme();
+
   const { name, id } = section;
 
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
+
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
     isError: false,
@@ -60,11 +65,20 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
     setIsSectionExpanded((previousState: boolean) => !previousState);
   };
 
+  useEffect(() => {
+    if (blocks?.length) {
+      setIsSectionExpanded(true);
+    }
+  }, []);
+
   return (
     <Accordion
       expanded={isSectionExpanded}
       onChange={toggleSection}
-      sx={{ backgroundColor: yellow[400] }}
+      sx={{
+        backgroundColor: theme.palette.secondary.light,
+        color: theme.palette.common.white,
+      }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}

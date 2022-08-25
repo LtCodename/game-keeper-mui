@@ -12,7 +12,8 @@ const APP_VERSION = 1.001;
 const DRAWER_WIDTH = 320;
 const NAME_LENGTH = 43;
 const DEVELOPER_LENGTH = 59;
-const ADD_GAME_WINDOW_WIDTH = 59;
+const ADD_GAME_WINDOW_WIDTH = 320;
+const SHADE_OF_GREY = 300;
 const ADD_GAME_ERROR = "Game was not added!";
 const DEMO_EMAIL = "ltcodename92@gmail.com";
 const DEMO_PASSWORD = "22121992";
@@ -28,4 +29,5 @@ export {
   DEMO_EMAIL,
   DEMO_PASSWORD,
   SNACKBAR_SUCCESS,
+  SHADE_OF_GREY,
 };

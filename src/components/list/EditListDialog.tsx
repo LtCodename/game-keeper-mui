@@ -304,7 +304,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                   </ErrorMessage>
                 </FormControl>
 
-                <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
+                <FormControl variant="filled" sx={{ mt: 1, width: "100%" }}>
                   <InputLabel id="listPosition">Position</InputLabel>
                   <Select
                     labelId="listPosition"

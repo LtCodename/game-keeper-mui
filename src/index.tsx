@@ -26,6 +26,8 @@ import rootReducer from "redux/rootReducer";
 
 import Loader from "components/Loader";
 
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
@@ -34,10 +36,18 @@ const root = ReactDOM.createRoot(
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
+const darkTheme = createTheme({
+  palette: {
+    mode: "light",
+  },
+});
+
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <Loader />
+      <ThemeProvider theme={darkTheme}>
+        <Loader />
+      </ThemeProvider>
     </BrowserRouter>
   </Provider>
 );

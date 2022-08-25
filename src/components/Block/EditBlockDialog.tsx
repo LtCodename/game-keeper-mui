@@ -274,7 +274,8 @@ const EditBlockDialog = ({
 
       <Box
         sx={{
-          p: 2,
+          pb: 2,
+          px: 2,
           width: 400,
         }}
       >
