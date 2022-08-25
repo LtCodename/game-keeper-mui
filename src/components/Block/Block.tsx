@@ -14,7 +14,7 @@ import { Card, CardContent, Typography } from "@mui/material/";
 
 import { ISnackbar, IUserBlock } from "types";
 
-import { formatReleaseDate } from "logic";
+import { formatReleaseDate } from "sharedLogic";
 
 import EditBlockDialog from "components/Block/EditBlockDialog";
 import Toast from "components/Toast";

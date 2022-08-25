@@ -52,7 +52,7 @@ import { getGameInformation, searchGamesByName } from "api/rawgApi";
 import AddBlockSearchSection from "components/AddDialogs/AddBlockDialog/AddBlockSearchSection";
 import Toast from "components/Toast";
 
-import { formatReleaseDate, processDevelopers } from "logic";
+import { formatReleaseDate, processDevelopers } from "sharedLogic";
 
 import {
   ADD_GAME_ERROR,
