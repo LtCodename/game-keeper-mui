@@ -76,6 +76,9 @@ const Header = () => {
     signOut(auth)
       .then(() => {
         navigate("/login", { replace: true });
+
+        setIsDrawerOpen(false);
+
         setTimeout(() => {
           clearStore();
         }, 100);
