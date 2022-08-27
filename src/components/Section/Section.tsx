@@ -71,6 +71,10 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
     }
   }, []);
 
+  useEffect(() => {
+    setIsSectionExpanded(Boolean(blocks?.length));
+  }, [blocks?.length]);
+
   return (
     <Accordion
       expanded={isSectionExpanded}
