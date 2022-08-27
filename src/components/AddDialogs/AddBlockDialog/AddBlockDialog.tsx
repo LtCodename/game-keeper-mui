@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogTitle,
   FormControl,
@@ -78,7 +79,8 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
 
   const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<IRawgSearchResponce>();
-  const [isSearchDisplayed, setIsSearchDisplayed] = useState<boolean>(false);
+  const [isResultDisplayed, setIsResultDisplayed] = useState<boolean>(false);
+  const [isSearchInProgress, setIsSearchInProgress] = useState<boolean>(false);
   const [gameToAdd, setGameToAdd] = useState<IUserBlock>();
   const [isAdditionalInfo, setIsAdditionalInfo] = useState<boolean>(false);
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
@@ -156,10 +158,12 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
   };
 
   const searchApi = async (gameName: string) => {
+    setIsSearchInProgress(true);
+
     await searchGamesByName(gameName)
       .then((response: IRawgSearchResponce) => {
         setSearchResults(response);
-        setIsSearchDisplayed(true);
+        setIsResultDisplayed(true);
       })
       .catch(() => {
         setSnackbarState({
@@ -167,11 +171,14 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
           isError: true,
           message: "RAWG failed to return search results",
         });
+      })
+      .finally(() => {
+        setIsSearchInProgress(false);
       });
   };
 
   const onGameSelect = async (rawgId: number) => {
-    setIsSearchDisplayed(false);
+    setIsResultDisplayed(false);
 
     await getGameInformation(rawgId)
       .then((rawgResponse: any) => {
@@ -246,14 +253,16 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
                   </ErrorMessage>
                 </FormControl>
 
-                {isSearchDisplayed && (
+                {isSearchInProgress && <CircularProgress sx={{ mt: 2 }} />}
+
+                {isResultDisplayed && (
                   <AddBlockSearchSection
                     onGameSelect={(rawgId: number) => onGameSelect(rawgId)}
                     searchResults={searchResults}
                   />
                 )}
 
-                {isAdditionalInfo && !isSearchDisplayed && (
+                {isAdditionalInfo && !isResultDisplayed && (
                   <Stack
                     direction="column"
                     spacing={0}
