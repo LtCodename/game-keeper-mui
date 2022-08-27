@@ -253,7 +253,11 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
                   </ErrorMessage>
                 </FormControl>
 
-                {isSearchInProgress && <CircularProgress sx={{ mt: 2 }} />}
+                {isSearchInProgress && (
+                  <CircularProgress
+                    sx={{ position: "absolute", top: 10, right: 20 }}
+                  />
+                )}
 
                 {isResultDisplayed && (
                   <AddBlockSearchSection
@@ -266,7 +270,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
                   <Stack
                     direction="column"
                     spacing={0}
-                    sx={{ mt: 2, width: "100%" }}
+                    sx={{ mt: 2, width: "100%", minHight: 72 }}
                   >
                     <Typography>{`Name: ${gameToAdd?.name}`}</Typography>
                     <Typography>{`Developers: ${gameToAdd?.developers}`}</Typography>
