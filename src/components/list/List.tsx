@@ -104,7 +104,7 @@ const List = () => {
       </Stack>
       <SpeedDial
         ariaLabel="list actions"
-        sx={{ position: "absolute", bottom: 16, right: 16 }}
+        sx={{ position: "fixed", bottom: 16, right: 16 }}
         icon={<SettingsIcon />}
         openIcon={<CloseIcon />}
       >
