@@ -63,7 +63,7 @@ const defaultValues: {
 };
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required("Name is a required field"),
+  name: yup.string().required("Make sure list name is entered/changed"),
 });
 
 const EditListDialog = ({ open, handleClose, listId }: Props) => {
@@ -338,7 +338,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     color="success"
                     type="submit"
                   >
-                    Save
+                    Rename
                   </LoadingButton>
                   <LoadingButton
                     loading={isSubmittimg}

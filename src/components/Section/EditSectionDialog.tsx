@@ -63,7 +63,7 @@ const defaultValues: {
 };
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required("Name is a required field"),
+  name: yup.string().required("Make sure section name is entered/changed"),
 });
 
 const EditSectionDialog = ({
@@ -342,7 +342,7 @@ const EditSectionDialog = ({
                     color="success"
                     type="submit"
                   >
-                    Save
+                    Rename
                   </LoadingButton>
                   <LoadingButton
                     loading={isSubmittimg}
