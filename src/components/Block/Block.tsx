@@ -66,9 +66,7 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
             {processName()}
           </Typography>
           <Typography sx={{ mb: 0 }} color="text.secondary" gutterBottom>
-            {!releaseDate || !releaseDate.length
-              ? "TBA"
-              : formatReleaseDate(releaseDate)}
+            {formatReleaseDate(releaseDate)}
           </Typography>
         </CardContent>
       </Card>
