@@ -31,6 +31,7 @@ import Header from "components/Header/Header";
 import List from "components/List/List";
 import Login from "components/Login";
 import Toast from "components/Toast";
+import WrongRoute from "components/WrongRoute";
 
 const Loader = () => {
   const dispatch = useDispatch();
@@ -117,9 +118,9 @@ const Loader = () => {
           <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/:listId" element={<List />} />
+            <Route path=":listId" element={<List />} />
             <Route path="login" element={<Login />} />
-            <Route path="*" element={<p>There is nothing here!</p>} />
+            <Route path="error" element={<WrongRoute />} />
           </Routes>
         </>
       ) : null}
