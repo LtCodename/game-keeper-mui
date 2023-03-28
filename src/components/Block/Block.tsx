@@ -14,12 +14,10 @@ import { Card, CardContent, Typography } from "@mui/material/";
 
 import { ISnackbar, IUserBlock } from "types";
 
-import { formatReleaseDate } from "sharedLogic";
+import { formatReleaseDate, trimName } from "sharedLogic";
 
 import EditBlockDialog from "components/Block/EditBlockDialog";
 import Toast from "components/Toast";
-
-import { NAME_LENGTH } from "config";
 
 interface Props {
   block: IUserBlock;
@@ -38,15 +36,6 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
     message: "",
   });
 
-  const processName = (): string => {
-    if (!name || !name.length) return "";
-
-    if (name.length >= NAME_LENGTH) {
-      return `${name.substring(0, NAME_LENGTH)}...`;
-    }
-    return name;
-  };
-
   return (
     <>
       <Card
@@ -63,7 +52,7 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
           }}
         >
           <Typography variant="h6" component="div">
-            {processName()}
+            {trimName(name)}
           </Typography>
           <Typography sx={{ mb: 0 }} color="text.secondary" gutterBottom>
             {formatReleaseDate(releaseDate)}
