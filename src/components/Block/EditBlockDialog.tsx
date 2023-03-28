@@ -44,7 +44,7 @@ import db from "api/firebase";
 
 import { BLOCKS_SET } from "redux/actions";
 
-import { formatReleaseDate, processDevelopers } from "sharedLogic";
+import { formatReleaseDate, processDevelopers, trimName } from "sharedLogic";
 
 import { getGameInformation } from "api/rawgApi";
 
@@ -260,7 +260,7 @@ const EditBlockDialog = ({
           pt: 1,
         }}
       >
-        <DialogTitle sx={{ p: 0 }}>{gameMeta?.name}</DialogTitle>
+        <DialogTitle sx={{ p: 0 }}>{trimName(gameMeta?.name)}</DialogTitle>
         <Tooltip title="Refresh meta data">
           <IconButton
             aria-label="refresh"
