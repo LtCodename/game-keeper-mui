@@ -81,7 +81,15 @@ const List = () => {
     }
 
     if (!list) {
-      navigate("/error", { replace: true });
+      setSnackbarState({
+        open: true,
+        isError: true,
+        message: "Wrong route or list ID, redirecting...",
+      });
+
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 5000);
     }
   }, [userData, list]);
 
