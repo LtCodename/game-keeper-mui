@@ -66,20 +66,32 @@ const List = () => {
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
 
+  const list: IUserList | undefined = userLists.find(
+    (list: IUserList) => list.id === listId
+  );
+
   const sections: IUserSection[] =
     useSelector((state: IStore) => state.userSections).filter(
       (section: IUserSection) => section.listId === listId
     ) || [];
 
-  const list: IUserList | undefined = userLists.find(
-    (list: IUserList) => list.id === listId
-  );
-
   useEffect(() => {
     if (!userData) {
       navigate("/login", { replace: true });
     }
-  }, [userData]);
+
+    if (!list) {
+      setSnackbarState({
+        open: true,
+        isError: true,
+        message: "Wrong route or list ID, redirecting...",
+      });
+
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 5000);
+    }
+  }, [userData, list]);
 
   return (
     <Box sx={{ p: 2 }}>
