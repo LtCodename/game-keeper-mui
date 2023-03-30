@@ -65,8 +65,8 @@ const ListSelector = ({ open, onClose }: Props) => {
           boxSizing: "border-box",
         },
       }}
-      variant="persistent"
       anchor="left"
+      onClose={onClose}
       open={open}
     >
       <DrawerHeader>
