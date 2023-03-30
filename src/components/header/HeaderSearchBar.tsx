@@ -94,7 +94,15 @@ const HeaderSearchBar = () => {
   }, [searchInputValue]);
 
   return (
-    <Search sx={{ minWidth: { xs: "auto", sm: "300px" } }}>
+    <Search
+      sx={{
+        position: "relative",
+        minWidth: { xs: "auto", sm: "300px" },
+        "& .MuiInputBase-root": {
+          width: "100%",
+        },
+      }}
+    >
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
@@ -107,54 +115,74 @@ const HeaderSearchBar = () => {
         ) => {
           setSearchInputValue(event.currentTarget.value);
         }}
+        value={searchInputValue}
       />
 
       {isResultDisplayed && (
-        <Box
+        <Stack
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            setSearchInputValue("");
+            setIsResultDisplayed(false);
+          }}
           sx={{
-            position: "absolute",
-            zIndex: 9999,
-            pl: 2,
-            pt: 2,
-            pb: 1,
-            backgroundColor: grey[SHADE_OF_GREY],
-            borderRadius: "4px",
-            minWidth: { xs: "auto", sm: "350px" },
-            left: "-40px",
-            top: "45px",
-            right: 0,
-            my: 0,
-            mx: "auto",
+            position: "fixed",
+            cursor: "pointer",
+            top: 0,
+            left: 0,
+            width: 1,
+            height: 1,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999,
           }}
         >
-          <Stack
-            direction="column"
-            spacing={1}
+          <Box
             sx={{
-              overflowY: "auto",
-              maxHeight: 600,
-              pr: 2,
+              position: "absolute",
+              pl: 2,
+              pt: 2,
+              pb: 1,
+              backgroundColor: grey[SHADE_OF_GREY],
+              borderRadius: "4px",
+              width: 400,
+              left: 100,
+              top: 50,
+              right: 0,
+              my: 0,
+              mx: "auto",
             }}
           >
-            {searchResults.map((block: IUserBlock) => (
-              <Box
-                key={block.id}
-                sx={{
-                  "&:last-child": {
-                    mb: 1,
-                  },
-                }}
-              >
-                <SearchResultItem
-                  onClick={() => onGameSelect(block.id)}
-                  name={block.name}
-                  listName={block.listName}
-                  sectionName={block.sectionName}
-                />
-              </Box>
-            ))}
-          </Stack>
-        </Box>
+            <Stack
+              direction="column"
+              spacing={1}
+              sx={{
+                overflowY: "auto",
+                maxHeight: 600,
+                pr: 2,
+              }}
+            >
+              {searchResults.map((block: IUserBlock) => (
+                <Box
+                  key={block.id}
+                  sx={{
+                    "&:last-child": {
+                      mb: 1,
+                    },
+                  }}
+                >
+                  <SearchResultItem
+                    onClick={() => onGameSelect(block.id)}
+                    name={block.name}
+                    listName={block.listName}
+                    sectionName={block.sectionName}
+                  />
+                </Box>
+              ))}
+            </Stack>
+          </Box>
+        </Stack>
       )}
     </Search>
   );
