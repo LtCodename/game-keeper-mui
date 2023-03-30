@@ -97,7 +97,9 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
             width: "100%",
           }}
         >
-          <Typography>{name}</Typography>
+          <Typography fontSize="1.5rem" fontWeight={600}>
+            {name}
+          </Typography>
           <Box>
             <Button
               variant="contained"
