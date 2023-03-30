@@ -36,16 +36,22 @@ const root = ReactDOM.createRoot(
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
-const darkTheme = createTheme({
+const lightTheme = createTheme({
   palette: {
     mode: "light",
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#f9a825",
+    },
   },
 });
 
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={lightTheme}>
         <Loader />
       </ThemeProvider>
     </BrowserRouter>

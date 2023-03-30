@@ -10,7 +10,7 @@
 
 import React, { useState } from "react";
 
-import { Paper } from "@mui/material/";
+import { Paper, Typography } from "@mui/material/";
 
 import { IUserList } from "types";
 
@@ -48,7 +48,9 @@ const ListItem = ({ list, onClose }: Props) => {
           color: theme.palette.common.white,
         }}
       >
-        {name}
+        <Typography fontSize="1rem" fontWeight={600}>
+          {name}
+        </Typography>
       </Paper>
     </Link>
   );
