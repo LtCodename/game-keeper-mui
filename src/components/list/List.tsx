@@ -86,10 +86,7 @@ const List = () => {
         isError: true,
         message: "Wrong route or list ID, redirecting...",
       });
-
-      setTimeout(() => {
-        navigate("/", { replace: true });
-      }, 5000);
+      navigate("/", { replace: true });
     }
   }, [userData, list]);
 
