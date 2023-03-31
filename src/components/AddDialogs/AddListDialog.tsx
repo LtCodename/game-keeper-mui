@@ -28,7 +28,14 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
+import {
+  IAddListForm,
+  ISnackbar,
+  IStore,
+  IUserBlock,
+  IUserList,
+  IUserSection,
+} from "types";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -61,7 +68,7 @@ const validationSchema = yup.object().shape({
 const AddListDialog = ({ open, handleClose, callback }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
@@ -69,7 +76,7 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
@@ -125,7 +132,7 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: any) => {
+          onSubmit={(values: IAddListForm) => {
             submitForm(values);
           }}
           validationSchema={validationSchema}
@@ -169,7 +176,7 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
                     Close
                   </Button>
                   <LoadingButton
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<PublishIcon />}
                     variant="outlined"

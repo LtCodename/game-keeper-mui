@@ -42,7 +42,7 @@ const Loader = () => {
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   useEffect(() => {
     if (userData) {
@@ -53,7 +53,7 @@ const Loader = () => {
   const userPresenceCheck = () => {
     const auth = getAuth();
 
-    onAuthStateChanged(auth, (user: any) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch({
           type: USER_SET,
@@ -74,7 +74,7 @@ const Loader = () => {
     const usersRef = doc(db, "users", userData.uid);
 
     await getDoc(usersRef)
-      .then((doc: any) => {
+      .then((doc) => {
         const allUserData = doc.data() || {};
 
         dispatch({

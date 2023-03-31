@@ -12,7 +12,7 @@ import React from "react";
 
 import { Stack } from "@mui/material/";
 
-import { IRawgSearchResponce, IRawgSearchResult } from "types";
+import { IRawgSearchResponse, IRawgSearchResult } from "types";
 
 import SearchResultItem from "components/SearchResultItem";
 
@@ -22,7 +22,7 @@ import { grey } from "@mui/material/colors";
 
 export interface Props {
   onGameSelect: (id: number) => void;
-  searchResults: IRawgSearchResponce | undefined;
+  searchResults: IRawgSearchResponse | undefined;
 }
 
 const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (

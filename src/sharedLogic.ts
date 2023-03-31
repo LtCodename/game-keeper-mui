@@ -12,15 +12,17 @@ import { NAME_LENGTH } from "config";
 
 import moment from "moment";
 
+import { IRawgDeveloper } from "types";
+
 export const formatReleaseDate = (releaseDate: string | undefined): string =>
   releaseDate && releaseDate.length
     ? moment(releaseDate).format("MMMM D YYYY")
     : "TBA";
 
-export const processDevelopers = (developers: any): string => {
+export const processDevelopers = (developers: IRawgDeveloper[]): string => {
   if (!developers.length) return "";
 
-  return developers.map((developer: any) => developer.name).join(", ");
+  return developers.map((developer) => developer.name).join(", ");
 };
 
 export const trimName = (name: string): string => {

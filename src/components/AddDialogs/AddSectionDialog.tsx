@@ -28,7 +28,14 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
+import {
+  IAddSectionForm,
+  ISnackbar,
+  IStore,
+  IUserBlock,
+  IUserList,
+  IUserSection,
+} from "types";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -62,14 +69,14 @@ const validationSchema = yup.object().shape({
 const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
@@ -120,11 +127,11 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Secton</DialogTitle>
+      <DialogTitle sx={{ pl: 2, pb: 0 }}>Add Section</DialogTitle>
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: any) => {
+          onSubmit={(values: IAddSectionForm) => {
             submitForm(values);
           }}
           validationSchema={validationSchema}
@@ -172,7 +179,7 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
                     Close
                   </Button>
                   <LoadingButton
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<PublishIcon />}
                     variant="outlined"

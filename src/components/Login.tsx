@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import { ISnackbar } from "types";
+import { ILoginForm, ISnackbar } from "types";
 
 import Toast from "components/Toast";
 
@@ -47,7 +47,7 @@ const validationSchema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
@@ -107,7 +107,7 @@ const Login = () => {
     >
       <Formik
         initialValues={defaultValues}
-        onSubmit={(values: any) => {
+        onSubmit={(values: ILoginForm) => {
           submitForm(values);
         }}
         validationSchema={validationSchema}
@@ -167,7 +167,7 @@ const Login = () => {
                 <Box>
                   <LoadingButton
                     sx={{ mt: 2, mx: 1 }}
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<LockOpenIcon />}
                     variant="outlined"
@@ -178,7 +178,7 @@ const Login = () => {
                   </LoadingButton>
                   <LoadingButton
                     sx={{ mt: 2, mx: 1 }}
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<VisibilityIcon />}
                     variant="outlined"

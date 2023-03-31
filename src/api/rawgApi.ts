@@ -10,6 +10,8 @@
 
 import axios from "axios";
 
+import { IRawgGame } from "types";
+
 export async function searchGamesByName(name: string) {
   try {
     const { data } = await axios.get(
@@ -35,7 +37,9 @@ export async function getGameInformation(id: number | undefined) {
         },
       }
     );
-    return data;
+
+    const gameData: IRawgGame = data;
+    return gameData;
   } catch (e) {
     throw new Error("Something went wrong!");
   }

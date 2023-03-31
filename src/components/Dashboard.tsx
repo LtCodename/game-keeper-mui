@@ -19,7 +19,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];

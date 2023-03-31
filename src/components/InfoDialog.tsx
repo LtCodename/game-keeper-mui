@@ -32,7 +32,7 @@ interface Props {
 }
 
 const InfoDialog = ({ onClose, open }: Props) => {
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];

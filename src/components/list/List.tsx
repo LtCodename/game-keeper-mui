@@ -47,7 +47,7 @@ const speedDialActions: ISpeedDialAction[] = [
 
 const List = () => {
   const navigate = useNavigate();
-  const location: any = useLocation();
+  const location = useLocation();
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
 
@@ -59,9 +59,9 @@ const List = () => {
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
-  const listId: string = location.pathname.replace(/[/]/, "");
+  const listId = location.pathname.replace(/[/]/, "");
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];

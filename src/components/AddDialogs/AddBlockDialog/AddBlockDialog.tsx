@@ -32,7 +32,7 @@ import * as yup from "yup";
 import { ErrorMessage, Form, Formik } from "formik";
 
 import {
-  IRawgSearchResponce,
+  IRawgSearchResponse,
   ISnackbar,
   IStore,
   IUserBlock,
@@ -77,8 +77,8 @@ const validationSchema = yup.object().shape({
 const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  const [searchResults, setSearchResults] = useState<IRawgSearchResponce>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState<IRawgSearchResponse>();
   const [isResultDisplayed, setIsResultDisplayed] = useState<boolean>(false);
   const [isSearchInProgress, setIsSearchInProgress] = useState<boolean>(false);
   const [gameToAdd, setGameToAdd] = useState<IUserBlock>();
@@ -89,7 +89,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
@@ -161,7 +161,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
     setIsSearchInProgress(true);
 
     await searchGamesByName(gameName)
-      .then((response: IRawgSearchResponce) => {
+      .then((response: IRawgSearchResponse) => {
         setSearchResults(response);
         setIsResultDisplayed(true);
       })
@@ -181,14 +181,14 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
     setIsResultDisplayed(false);
 
     await getGameInformation(rawgId)
-      .then((rawgResponse: any) => {
+      .then((data) => {
         setGameToAdd({
           id: `id${new Date().getTime()}`,
-          name: rawgResponse.name,
+          name: data.name,
           sectionId,
-          apiId: rawgResponse.id,
-          developers: processDevelopers(rawgResponse.developers),
-          releaseDate: rawgResponse.released,
+          apiId: data.id,
+          developers: processDevelopers(data.developers),
+          releaseDate: data.released,
         });
       })
       .catch(() => {
@@ -289,7 +289,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
                     Close
                   </Button>
                   <LoadingButton
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<PublishIcon />}
                     variant="outlined"

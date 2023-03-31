@@ -35,7 +35,14 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
+import {
+  IEditListForm,
+  ISnackbar,
+  IStore,
+  IUserBlock,
+  IUserList,
+  IUserSection,
+} from "types";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -70,7 +77,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [currentListIndex, setCurrentListIndex] = useState<number>(0);
 
@@ -86,7 +93,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   const userLists: IUserList[] =
     useSelector((state: IStore) => state.userLists) || [];
@@ -265,7 +272,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: any) => {
+          onSubmit={(values: IEditListForm) => {
             submitForm(values);
           }}
           validationSchema={validationSchema}
@@ -330,7 +337,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                   </Button>
                   <LoadingButton
                     sx={{ mr: 2 }}
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<SaveIcon />}
                     variant="outlined"
@@ -341,7 +348,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     Rename
                   </LoadingButton>
                   <LoadingButton
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<DeleteIcon />}
                     variant="outlined"

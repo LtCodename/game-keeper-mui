@@ -73,7 +73,7 @@ const EditBlockDialog = ({
 }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
     useState<boolean>(false);
 
@@ -97,7 +97,7 @@ const EditBlockDialog = ({
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: IStore) => state.userData) || null;
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];
@@ -112,11 +112,11 @@ const EditBlockDialog = ({
     setIsSubmitting(true);
 
     await getGameInformation(block?.apiId)
-      .then((rawgResponse: any) => {
+      .then((data) => {
         setGameMeta({
-          developers: processDevelopers(rawgResponse.developers),
-          releaseDate: rawgResponse.released,
-          name: rawgResponse.name,
+          developers: processDevelopers(data.developers),
+          releaseDate: data.released,
+          name: data.name,
         });
 
         setSnackbarState({
@@ -326,7 +326,7 @@ const EditBlockDialog = ({
         </Button>
         <LoadingButton
           sx={{ mr: 2 }}
-          loading={isSubmittimg}
+          loading={isSubmitting}
           loadingPosition="start"
           startIcon={<SaveIcon />}
           variant="outlined"
@@ -336,7 +336,7 @@ const EditBlockDialog = ({
           Save
         </LoadingButton>
         <LoadingButton
-          loading={isSubmittimg}
+          loading={isSubmitting}
           loadingPosition="start"
           startIcon={<DeleteIcon />}
           variant="outlined"
