@@ -35,9 +35,9 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const [isInfoDisplayed, setIsInfoDisplayed] = useState<boolean>(false);
+  const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

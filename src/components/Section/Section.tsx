@@ -43,9 +43,9 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
   const theme = useTheme();
   const { name, id } = section;
 
-  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+  const [isSectionExpanded, setIsSectionExpanded] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

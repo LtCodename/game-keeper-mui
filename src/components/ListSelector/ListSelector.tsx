@@ -44,7 +44,7 @@ interface Props {
 const ListSelector = ({ open, onClose }: Props) => {
   const theme = useTheme();
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

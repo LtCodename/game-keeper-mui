@@ -73,9 +73,8 @@ const EditBlockDialog = ({
 }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
-    useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
 
   const [listSelectorValue, setListSelectorValue] = useState<
     string | undefined

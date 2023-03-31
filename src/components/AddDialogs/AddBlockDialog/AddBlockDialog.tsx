@@ -77,12 +77,12 @@ const validationSchema = yup.object().shape({
 const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchResults, setSearchResults] = useState<IRawgSearchResponse>();
-  const [isResultDisplayed, setIsResultDisplayed] = useState<boolean>(false);
-  const [isSearchInProgress, setIsSearchInProgress] = useState<boolean>(false);
+  const [isResultDisplayed, setIsResultDisplayed] = useState(false);
+  const [isSearchInProgress, setIsSearchInProgress] = useState(false);
   const [gameToAdd, setGameToAdd] = useState<IUserBlock>();
-  const [isAdditionalInfo, setIsAdditionalInfo] = useState<boolean>(false);
+  const [isAdditionalInfo, setIsAdditionalInfo] = useState(false);
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
     isError: false,

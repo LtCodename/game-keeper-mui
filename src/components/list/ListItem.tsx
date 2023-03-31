@@ -26,7 +26,7 @@ interface Props {
 const ListItem = ({ list, onClose }: Props) => {
   const theme = useTheme();
 
-  const [elevation, setElevation] = useState<number>(1);
+  const [elevation, setElevation] = useState(1);
 
   const { name, id } = list;
 

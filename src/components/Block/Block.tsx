@@ -28,7 +28,7 @@ interface Props {
 const Block = ({ block, listId, deleteBlockCallback }: Props) => {
   const { name, releaseDate } = block;
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

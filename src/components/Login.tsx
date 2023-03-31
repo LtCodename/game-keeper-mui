@@ -47,7 +47,7 @@ const validationSchema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

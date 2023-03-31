@@ -32,8 +32,8 @@ const HeaderSearchBar = () => {
   const navigate = useNavigate();
 
   const [searchResults, setSearchResults] = useState<IUserBlock[]>([]);
-  const [searchInputValue, setSearchInputValue] = useState<string>("");
-  const [isResultDisplayed, setIsResultDisplayed] = useState<boolean>(false);
+  const [searchInputValue, setSearchInputValue] = useState("");
+  const [isResultDisplayed, setIsResultDisplayed] = useState(false);
 
   const userBlocks: IUserBlock[] =
     useSelector((state: IStore) => state.userBlocks) || [];

@@ -77,15 +77,13 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [currentListIndex, setCurrentListIndex] = useState<number>(0);
+  const [currentListIndex, setCurrentListIndex] = useState(0);
 
-  const [isLastAlertDisplayed, setIsLastAlertDisplayed] =
-    useState<boolean>(false);
+  const [isLastAlertDisplayed, setIsLastAlertDisplayed] = useState(false);
 
-  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
-    useState<boolean>(false);
+  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

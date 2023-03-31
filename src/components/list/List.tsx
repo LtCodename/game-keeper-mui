@@ -49,9 +49,9 @@ const List = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

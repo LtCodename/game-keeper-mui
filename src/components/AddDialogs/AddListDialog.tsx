@@ -68,7 +68,7 @@ const validationSchema = yup.object().shape({
 const AddListDialog = ({ open, handleClose, callback }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,

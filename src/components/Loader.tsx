@@ -35,7 +35,7 @@ import Toast from "components/Toast";
 const Loader = () => {
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
     isError: true,
