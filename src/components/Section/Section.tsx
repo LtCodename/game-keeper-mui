@@ -41,13 +41,10 @@ interface Props {
 
 const Section = ({ section, listId, deleteSectionCallback }: Props) => {
   const theme = useTheme();
-
   const { name, id } = section;
 
   const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
-
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
-
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
@@ -66,14 +63,8 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
   };
 
   useEffect(() => {
-    if (blocks?.length) {
-      setIsSectionExpanded(true);
-    }
+    setIsSectionExpanded(!section?.collapsed);
   }, []);
-
-  useEffect(() => {
-    setIsSectionExpanded(Boolean(blocks?.length));
-  }, [blocks?.length]);
 
   return (
     <Accordion
@@ -178,9 +169,7 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
           handleClose={() => setIsEditDialogOpen(false)}
           sectionId={id}
           listId={listId}
-          callback={(isError, message) =>
-            deleteSectionCallback(isError, message)
-          }
+          deleteSectionCallback={deleteSectionCallback}
         />
       )}
 
