@@ -8,7 +8,7 @@
  * https://ltcodename.com
  */
 
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 
 import {
   Box,
@@ -16,9 +16,11 @@ import {
   Dialog,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   InputLabel,
   MenuItem,
+  Switch,
   TextField,
 } from "@mui/material/";
 
@@ -53,7 +55,7 @@ export interface Props {
   handleClose: () => void;
   sectionId: string;
   listId: string | undefined;
-  callback: (isError: boolean, message: string) => void;
+  deleteSectionCallback: (isError: boolean, message: string) => void;
 }
 
 const defaultValues: {
@@ -71,20 +73,14 @@ const EditSectionDialog = ({
   handleClose,
   sectionId,
   listId,
-  callback,
+  deleteSectionCallback,
 }: Props) => {
+  const [isSubmittimg, setIsSubmitting] = useState(false);
+  const [currentSectionIndexGlobal, setCurrentSectionIndexGlobal] = useState(0);
+  const [currentSectionIndexLocal, setCurrentSectionIndexLocal] = useState(0);
+  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
+
   const dispatch = useDispatch();
-
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-
-  const [currentSectionIndexGlobal, setCurrentSectionIndexGlobal] =
-    useState<number>(0);
-
-  const [currentSectionIndexLocal, setCurrentSectionIndexLocal] =
-    useState<number>(0);
-
-  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
-    useState<boolean>(false);
 
   const [snackbarState, setSnackbarState] = useState<ISnackbar>({
     open: false,
@@ -118,6 +114,51 @@ const EditSectionDialog = ({
       setCurrentSectionIndexLocal(userSectionsLocal.indexOf(currentSection));
     }
   }, [currentSection, userSections, userSectionsLocal]);
+
+  const handleSwitchChange = async (
+    event: SyntheticEvent<Element, Event>,
+    checked: boolean
+  ) => {
+    setIsSubmitting(true);
+
+    const sectionsCopy = [...userSections];
+
+    const targetSection = sectionsCopy.find(
+      (section) => section.id === sectionId
+    );
+
+    if (targetSection) {
+      targetSection.collapsed = checked;
+    }
+
+    await setDoc(doc(db, "users", userData.uid), {
+      lists: userLists,
+      sections: sectionsCopy,
+      blocks: userBlocks,
+    })
+      .then(() => {
+        setSnackbarState({
+          open: true,
+          isError: false,
+          message: SNACKBAR_SUCCESS.toString(),
+        });
+
+        dispatch({
+          type: SECTIONS_SET,
+          payload: sectionsCopy,
+        });
+      })
+      .catch((error: any) => {
+        setSnackbarState({
+          open: true,
+          isError: true,
+          message: error.toString(),
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
 
   const handlePositionChange = async (event: SelectChangeEvent) => {
     setIsSubmitting(true);
@@ -203,7 +244,7 @@ const EditSectionDialog = ({
           payload: blocksCopy,
         });
 
-        callback(false, SNACKBAR_SUCCESS);
+        deleteSectionCallback(false, SNACKBAR_SUCCESS);
 
         handleClose();
       })
@@ -306,7 +347,7 @@ const EditSectionDialog = ({
                   </ErrorMessage>
                 </FormControl>
 
-                <FormControl variant="filled" sx={{ mt: 1, width: "100%" }}>
+                <FormControl variant="filled" sx={{ mt: 1, width: 1 }}>
                   <InputLabel id="sectionPosition">Position</InputLabel>
                   <Select
                     labelId="sectionPosition"
@@ -322,6 +363,18 @@ const EditSectionDialog = ({
                       )
                     )}
                   </Select>
+                </FormControl>
+
+                <FormControl sx={{ mt: 1, width: 1 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={currentSection?.collapsed}
+                        onChange={handleSwitchChange}
+                      />
+                    }
+                    label="Keep Collapsed"
+                  />
                 </FormControl>
 
                 <Box sx={{ mt: 2 }}>
