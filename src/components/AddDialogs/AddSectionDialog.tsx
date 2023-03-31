@@ -106,16 +106,16 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
           payload: sectionsCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (

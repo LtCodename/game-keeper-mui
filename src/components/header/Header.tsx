@@ -83,12 +83,14 @@ const Header = () => {
           clearStore();
         }, 100);
       })
-      .catch((error: any) => {
-        setSnackbarState((previousState: ISnackbar) => ({
-          ...previousState,
-          open: true,
-          message: error.toString(),
-        }));
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: true,
+            message: error.toString(),
+          }));
+        }
       });
   };
 

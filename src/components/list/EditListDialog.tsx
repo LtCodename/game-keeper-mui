@@ -137,16 +137,16 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const confirmDelete = async () => {
@@ -208,16 +208,16 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         handleClose();
         navigate("/", { replace: true });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const submitForm = async (data: { name: string }) => {
@@ -247,16 +247,16 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (

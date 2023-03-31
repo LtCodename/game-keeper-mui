@@ -176,16 +176,16 @@ const EditBlockDialog = ({
           payload: blocksCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          isError: true,
-          open: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            isError: true,
+            open: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const handleListChange = (event: SelectChangeEvent) => {
@@ -234,16 +234,16 @@ const EditBlockDialog = ({
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          isError: true,
-          open: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            isError: true,
+            open: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (

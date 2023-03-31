@@ -63,16 +63,16 @@ const Login = () => {
       .then(() => {
         navigate("/", { replace: true });
       })
-      .catch((error: any) => {
-        setSnackbarState((previousState: ISnackbar) => ({
-          ...previousState,
-          open: true,
-          message: error.toString(),
-        }));
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: true,
+            message: error.toString(),
+          }));
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const demoLogin = () => {
@@ -83,16 +83,16 @@ const Login = () => {
       .then(() => {
         navigate("/", { replace: true });
       })
-      .catch((error: any) => {
-        setSnackbarState((previousState: ISnackbar) => ({
-          ...previousState,
-          open: true,
-          message: error.toString(),
-        }));
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState((previousState: ISnackbar) => ({
+            ...previousState,
+            open: true,
+            message: error.toString(),
+          }));
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (

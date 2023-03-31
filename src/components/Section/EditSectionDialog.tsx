@@ -148,16 +148,16 @@ const EditSectionDialog = ({
           payload: sectionsCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const handlePositionChange = async (event: SelectChangeEvent) => {
@@ -199,16 +199,16 @@ const EditSectionDialog = ({
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const confirmDelete = async () => {
@@ -248,16 +248,16 @@ const EditSectionDialog = ({
 
         handleClose();
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const submitForm = async (data: { name: string }) => {
@@ -290,16 +290,16 @@ const EditSectionDialog = ({
           payload: sectionsCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (

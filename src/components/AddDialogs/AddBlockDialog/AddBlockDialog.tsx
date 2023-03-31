@@ -145,16 +145,16 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
           payload: blocksCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const searchApi = async (gameName: string) => {
