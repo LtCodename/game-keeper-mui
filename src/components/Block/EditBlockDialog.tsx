@@ -51,10 +51,10 @@ import { getGameInformation } from "api/rawgApi";
 import { SNACKBAR_SUCCESS } from "config";
 
 interface Props {
-  block: UserBlock | undefined;
+  block: UserBlock;
   open: boolean;
   handleClose: () => void;
-  listId?: string | undefined;
+  listId?: string;
   callback: (isError: boolean, message: string) => void;
 }
 
@@ -75,14 +75,10 @@ const EditBlockDialog = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
-
-  const [listSelectorValue, setListSelectorValue] = useState<
-    string | undefined
-  >(listId);
-
-  const [sectionSelectorValue, setSectionSelectorValue] = useState<
-    string | undefined
-  >(block?.sectionId);
+  const [listSelectorValue, setListSelectorValue] = useState(listId);
+  const [sectionSelectorValue, setSectionSelectorValue] = useState(
+    block?.sectionId
+  );
 
   const [gameMeta, setGameMeta] = useState<IGameMeta>({
     developers: block?.developers || "",
@@ -104,7 +100,7 @@ const EditBlockDialog = ({
   const refreshGameInfo = async () => {
     setIsSubmitting(true);
 
-    await getGameInformation(block?.apiId)
+    await getGameInformation(block.apiId)
       .then((data) => {
         setGameMeta({
           developers: processDevelopers(data.developers),
@@ -198,8 +194,7 @@ const EditBlockDialog = ({
     setIsSubmitting(true);
 
     const blocksCopy = [...userBlocks];
-
-    const targetBlock: UserBlock | undefined = blocksCopy.find(
+    const targetBlock = blocksCopy.find(
       (iterator) => iterator.id === block?.id
     );
 

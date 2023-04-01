@@ -14,7 +14,7 @@ import moment from "moment";
 
 import type { RawgDeveloper } from "types";
 
-export const formatReleaseDate = (releaseDate: string | undefined): string =>
+export const formatReleaseDate = (releaseDate: string): string =>
   releaseDate && releaseDate.length
     ? moment(releaseDate).format("MMMM D YYYY")
     : "TBA";

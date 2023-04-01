@@ -25,7 +25,7 @@ export interface Props {
   searchResults: RawgSearchResponse | undefined;
 }
 
-const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
+const AddBlockSearchSection = ({ onGameSelect, searchResults }: Props) => (
   <Stack
     direction="column"
     spacing={1}
@@ -48,4 +48,4 @@ const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
   </Stack>
 );
 
-export default AddGameSearchSection;
+export default AddBlockSearchSection;

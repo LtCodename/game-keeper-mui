@@ -87,7 +87,7 @@ const List = () => {
           <Section
             key={section.id}
             section={section}
-            listId={list?.id}
+            listId={list?.id || ""}
             deleteSectionCallback={(isError, message) =>
               setSnackbarState({
                 isError,

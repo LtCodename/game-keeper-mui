@@ -21,7 +21,7 @@ import Toast from "components/Toast";
 
 interface Props {
   block: UserBlock;
-  listId: string | undefined;
+  listId: string;
   deleteBlockCallback: (isError: boolean, message: string) => void;
 }
 

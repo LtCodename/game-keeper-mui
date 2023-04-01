@@ -48,18 +48,13 @@ import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
 
 import { SNACKBAR_SUCCESS } from "config";
 
-import type {
-  EditSectionForm,
-  SnackbarMessage,
-  Store,
-  UserSection,
-} from "types";
+import type { EditSectionForm, SnackbarMessage, Store } from "types";
 
 export interface Props {
   open: boolean;
   handleClose: () => void;
   sectionId: string;
-  listId: string | undefined;
+  listId: string;
   deleteSectionCallback: (isError: boolean, message: string) => void;
 }
 
@@ -247,7 +242,7 @@ const EditSectionDialog = ({
     setIsSubmitting(true);
 
     const sectionsCopy = [...userSections];
-    const targetSection: UserSection | undefined = sectionsCopy.find(
+    const targetSection = sectionsCopy.find(
       (section) => section.id === sectionId
     );
 

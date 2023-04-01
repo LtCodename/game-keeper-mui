@@ -35,7 +35,7 @@ import { useTheme } from "@mui/material/styles";
 
 interface Props {
   section: UserSection;
-  listId: string | undefined;
+  listId: string;
   deleteSectionCallback: (isError: boolean, message: string) => void;
 }
 
