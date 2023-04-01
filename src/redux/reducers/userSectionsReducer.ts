@@ -8,16 +8,16 @@
  * https://ltcodename.com
  */
 
-import { IAction, IUserSection } from "types";
+import type { Action, UserSection } from "types";
 
 import { SECTIONS_SET } from "../actions";
 
-const initState: IUserSection[] = [];
+const initState: UserSection[] = [];
 
 const userSectionsReducer = (
   // eslint-disable-next-line @typescript-eslint/default-param-last
-  state: IUserSection[] = initState,
-  action: IAction
+  state = initState,
+  action: Action
 ) => {
   switch (action.type) {
     case SECTIONS_SET:

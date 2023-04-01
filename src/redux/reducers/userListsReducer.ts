@@ -8,14 +8,14 @@
  * https://ltcodename.com
  */
 
-import { IAction, IUserList } from "types";
+import type { Action, UserList } from "types";
 
 import { LISTS_SET } from "../actions";
 
-const initState: IUserList[] = [];
+const initState: UserList[] = [];
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
-const userListsReducer = (state: IUserList[] = initState, action: IAction) => {
+const userListsReducer = (state = initState, action: Action) => {
   switch (action.type) {
     case LISTS_SET:
       return action.payload;

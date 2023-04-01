@@ -28,14 +28,7 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import {
-  IAddListForm,
-  ISnackbar,
-  IStore,
-  IUserBlock,
-  IUserList,
-  IUserSection,
-} from "types";
+import type { AddListForm, SnackbarMessage, Store, UserList } from "types";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -70,34 +63,28 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData = useSelector((state: IStore) => state.userData) || null;
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
 
   const submitForm = async (data: { listName: string }) => {
     setIsSubmitting(true);
 
     const newListId: string = `id${new Date().getTime()}`;
 
-    const newList: IUserList = {
+    const newList: UserList = {
       id: newListId,
       name: data.listName,
     };
 
-    const listsCopy: IUserList[] = [...userLists, newList];
+    const listsCopy = [...userLists, newList];
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: listsCopy,
@@ -132,7 +119,7 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: IAddListForm) => {
+          onSubmit={(values: AddListForm) => {
             submitForm(values);
           }}
           validationSchema={validationSchema}
@@ -198,7 +185,7 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

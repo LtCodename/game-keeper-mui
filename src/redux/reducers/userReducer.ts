@@ -8,14 +8,14 @@
  * https://ltcodename.com
  */
 
-import { IAction } from "types";
+import type { Action } from "types";
 
 import { USER_SET } from "../actions";
 
 const initState = null;
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
-const userReducer = (state = initState, action: IAction) => {
+const userReducer = (state = initState, action: Action) => {
   switch (action.type) {
     case USER_SET:
       return action.payload;

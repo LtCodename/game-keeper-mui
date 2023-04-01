@@ -10,7 +10,7 @@
 
 import axios from "axios";
 
-import { IRawgGame } from "types";
+import type { RawgGame, RawgSearchResponse } from "types";
 
 export async function searchGamesByName(name: string) {
   try {
@@ -22,7 +22,8 @@ export async function searchGamesByName(name: string) {
         },
       }
     );
-    return data;
+    const searchResult: RawgSearchResponse = data;
+    return searchResult;
   } catch (e) {
     throw new Error("Something went wrong!");
   }
@@ -38,7 +39,7 @@ export async function getGameInformation(id: number | undefined) {
       }
     );
 
-    const gameData: IRawgGame = data;
+    const gameData: RawgGame = data;
     return gameData;
   } catch (e) {
     throw new Error("Something went wrong!");

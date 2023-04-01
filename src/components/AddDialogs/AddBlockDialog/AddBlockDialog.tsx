@@ -10,6 +10,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   Box,
   Button,
@@ -31,16 +33,12 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import {
-  IRawgSearchResponse,
-  ISnackbar,
-  IStore,
-  IUserBlock,
-  IUserList,
-  IUserSection,
+import type {
+  RawgSearchResponse,
+  SnackbarMessage,
+  Store,
+  UserBlock,
 } from "types";
-
-import { useDispatch, useSelector } from "react-redux";
 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -78,27 +76,21 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchResults, setSearchResults] = useState<IRawgSearchResponse>();
+  const [searchResults, setSearchResults] = useState<RawgSearchResponse>();
   const [isResultDisplayed, setIsResultDisplayed] = useState(false);
   const [isSearchInProgress, setIsSearchInProgress] = useState(false);
-  const [gameToAdd, setGameToAdd] = useState<IUserBlock>();
+  const [gameToAdd, setGameToAdd] = useState<UserBlock>();
   const [isAdditionalInfo, setIsAdditionalInfo] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData = useSelector((state: IStore) => state.userData) || null;
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
 
   useEffect(() => {
     if (gameToAdd) {
@@ -119,7 +111,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
 
     setIsSubmitting(true);
 
-    const newBlock: IUserBlock = {
+    const newBlock: UserBlock = {
       id: gameToAdd?.id,
       name: gameToAdd?.name,
       sectionId,
@@ -127,8 +119,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
       developers: gameToAdd?.developers,
       releaseDate: gameToAdd?.releaseDate,
     };
-
-    const blocksCopy: IUserBlock[] = [...userBlocks, newBlock];
+    const blocksCopy = [...userBlocks, newBlock];
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: userLists,
@@ -161,7 +152,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
     setIsSearchInProgress(true);
 
     await searchGamesByName(gameName)
-      .then((response: IRawgSearchResponse) => {
+      .then((response) => {
         setSearchResults(response);
         setIsResultDisplayed(true);
       })
@@ -310,7 +301,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

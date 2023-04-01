@@ -28,13 +28,11 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import {
-  IAddSectionForm,
-  ISnackbar,
-  IStore,
-  IUserBlock,
-  IUserList,
-  IUserSection,
+import type {
+  AddSectionForm,
+  SnackbarMessage,
+  Store,
+  UserSection,
 } from "types";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -70,33 +68,27 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
   const dispatch = useDispatch();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData = useSelector((state: IStore) => state.userData) || null;
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
 
   const submitForm = async (data: { sectionName: string }) => {
     setIsSubmitting(true);
 
-    const newSection: IUserSection = {
+    const newSection: UserSection = {
       id: `id${new Date().getTime()}`,
       name: data.sectionName,
       listId,
     };
 
-    const sectionsCopy: IUserSection[] = [...userSections, newSection];
+    const sectionsCopy = [...userSections, newSection];
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: userLists,
@@ -131,7 +123,7 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: IAddSectionForm) => {
+          onSubmit={(values: AddSectionForm) => {
             submitForm(values);
           }}
           validationSchema={validationSchema}
@@ -201,7 +193,7 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

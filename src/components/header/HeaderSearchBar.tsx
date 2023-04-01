@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
 
-import { IStore, IUserBlock, IUserList, IUserSection } from "types";
+import type { Store, UserBlock } from "types";
 
 import { useSelector } from "react-redux";
 
@@ -31,33 +31,26 @@ import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 const HeaderSearchBar = () => {
   const navigate = useNavigate();
 
-  const [searchResults, setSearchResults] = useState<IUserBlock[]>([]);
+  const [searchResults, setSearchResults] = useState<UserBlock[]>([]);
   const [searchInputValue, setSearchInputValue] = useState("");
   const [isResultDisplayed, setIsResultDisplayed] = useState(false);
 
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userLists = useSelector((state: Store) => state.userLists) || [];
 
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const filter = (): void => {
-    const filtered: IUserBlock[] = userBlocks
+  const filter = () => {
+    const filtered = userBlocks
       .filter(
-        (game: IUserBlock) =>
+        (game) =>
           game.name.toLowerCase().indexOf(searchInputValue.toLowerCase()) > -1
       )
-      .map((game: IUserBlock) => {
-        const section: IUserSection | undefined = userSections.find(
-          (section: IUserSection) => section.id === game.sectionId
+      .map((game) => {
+        const section = userSections.find(
+          (section) => section.id === game.sectionId
         );
 
-        const list: IUserList | undefined = userLists.find(
-          (list: IUserList) => list.id === section?.listId
-        );
+        const list = userLists.find((list) => list.id === section?.listId);
 
         return {
           ...game,
@@ -70,12 +63,9 @@ const HeaderSearchBar = () => {
   };
 
   const onGameSelect = (id: string): void => {
-    const block: IUserBlock | undefined = userBlocks.find(
-      (block: IUserBlock) => block.id === id
-    );
-
-    const section: IUserSection | undefined = userSections.find(
-      (section: IUserSection) => section.id === block?.sectionId
+    const block = userBlocks.find((block) => block.id === id);
+    const section = userSections.find(
+      (section) => section.id === block?.sectionId
     );
 
     navigate(`/${section?.listId}`, { replace: true });
@@ -163,7 +153,7 @@ const HeaderSearchBar = () => {
                 pr: 2,
               }}
             >
-              {searchResults.map((block: IUserBlock) => (
+              {searchResults.map((block) => (
                 <Box
                   key={block.id}
                   sx={{

@@ -10,6 +10,8 @@
 
 import React, { useState } from "react";
 
+import { useSelector } from "react-redux";
+
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -28,11 +30,9 @@ import AddListDialog from "components/AddDialogs/AddListDialog";
 import ListItem from "components/List/ListItem";
 import Toast from "components/Toast";
 
-import { ISnackbar, IStore, IUserList } from "types";
-
-import { useSelector } from "react-redux";
-
 import { DRAWER_WIDTH } from "config";
+
+import type { SnackbarMessage, Store } from "types";
 
 import DrawerHeader from "./styles";
 
@@ -42,18 +42,15 @@ interface Props {
 }
 
 const ListSelector = ({ open, onClose }: Props) => {
-  const theme = useTheme();
-
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
+  const theme = useTheme();
+  const userLists = useSelector((state: Store) => state.userLists) || [];
 
   return (
     <Drawer
@@ -97,7 +94,7 @@ const ListSelector = ({ open, onClose }: Props) => {
       <Divider />
 
       <Stack direction="column" spacing={1} sx={{ flexWrap: "wrap", p: 2 }}>
-        {userLists.map((list: IUserList) => (
+        {userLists.map((list) => (
           <ListItem key={list.id} list={list} onClose={() => onClose()} />
         ))}
       </Stack>
@@ -121,7 +118,7 @@ const ListSelector = ({ open, onClose }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

@@ -12,17 +12,16 @@ import React, { useEffect } from "react";
 
 import { useSelector } from "react-redux";
 
-import { IStore, IUserList } from "types";
+import type { Store } from "types";
 
 import { Outlet, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const userData = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: Store) => state.userData) || null;
 
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
+  const userLists = useSelector((state: Store) => state.userLists) || [];
 
   useEffect(() => {
     if (!userData) {

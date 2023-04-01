@@ -8,7 +8,7 @@
  * https://ltcodename.com
  */
 
-import * as React from "react";
+import React from "react";
 
 import { Snackbar } from "@mui/material";
 

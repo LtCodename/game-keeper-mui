@@ -12,7 +12,7 @@ import React from "react";
 
 import { useSelector } from "react-redux";
 
-import { IStore, IUserBlock, IUserList, IUserSection } from "types";
+import type { Store } from "types";
 
 import {
   Box,
@@ -32,16 +32,10 @@ interface Props {
 }
 
 const InfoDialog = ({ onClose, open }: Props) => {
-  const userData = useSelector((state: IStore) => state.userData) || null;
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
 
   return (
     <Dialog

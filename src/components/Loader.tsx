@@ -24,7 +24,7 @@ import { Backdrop, CircularProgress } from "@mui/material/";
 
 import { Route, Routes } from "react-router-dom";
 
-import { ISnackbar, IStore } from "types";
+import type { SnackbarMessage, Store } from "types";
 
 import Dashboard from "components/Dashboard";
 import Header from "components/Header/Header";
@@ -36,13 +36,13 @@ const Loader = () => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: true,
     message: "",
   });
 
-  const userData = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: Store) => state.userData) || null;
 
   useEffect(() => {
     if (userData) {
@@ -94,7 +94,7 @@ const Loader = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: true,
             message: error.toString(),
@@ -137,7 +137,7 @@ const Loader = () => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

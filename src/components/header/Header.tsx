@@ -24,12 +24,12 @@ import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
 
 import { useDispatch } from "react-redux";
 
-import { ISnackbar } from "types";
-
 import HeaderSearchBar from "components/Header/HeaderSearchBar";
 import InfoDialog from "components/InfoDialog";
 import ListSelector from "components/ListSelector/ListSelector";
 import Toast from "components/Toast";
+
+import type { SnackbarMessage } from "types";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const Header = () => {
 
   const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: true,
     message: "",
@@ -85,7 +85,7 @@ const Header = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: true,
             message: error.toString(),
@@ -153,7 +153,7 @@ const Header = () => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

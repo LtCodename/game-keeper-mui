@@ -15,14 +15,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
-  ISnackbar,
-  ISpeedDialAction,
-  IStore,
-  IUserList,
-  IUserSection,
-} from "types";
-
-import {
   Box,
   SpeedDial,
   SpeedDialAction,
@@ -40,7 +32,9 @@ import EditListDialog from "components/List/EditListDialog";
 import Section from "components/Section/Section";
 import Toast from "components/Toast";
 
-const speedDialActions: ISpeedDialAction[] = [
+import type { SnackbarMessage, SpeedDialItem, Store } from "types";
+
+const speedDialActions: SpeedDialItem[] = [
   { icon: <AddIcon />, name: "Add section" },
   { icon: <EditIcon />, name: "Edit list" },
 ];
@@ -53,26 +47,19 @@ const List = () => {
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData = useSelector((state: IStore) => state.userData) || null;
-
+  const userData = useSelector((state: Store) => state.userData) || null;
   const listId = location.pathname.replace(/[/]/, "");
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const list: IUserList | undefined = userLists.find(
-    (list: IUserList) => list.id === listId
-  );
-
-  const sections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections).filter(
-      (section: IUserSection) => section.listId === listId
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const list = userLists.find((list) => list.id === listId);
+  const sections =
+    useSelector((state: Store) => state.userSections).filter(
+      (section) => section.listId === listId
     ) || [];
 
   useEffect(() => {
@@ -96,7 +83,7 @@ const List = () => {
         {list?.name}
       </Typography>
       <Stack direction="column" spacing={2}>
-        {sections.map((section: IUserSection) => (
+        {sections.map((section) => (
           <Section
             key={section.id}
             section={section}
@@ -117,7 +104,7 @@ const List = () => {
         icon={<SettingsIcon />}
         openIcon={<CloseIcon />}
       >
-        {speedDialActions.map((action: ISpeedDialAction, index: number) => (
+        {speedDialActions.map((action: SpeedDialItem, index: number) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
@@ -166,7 +153,7 @@ const List = () => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

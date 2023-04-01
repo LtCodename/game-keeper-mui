@@ -25,11 +25,11 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import { ILoginForm, ISnackbar } from "types";
-
 import Toast from "components/Toast";
 
 import { DEMO_EMAIL, DEMO_PASSWORD } from "config";
+
+import type { LoginForm, SnackbarMessage } from "types";
 
 const defaultValues: {
   email: string;
@@ -49,7 +49,7 @@ const Login = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: true,
     message: "",
@@ -65,7 +65,7 @@ const Login = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: true,
             message: error.toString(),
@@ -85,7 +85,7 @@ const Login = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: true,
             message: error.toString(),
@@ -107,7 +107,7 @@ const Login = () => {
     >
       <Formik
         initialValues={defaultValues}
-        onSubmit={(values: ILoginForm) => {
+        onSubmit={(values: LoginForm) => {
           submitForm(values);
         }}
         validationSchema={validationSchema}
@@ -198,7 +198,7 @@ const Login = () => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))
