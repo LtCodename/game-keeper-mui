@@ -27,23 +27,18 @@ import { useDispatch } from "react-redux";
 import HeaderSearchBar from "components/Header/HeaderSearchBar";
 import InfoDialog from "components/InfoDialog";
 import ListSelector from "components/ListSelector/ListSelector";
-import Toast from "components/Toast";
-
-import type { SnackbarMessage } from "types";
 
 import { ReactComponent as Logo } from "assets/logo.svg";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const snackbar = useSnackbar();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: true,
-    message: "",
-  });
 
   const clearStore = () => {
     dispatch({
@@ -81,11 +76,10 @@ const Header = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
-          }));
+          });
         }
       });
   };
@@ -141,18 +135,6 @@ const Header = () => {
           onClose={() => setIsInfoDisplayed(false)}
         />
       )}
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Box>
   );
 };

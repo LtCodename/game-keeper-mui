@@ -8,7 +8,7 @@
  * https://ltcodename.com
  */
 
-import React from "react";
+import React, { useState } from "react";
 
 import ReactDOM from "react-dom/client";
 
@@ -27,6 +27,12 @@ import rootReducer from "redux/rootReducer";
 import Loader from "components/Loader";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+import Snackbar from "components/Snackbar/Snackbar";
+
+import { SnackbarProvider } from "components/Snackbar/SnackbarContext";
+
+import { SnackbarMessage } from "types";
 
 import reportWebVitals from "./reportWebVitals";
 
@@ -48,14 +54,29 @@ const lightTheme = createTheme({
   },
 });
 
-root.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <ThemeProvider theme={lightTheme}>
-        <Loader />
-      </ThemeProvider>
-    </BrowserRouter>
-  </Provider>
-);
+const Render = () => {
+  const [message, setMessage] = useState<SnackbarMessage>();
+
+  const snackbarData = {
+    message,
+    setMessage,
+  };
+
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={lightTheme}>
+          {/* @ts-ignore */}
+          <SnackbarProvider value={snackbarData}>
+            <Loader />
+            <Snackbar />
+          </SnackbarProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
+  );
+};
+
+root.render(<Render />);
 
 reportWebVitals();

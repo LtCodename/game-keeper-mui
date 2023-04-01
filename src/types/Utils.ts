@@ -2,8 +2,14 @@ export interface SpeedDialItem {
   icon: React.ReactElement;
   name: string;
 }
+
 export interface SnackbarMessage {
   message: string;
-  isError: boolean;
-  open: boolean;
+  severity: "error" | "warning" | "info" | "success";
+}
+
+export interface GameMeta {
+  developers: string;
+  releaseDate: string;
+  name: string;
 }

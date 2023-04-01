@@ -28,11 +28,10 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import AddListDialog from "components/AddDialogs/AddListDialog";
 import ListItem from "components/List/ListItem";
-import Toast from "components/Toast";
 
 import { DRAWER_WIDTH } from "config";
 
-import type { SnackbarMessage, Store } from "types";
+import type { Store } from "types";
 
 import DrawerHeader from "./styles";
 
@@ -43,11 +42,6 @@ interface Props {
 
 const ListSelector = ({ open, onClose }: Props) => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
 
   const theme = useTheme();
   const userLists = useSelector((state: Store) => state.userLists) || [];
@@ -103,27 +97,8 @@ const ListSelector = ({ open, onClose }: Props) => {
         <AddListDialog
           open={isAddDialogOpen}
           handleClose={() => setIsAddDialogOpen(false)}
-          callback={(isError, message) =>
-            setSnackbarState({
-              isError,
-              message,
-              open: true,
-            })
-          }
         />
       )}
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Drawer>
   );
 };

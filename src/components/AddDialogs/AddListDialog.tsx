@@ -28,7 +28,7 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import type { AddListForm, SnackbarMessage, Store, UserList } from "types";
+import type { AddListForm, Store, UserList } from "types";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -38,14 +38,13 @@ import db from "api/firebase";
 
 import { LISTS_SET } from "redux/actions";
 
-import Toast from "components/Toast";
-
 import { SNACKBAR_SUCCESS } from "config";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 export interface Props {
   open: boolean;
   handleClose: () => void;
-  callback: (isError: boolean, message: string) => void;
 }
 
 const defaultValues: {
@@ -58,16 +57,11 @@ const validationSchema = yup.object().shape({
   listName: yup.string().required("List name is a required field"),
 });
 
-const AddListDialog = ({ open, handleClose, callback }: Props) => {
+const AddListDialog = ({ open, handleClose }: Props) => {
   const dispatch = useDispatch();
+  const snackbar = useSnackbar();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const userLists = useSelector((state: Store) => state.userLists) || [];
@@ -94,7 +88,10 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
       .then(() => {
         handleClose();
 
-        callback(false, SNACKBAR_SUCCESS);
+        snackbar.setMessage({
+          severity: "success",
+          message: SNACKBAR_SUCCESS.toString(),
+        });
 
         dispatch({
           type: LISTS_SET,
@@ -103,9 +100,8 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -179,18 +175,6 @@ const AddListDialog = ({ open, handleClose, callback }: Props) => {
           )}
         </Formik>
       </Box>
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Dialog>
   );
 };

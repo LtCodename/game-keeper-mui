@@ -24,24 +24,20 @@ import { Backdrop, CircularProgress } from "@mui/material/";
 
 import { Route, Routes } from "react-router-dom";
 
-import type { SnackbarMessage, Store } from "types";
+import type { Store } from "types";
 
 import Dashboard from "components/Dashboard";
 import Header from "components/Header/Header";
 import List from "components/List/List";
 import Login from "components/Login";
-import Toast from "components/Toast";
+
+import { useSnackbar } from "./Snackbar/SnackbarContext";
 
 const Loader = () => {
-  const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState(true);
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: true,
-    message: "",
-  });
 
+  const dispatch = useDispatch();
+  const snackbar = useSnackbar();
   const userData = useSelector((state: Store) => state.userData) || null;
 
   useEffect(() => {
@@ -94,11 +90,10 @@ const Loader = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
-          }));
+          });
         }
       })
       .finally(() => {
@@ -131,18 +126,6 @@ const Loader = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </>
   );
 };

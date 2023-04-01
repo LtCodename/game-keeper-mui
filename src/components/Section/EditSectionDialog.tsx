@@ -41,14 +41,15 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import Toast from "components/Toast";
 import WarningDialog from "components/WarningDialog";
 
 import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
 
 import { SNACKBAR_SUCCESS } from "config";
 
-import type { EditSectionForm, SnackbarMessage, Store } from "types";
+import type { EditSectionForm, Store } from "types";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 export interface Props {
   open: boolean;
@@ -81,12 +82,8 @@ const EditSectionDialog = ({
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
 
   const dispatch = useDispatch();
+  const snackbar = useSnackbar();
 
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
   const userData = useSelector((state: Store) => state.userData) || null;
   const userLists = useSelector((state: Store) => state.userLists) || [];
   const userSections = useSelector((state: Store) => state.userSections) || [];
@@ -128,9 +125,8 @@ const EditSectionDialog = ({
       blocks: userBlocks,
     })
       .then(() => {
-        setSnackbarState({
-          open: true,
-          isError: false,
+        snackbar.setMessage({
+          severity: "success",
           message: SNACKBAR_SUCCESS.toString(),
         });
 
@@ -141,9 +137,8 @@ const EditSectionDialog = ({
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -177,17 +172,15 @@ const EditSectionDialog = ({
           payload: sectionsCopy,
         });
 
-        setSnackbarState({
-          open: true,
-          isError: false,
+        snackbar.setMessage({
+          severity: "success",
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -228,9 +221,8 @@ const EditSectionDialog = ({
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -256,9 +248,8 @@ const EditSectionDialog = ({
       blocks: userBlocks,
     })
       .then(() => {
-        setSnackbarState({
-          open: true,
-          isError: false,
+        snackbar.setMessage({
+          severity: "success",
           message: SNACKBAR_SUCCESS.toString(),
         });
 
@@ -269,9 +260,8 @@ const EditSectionDialog = ({
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -394,18 +384,6 @@ const EditSectionDialog = ({
         message="You're about to delete the whole section. All the games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteSection()}
-      />
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
       />
     </Dialog>
   );

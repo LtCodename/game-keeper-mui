@@ -25,11 +25,11 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import Toast from "components/Toast";
-
 import { DEMO_EMAIL, DEMO_PASSWORD } from "config";
 
-import type { LoginForm, SnackbarMessage } from "types";
+import type { LoginForm } from "types";
+
+import { useSnackbar } from "./Snackbar/SnackbarContext";
 
 const defaultValues: {
   email: string;
@@ -45,19 +45,14 @@ const validationSchema = yup.object().shape({
 });
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: true,
-    message: "",
-  });
+  const navigate = useNavigate();
+  const snackbar = useSnackbar();
+  const auth = getAuth();
 
   const submitForm = (data: { email: string; password: string }) => {
     setIsSubmitting(true);
-    const auth = getAuth();
 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
@@ -65,11 +60,10 @@ const Login = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
-          }));
+          });
         }
       })
       .finally(() => setIsSubmitting(false));
@@ -85,11 +79,10 @@ const Login = () => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
-          }));
+          });
         }
       })
       .finally(() => setIsSubmitting(false));
@@ -192,18 +185,6 @@ const Login = () => {
           </Form>
         )}
       </Formik>
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Box>
   );
 };
