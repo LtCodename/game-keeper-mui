@@ -10,7 +10,7 @@
 
 import React, { useState } from "react";
 
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material/";
+import { AppBar, Box, IconButton, Toolbar } from "@mui/material/";
 
 import HelpIcon from "@mui/icons-material/Help";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -31,23 +31,19 @@ import Toast from "components/Toast";
 
 import type { SnackbarMessage } from "types";
 
+import { ReactComponent as Logo } from "assets/logo.svg";
+
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
-
   const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: true,
     message: "",
   });
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen((previousState: boolean) => !previousState);
-  };
 
   const clearStore = () => {
     dispatch({
@@ -105,18 +101,16 @@ const Header = () => {
               color="inherit"
               aria-label="open drawer"
               sx={{ mr: 2 }}
-              onClick={toggleDrawer}
+              onClick={() =>
+                setIsDrawerOpen((previousState: boolean) => !previousState)
+              }
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}
-            >
-              Game Keeper
-            </Typography>
+
+            <Box sx={{ width: 80, mt: "4px", mr: 1 }}>
+              <Logo />
+            </Box>
           </Box>
 
           <HeaderSearchBar />
