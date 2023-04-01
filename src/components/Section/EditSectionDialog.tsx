@@ -8,7 +8,9 @@
  * https://ltcodename.com
  */
 
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { type SyntheticEvent, useEffect, useState } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Box,
@@ -35,10 +37,6 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
-
-import { useDispatch, useSelector } from "react-redux";
-
 import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
@@ -50,11 +48,13 @@ import { BLOCKS_SET, SECTIONS_SET } from "redux/actions";
 
 import { SNACKBAR_SUCCESS } from "config";
 
+import type { EditSectionForm, SnackbarMessage, Store } from "types";
+
 export interface Props {
   open: boolean;
   handleClose: () => void;
   sectionId: string;
-  listId: string | undefined;
+  listId: string;
   deleteSectionCallback: (isError: boolean, message: string) => void;
 }
 
@@ -75,36 +75,27 @@ const EditSectionDialog = ({
   listId,
   deleteSectionCallback,
 }: Props) => {
-  const [isSubmittimg, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentSectionIndexGlobal, setCurrentSectionIndexGlobal] = useState(0);
   const [currentSectionIndexLocal, setCurrentSectionIndexLocal] = useState(0);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
 
   const dispatch = useDispatch();
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
-
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
-
-  const currentSection: IUserSection | undefined = userSections.find(
-    (section: IUserSection) => section.id === sectionId
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
+  const currentSection = userSections.find(
+    (section) => section.id === sectionId
   );
-
-  const userSectionsLocal: IUserSection[] | undefined = userSections.filter(
-    (section: IUserSection) => section.listId === listId
+  const userSectionsLocal = userSections.filter(
+    (section) => section.listId === listId
   );
 
   useEffect(() => {
@@ -148,37 +139,30 @@ const EditSectionDialog = ({
           payload: sectionsCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const handlePositionChange = async (event: SelectChangeEvent) => {
     setIsSubmitting(true);
 
-    const sectionsCopy: IUserSection[] = [...userSections];
-
-    const oldSectionPosition: number = sectionsCopy.findIndex(
-      (section: IUserSection) =>
-        section.id === userSectionsLocal[currentSectionIndexLocal].id
+    const sectionsCopy = [...userSections];
+    const oldSectionPosition = sectionsCopy.findIndex(
+      (section) => section.id === userSectionsLocal[currentSectionIndexLocal].id
     );
-
-    const newSectionPosition: number = sectionsCopy.findIndex(
-      (section: IUserSection) =>
+    const newSectionPosition = sectionsCopy.findIndex(
+      (section) =>
         section.id === userSectionsLocal[Number(event.target.value)].id
     );
-
-    const splicedSections: IUserSection[] = sectionsCopy.splice(
-      oldSectionPosition,
-      1
-    );
+    const splicedSections = sectionsCopy.splice(oldSectionPosition, 1);
 
     sectionsCopy.splice(newSectionPosition, 0, splicedSections[0]);
 
@@ -199,31 +183,25 @@ const EditSectionDialog = ({
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
-  };
-
-  const confirmDelete = async () => {
-    setIsDeleteAlertDisplayed(true);
+      .finally(() => setIsSubmitting(false));
   };
 
   const deleteSection = async () => {
     setIsDeleteAlertDisplayed(false);
-
     setIsSubmitting(true);
 
-    const sectionsCopy: IUserSection[] = [...userSections];
-
-    const blocksCopy: IUserBlock[] = [...userBlocks].filter(
-      (block: IUserBlock) => block.sectionId !== sectionId
+    const sectionsCopy = [...userSections];
+    const blocksCopy = [...userBlocks].filter(
+      (block) => block.sectionId !== sectionId
     );
 
     sectionsCopy.splice(currentSectionIndexGlobal, 1);
@@ -248,25 +226,24 @@ const EditSectionDialog = ({
 
         handleClose();
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const submitForm = async (data: { name: string }) => {
     setIsSubmitting(true);
 
-    const sectionsCopy: IUserSection[] = [...userSections];
-
-    const targetSection: IUserSection | undefined = sectionsCopy.find(
-      (section: IUserSection) => section.id === sectionId
+    const sectionsCopy = [...userSections];
+    const targetSection = sectionsCopy.find(
+      (section) => section.id === sectionId
     );
 
     if (targetSection) {
@@ -290,16 +267,16 @@ const EditSectionDialog = ({
           payload: sectionsCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
@@ -308,7 +285,7 @@ const EditSectionDialog = ({
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: any) => {
+          onSubmit={(values: EditSectionForm) => {
             submitForm(values);
           }}
           validationSchema={validationSchema}
@@ -355,13 +332,11 @@ const EditSectionDialog = ({
                     value={currentSectionIndexLocal.toString()}
                     onChange={handlePositionChange}
                   >
-                    {userSectionsLocal.map(
-                      (section: IUserSection, index: number) => (
-                        <MenuItem key={section.id} value={index}>
-                          {index + 1}
-                        </MenuItem>
-                      )
-                    )}
+                    {userSectionsLocal.map((section, index: number) => (
+                      <MenuItem key={section.id} value={index}>
+                        {index + 1}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
 
@@ -387,7 +362,7 @@ const EditSectionDialog = ({
                   </Button>
                   <LoadingButton
                     sx={{ mr: 2 }}
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<SaveIcon />}
                     variant="outlined"
@@ -398,12 +373,12 @@ const EditSectionDialog = ({
                     Rename
                   </LoadingButton>
                   <LoadingButton
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<DeleteIcon />}
                     variant="outlined"
                     color="error"
-                    onClick={confirmDelete}
+                    onClick={() => setIsDeleteAlertDisplayed(true)}
                   >
                     Delete
                   </LoadingButton>
@@ -426,7 +401,7 @@ const EditSectionDialog = ({
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

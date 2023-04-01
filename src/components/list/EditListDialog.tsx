@@ -35,8 +35,6 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
-
 import { useDispatch, useSelector } from "react-redux";
 
 import { doc, setDoc } from "firebase/firestore";
@@ -49,6 +47,8 @@ import WarningDialog from "components/WarningDialog";
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
 
 import { SNACKBAR_SUCCESS } from "config";
+
+import type { EditListForm, SnackbarMessage, Store } from "types";
 
 export interface Props {
   open: boolean;
@@ -70,36 +70,21 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-
-  const [currentListIndex, setCurrentListIndex] = useState<number>(0);
-
-  const [isLastAlertDisplayed, setIsLastAlertDisplayed] =
-    useState<boolean>(false);
-
-  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
-    useState<boolean>(false);
-
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentListIndex, setCurrentListIndex] = useState(0);
+  const [isLastAlertDisplayed, setIsLastAlertDisplayed] = useState(false);
+  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const currentList: IUserList | undefined = userLists.find(
-    (list: IUserList) => list.id === listId
-  );
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const currentList = userLists.find((list) => list.id === listId);
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
 
   useEffect(() => {
     if (currentList && userLists.length) {
@@ -110,13 +95,13 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
   const handlePositionChange = async (event: SelectChangeEvent) => {
     setIsSubmitting(true);
 
-    const listsCopy: IUserList[] = [...userLists];
+    const listsCopy = [...userLists];
 
     if (currentListIndex.toString() === event.target.value) {
       return;
     }
 
-    const splicedLists: IUserList[] = listsCopy.splice(currentListIndex, 1);
+    const splicedLists = listsCopy.splice(currentListIndex, 1);
 
     listsCopy.splice(Number(event.target.value), 0, splicedLists[0]);
 
@@ -137,16 +122,16 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const confirmDelete = async () => {
@@ -164,22 +149,19 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
     setIsSubmitting(true);
 
     const deletedSectionsIds: string[] = [];
-    const listsCopy: IUserList[] = [...userLists];
-
-    const sectionsCopy: IUserSection[] = [...userSections].filter(
-      (section: IUserSection) => {
-        if (section.listId !== listsCopy[currentListIndex].id) {
-          return true;
-          // eslint-disable-next-line no-else-return
-        } else {
-          deletedSectionsIds.push(section.id);
-          return false;
-        }
+    const listsCopy = [...userLists];
+    const sectionsCopy = [...userSections].filter((section) => {
+      if (section.listId !== listsCopy[currentListIndex].id) {
+        return true;
+        // eslint-disable-next-line no-else-return
+      } else {
+        deletedSectionsIds.push(section.id);
+        return false;
       }
-    );
+    });
 
-    const blocksCopy: IUserBlock[] = [...userBlocks].filter(
-      (block: IUserBlock) => deletedSectionsIds.indexOf(block.sectionId) === -1
+    const blocksCopy = [...userBlocks].filter(
+      (block) => deletedSectionsIds.indexOf(block.sectionId) === -1
     );
 
     listsCopy.splice(currentListIndex, 1);
@@ -208,22 +190,22 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         handleClose();
         navigate("/", { replace: true });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const submitForm = async (data: { name: string }) => {
     setIsSubmitting(true);
 
-    const listsCopy: IUserList[] = [...userLists];
+    const listsCopy = [...userLists];
 
     listsCopy[currentListIndex] = {
       ...listsCopy[currentListIndex],
@@ -247,16 +229,16 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
@@ -265,7 +247,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
       <Box sx={{ p: 2 }}>
         <Formik
           initialValues={defaultValues}
-          onSubmit={(values: any) => {
+          onSubmit={(values: EditListForm) => {
             submitForm(values);
           }}
           validationSchema={validationSchema}
@@ -312,7 +294,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     value={currentListIndex.toString()}
                     onChange={handlePositionChange}
                   >
-                    {userLists.map((list: IUserList, index: number) => (
+                    {userLists.map((list, index) => (
                       <MenuItem key={list.id} value={index}>
                         {index + 1}
                       </MenuItem>
@@ -330,7 +312,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                   </Button>
                   <LoadingButton
                     sx={{ mr: 2 }}
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<SaveIcon />}
                     variant="outlined"
@@ -341,7 +323,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
                     Rename
                   </LoadingButton>
                   <LoadingButton
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<DeleteIcon />}
                     variant="outlined"
@@ -375,7 +357,7 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

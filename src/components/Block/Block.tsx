@@ -12,7 +12,7 @@ import React, { useState } from "react";
 
 import { Card, CardContent, Typography } from "@mui/material/";
 
-import { ISnackbar, IUserBlock } from "types";
+import type { SnackbarMessage, UserBlock } from "types";
 
 import { formatReleaseDate, trimName } from "sharedLogic";
 
@@ -20,17 +20,17 @@ import EditBlockDialog from "components/Block/EditBlockDialog";
 import Toast from "components/Toast";
 
 interface Props {
-  block: IUserBlock;
-  listId: string | undefined;
+  block: UserBlock;
+  listId: string;
   deleteBlockCallback: (isError: boolean, message: string) => void;
 }
 
 const Block = ({ block, listId, deleteBlockCallback }: Props) => {
   const { name, releaseDate } = block;
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
@@ -73,7 +73,7 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

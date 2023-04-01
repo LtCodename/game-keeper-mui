@@ -12,20 +12,20 @@ import React from "react";
 
 import { Stack } from "@mui/material/";
 
-import { IRawgSearchResponce, IRawgSearchResult } from "types";
-
 import SearchResultItem from "components/SearchResultItem";
 
 import { ADD_GAME_WINDOW_WIDTH, SHADE_OF_GREY } from "config";
 
 import { grey } from "@mui/material/colors";
 
+import type { RawgSearchResponse, RawgSearchResult } from "types";
+
 export interface Props {
   onGameSelect: (id: number) => void;
-  searchResults: IRawgSearchResponce | undefined;
+  searchResults: RawgSearchResponse | undefined;
 }
 
-const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
+const AddBlockSearchSection = ({ onGameSelect, searchResults }: Props) => (
   <Stack
     direction="column"
     spacing={1}
@@ -38,7 +38,7 @@ const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
       backgroundColor: grey[SHADE_OF_GREY],
     }}
   >
-    {searchResults?.results?.map((searchResult: IRawgSearchResult) => (
+    {searchResults?.results?.map((searchResult: RawgSearchResult) => (
       <SearchResultItem
         key={searchResult.id}
         onClick={() => onGameSelect(Number(searchResult.id))}
@@ -48,4 +48,4 @@ const AddGameSearchSection = ({ onGameSelect, searchResults }: Props) => (
   </Stack>
 );
 
-export default AddGameSearchSection;
+export default AddBlockSearchSection;

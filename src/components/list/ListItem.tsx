@@ -12,7 +12,7 @@ import React, { useState } from "react";
 
 import { Paper, Typography } from "@mui/material/";
 
-import { IUserList } from "types";
+import type { UserList } from "types";
 
 import { Link } from "react-router-dom";
 
@@ -20,13 +20,13 @@ import { useTheme } from "@mui/material/styles";
 
 interface Props {
   onClose: () => void;
-  list: IUserList;
+  list: UserList;
 }
 
 const ListItem = ({ list, onClose }: Props) => {
   const theme = useTheme();
 
-  const [elevation, setElevation] = useState<number>(1);
+  const [elevation, setElevation] = useState(1);
 
   const { name, id } = list;
 

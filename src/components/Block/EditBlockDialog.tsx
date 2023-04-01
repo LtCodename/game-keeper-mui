@@ -23,7 +23,7 @@ import {
   Typography,
 } from "@mui/material/";
 
-import { ISnackbar, IStore, IUserBlock, IUserList, IUserSection } from "types";
+import type { SnackbarMessage, Store, UserBlock } from "types";
 
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
@@ -51,10 +51,10 @@ import { getGameInformation } from "api/rawgApi";
 import { SNACKBAR_SUCCESS } from "config";
 
 interface Props {
-  block: IUserBlock | undefined;
+  block: UserBlock;
   open: boolean;
   handleClose: () => void;
-  listId?: string | undefined;
+  listId?: string;
   callback: (isError: boolean, message: string) => void;
 }
 
@@ -73,17 +73,12 @@ const EditBlockDialog = ({
 }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] =
-    useState<boolean>(false);
-
-  const [listSelectorValue, setListSelectorValue] = useState<
-    string | undefined
-  >(listId);
-
-  const [sectionSelectorValue, setSectionSelectorValue] = useState<
-    string | undefined
-  >(block?.sectionId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
+  const [listSelectorValue, setListSelectorValue] = useState(listId);
+  const [sectionSelectorValue, setSectionSelectorValue] = useState(
+    block?.sectionId
+  );
 
   const [gameMeta, setGameMeta] = useState<IGameMeta>({
     developers: block?.developers || "",
@@ -91,32 +86,26 @@ const EditBlockDialog = ({
     name: block?.name || "",
   });
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
 
   const refreshGameInfo = async () => {
     setIsSubmitting(true);
 
-    await getGameInformation(block?.apiId)
-      .then((rawgResponse: any) => {
+    await getGameInformation(block.apiId)
+      .then((data) => {
         setGameMeta({
-          developers: processDevelopers(rawgResponse.developers),
-          releaseDate: rawgResponse.released,
-          name: rawgResponse.name,
+          developers: processDevelopers(data.developers),
+          releaseDate: data.released,
+          name: data.name,
         });
 
         setSnackbarState({
@@ -151,10 +140,10 @@ const EditBlockDialog = ({
     setIsDeleteAlertDisplayed(false);
     setIsSubmitting(true);
 
-    const blocksCopy: IUserBlock[] = [...userBlocks];
+    const blocksCopy = [...userBlocks];
 
-    const targetBlockIndex: number = blocksCopy.findIndex(
-      (blockToRemove: IUserBlock) => blockToRemove.id === block?.id
+    const targetBlockIndex = blocksCopy.findIndex(
+      (blockToRemove) => blockToRemove.id === block?.id
     );
 
     if (targetBlockIndex > -1) {
@@ -176,21 +165,21 @@ const EditBlockDialog = ({
           payload: blocksCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          isError: true,
-          open: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            isError: true,
+            open: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const handleListChange = (event: SelectChangeEvent) => {
-    const sections: IUserSection[] = userSections.filter(
-      (section: IUserSection) => section.listId === event.target.value
+    const sections = userSections.filter(
+      (section) => section.listId === event.target.value
     );
 
     setListSelectorValue(event.target.value);
@@ -204,10 +193,9 @@ const EditBlockDialog = ({
   const handleSave = async () => {
     setIsSubmitting(true);
 
-    const blocksCopy: IUserBlock[] = [...userBlocks];
-
-    const targetBlock: IUserBlock | undefined = blocksCopy.find(
-      (iterator: IUserBlock) => iterator.id === block?.id
+    const blocksCopy = [...userBlocks];
+    const targetBlock = blocksCopy.find(
+      (iterator) => iterator.id === block?.id
     );
 
     if (targetBlock && sectionSelectorValue) {
@@ -234,16 +222,16 @@ const EditBlockDialog = ({
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          isError: true,
-          open: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            isError: true,
+            open: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
@@ -291,7 +279,7 @@ const EditBlockDialog = ({
             value={listSelectorValue}
             onChange={handleListChange}
           >
-            {userLists.map((list: IUserList) => (
+            {userLists.map((list) => (
               <MenuItem key={list.id} value={list.id}>
                 {list.name}
               </MenuItem>
@@ -308,10 +296,8 @@ const EditBlockDialog = ({
             onChange={handleSectionChange}
           >
             {userSections
-              .filter(
-                (section: IUserSection) => section.listId === listSelectorValue
-              )
-              .map((section: IUserSection) => (
+              .filter((section) => section.listId === listSelectorValue)
+              .map((section) => (
                 <MenuItem key={section.id} value={section.id}>
                   {section.name}
                 </MenuItem>
@@ -326,7 +312,7 @@ const EditBlockDialog = ({
         </Button>
         <LoadingButton
           sx={{ mr: 2 }}
-          loading={isSubmittimg}
+          loading={isSubmitting}
           loadingPosition="start"
           startIcon={<SaveIcon />}
           variant="outlined"
@@ -336,7 +322,7 @@ const EditBlockDialog = ({
           Save
         </LoadingButton>
         <LoadingButton
-          loading={isSubmittimg}
+          loading={isSubmitting}
           loadingPosition="start"
           startIcon={<DeleteIcon />}
           variant="outlined"
@@ -359,7 +345,7 @@ const EditBlockDialog = ({
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

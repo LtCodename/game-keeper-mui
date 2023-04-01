@@ -24,7 +24,7 @@ import { Backdrop, CircularProgress } from "@mui/material/";
 
 import { Route, Routes } from "react-router-dom";
 
-import { ISnackbar, IStore } from "types";
+import type { SnackbarMessage, Store } from "types";
 
 import Dashboard from "components/Dashboard";
 import Header from "components/Header/Header";
@@ -35,14 +35,14 @@ import Toast from "components/Toast";
 const Loader = () => {
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [isLoading, setIsLoading] = useState(true);
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: true,
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
+  const userData = useSelector((state: Store) => state.userData) || null;
 
   useEffect(() => {
     if (userData) {
@@ -53,7 +53,7 @@ const Loader = () => {
   const userPresenceCheck = () => {
     const auth = getAuth();
 
-    onAuthStateChanged(auth, (user: any) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch({
           type: USER_SET,
@@ -74,7 +74,7 @@ const Loader = () => {
     const usersRef = doc(db, "users", userData.uid);
 
     await getDoc(usersRef)
-      .then((doc: any) => {
+      .then((doc) => {
         const allUserData = doc.data() || {};
 
         dispatch({
@@ -92,12 +92,14 @@ const Loader = () => {
           payload: allUserData.blocks || [],
         });
       })
-      .catch((error: any) => {
-        setSnackbarState((previousState: ISnackbar) => ({
-          ...previousState,
-          open: true,
-          message: error.toString(),
-        }));
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState((previousState: SnackbarMessage) => ({
+            ...previousState,
+            open: true,
+            message: error.toString(),
+          }));
+        }
       })
       .finally(() => {
         setTimeout(() => {
@@ -135,7 +137,7 @@ const Loader = () => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

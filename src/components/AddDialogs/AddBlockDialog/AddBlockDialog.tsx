@@ -10,6 +10,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   Box,
   Button,
@@ -31,16 +33,12 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import {
-  IRawgSearchResponce,
-  ISnackbar,
-  IStore,
-  IUserBlock,
-  IUserList,
-  IUserSection,
+import type {
+  RawgSearchResponse,
+  SnackbarMessage,
+  Store,
+  UserBlock,
 } from "types";
-
-import { useDispatch, useSelector } from "react-redux";
 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -77,28 +75,22 @@ const validationSchema = yup.object().shape({
 const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
   const dispatch = useDispatch();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
-  const [searchResults, setSearchResults] = useState<IRawgSearchResponce>();
-  const [isResultDisplayed, setIsResultDisplayed] = useState<boolean>(false);
-  const [isSearchInProgress, setIsSearchInProgress] = useState<boolean>(false);
-  const [gameToAdd, setGameToAdd] = useState<IUserBlock>();
-  const [isAdditionalInfo, setIsAdditionalInfo] = useState<boolean>(false);
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchResults, setSearchResults] = useState<RawgSearchResponse>();
+  const [isResultDisplayed, setIsResultDisplayed] = useState(false);
+  const [isSearchInProgress, setIsSearchInProgress] = useState(false);
+  const [gameToAdd, setGameToAdd] = useState<UserBlock>();
+  const [isAdditionalInfo, setIsAdditionalInfo] = useState(false);
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const userData: any = useSelector((state: IStore) => state.userData) || null;
-
-  const userLists: IUserList[] =
-    useSelector((state: IStore) => state.userLists) || [];
-
-  const userSections: IUserSection[] =
-    useSelector((state: IStore) => state.userSections) || [];
-
-  const userBlocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks) || [];
+  const userData = useSelector((state: Store) => state.userData) || null;
+  const userLists = useSelector((state: Store) => state.userLists) || [];
+  const userSections = useSelector((state: Store) => state.userSections) || [];
+  const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
 
   useEffect(() => {
     if (gameToAdd) {
@@ -119,7 +111,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
 
     setIsSubmitting(true);
 
-    const newBlock: IUserBlock = {
+    const newBlock: UserBlock = {
       id: gameToAdd?.id,
       name: gameToAdd?.name,
       sectionId,
@@ -127,8 +119,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
       developers: gameToAdd?.developers,
       releaseDate: gameToAdd?.releaseDate,
     };
-
-    const blocksCopy: IUserBlock[] = [...userBlocks, newBlock];
+    const blocksCopy = [...userBlocks, newBlock];
 
     await setDoc(doc(db, "users", userData.uid), {
       lists: userLists,
@@ -145,23 +136,23 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
           payload: blocksCopy,
         });
       })
-      .catch((error: any) => {
-        setSnackbarState({
-          open: true,
-          isError: true,
-          message: error.toString(),
-        });
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState({
+            open: true,
+            isError: true,
+            message: error.toString(),
+          });
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const searchApi = async (gameName: string) => {
     setIsSearchInProgress(true);
 
     await searchGamesByName(gameName)
-      .then((response: IRawgSearchResponce) => {
+      .then((response) => {
         setSearchResults(response);
         setIsResultDisplayed(true);
       })
@@ -181,14 +172,14 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
     setIsResultDisplayed(false);
 
     await getGameInformation(rawgId)
-      .then((rawgResponse: any) => {
+      .then((data) => {
         setGameToAdd({
           id: `id${new Date().getTime()}`,
-          name: rawgResponse.name,
+          name: data.name,
           sectionId,
-          apiId: rawgResponse.id,
-          developers: processDevelopers(rawgResponse.developers),
-          releaseDate: rawgResponse.released,
+          apiId: data.id,
+          developers: processDevelopers(data.developers),
+          releaseDate: data.released,
         });
       })
       .catch(() => {
@@ -289,7 +280,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
                     Close
                   </Button>
                   <LoadingButton
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<PublishIcon />}
                     variant="outlined"
@@ -310,7 +301,7 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

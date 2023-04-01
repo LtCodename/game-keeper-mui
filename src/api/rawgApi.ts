@@ -10,6 +10,8 @@
 
 import axios from "axios";
 
+import type { RawgGame, RawgSearchResponse } from "types";
+
 export async function searchGamesByName(name: string) {
   try {
     const { data } = await axios.get(
@@ -20,12 +22,13 @@ export async function searchGamesByName(name: string) {
         },
       }
     );
-    return data;
+    const searchResult: RawgSearchResponse = data;
+    return searchResult;
   } catch (e) {
     throw new Error("Something went wrong!");
   }
 }
-export async function getGameInformation(id: number | undefined) {
+export async function getGameInformation(id: number) {
   try {
     const { data } = await axios.get(
       `https://api.rawg.io/api/games/${id}?key=${"81d6a9bfb35d4a1c8fa5b2ad3b3b97fb"}`,
@@ -35,7 +38,9 @@ export async function getGameInformation(id: number | undefined) {
         },
       }
     );
-    return data;
+
+    const gameData: RawgGame = data;
+    return gameData;
   } catch (e) {
     throw new Error("Something went wrong!");
   }

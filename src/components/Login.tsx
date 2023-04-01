@@ -25,11 +25,11 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import { ISnackbar } from "types";
-
 import Toast from "components/Toast";
 
 import { DEMO_EMAIL, DEMO_PASSWORD } from "config";
+
+import type { LoginForm, SnackbarMessage } from "types";
 
 const defaultValues: {
   email: string;
@@ -47,9 +47,9 @@ const validationSchema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
 
-  const [isSubmittimg, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: true,
     message: "",
@@ -63,16 +63,16 @@ const Login = () => {
       .then(() => {
         navigate("/", { replace: true });
       })
-      .catch((error: any) => {
-        setSnackbarState((previousState: ISnackbar) => ({
-          ...previousState,
-          open: true,
-          message: error.toString(),
-        }));
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState((previousState: SnackbarMessage) => ({
+            ...previousState,
+            open: true,
+            message: error.toString(),
+          }));
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const demoLogin = () => {
@@ -83,16 +83,16 @@ const Login = () => {
       .then(() => {
         navigate("/", { replace: true });
       })
-      .catch((error: any) => {
-        setSnackbarState((previousState: ISnackbar) => ({
-          ...previousState,
-          open: true,
-          message: error.toString(),
-        }));
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          setSnackbarState((previousState: SnackbarMessage) => ({
+            ...previousState,
+            open: true,
+            message: error.toString(),
+          }));
+        }
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
@@ -107,7 +107,7 @@ const Login = () => {
     >
       <Formik
         initialValues={defaultValues}
-        onSubmit={(values: any) => {
+        onSubmit={(values: LoginForm) => {
           submitForm(values);
         }}
         validationSchema={validationSchema}
@@ -167,7 +167,7 @@ const Login = () => {
                 <Box>
                   <LoadingButton
                     sx={{ mt: 2, mx: 1 }}
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<LockOpenIcon />}
                     variant="outlined"
@@ -178,7 +178,7 @@ const Login = () => {
                   </LoadingButton>
                   <LoadingButton
                     sx={{ mt: 2, mx: 1 }}
-                    loading={isSubmittimg}
+                    loading={isSubmitting}
                     loadingPosition="start"
                     startIcon={<VisibilityIcon />}
                     variant="outlined"
@@ -198,7 +198,7 @@ const Login = () => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

@@ -10,6 +10,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useSelector } from "react-redux";
+
 import {
   Accordion,
   AccordionDetails,
@@ -22,9 +24,7 @@ import {
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { useSelector } from "react-redux";
-
-import { ISnackbar, IStore, IUserBlock, IUserSection } from "types";
+import type { SnackbarMessage, Store, UserSection } from "types";
 
 import AddBlockDialog from "components/AddDialogs/AddBlockDialog/AddBlockDialog";
 import Block from "components/Block/Block";
@@ -34,32 +34,31 @@ import Toast from "components/Toast";
 import { useTheme } from "@mui/material/styles";
 
 interface Props {
-  section: IUserSection;
-  listId: string | undefined;
+  section: UserSection;
+  listId: string;
   deleteSectionCallback: (isError: boolean, message: string) => void;
 }
 
 const Section = ({ section, listId, deleteSectionCallback }: Props) => {
-  const theme = useTheme();
-  const { name, id } = section;
-
-  const [isSectionExpanded, setIsSectionExpanded] = useState<boolean>(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
-
-  const [snackbarState, setSnackbarState] = useState<ISnackbar>({
+  const [isSectionExpanded, setIsSectionExpanded] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
     open: false,
     isError: false,
     message: "",
   });
 
-  const blocks: IUserBlock[] =
-    useSelector((state: IStore) => state.userBlocks).filter(
-      (block: IUserBlock) => block.sectionId === id
+  const theme = useTheme();
+  const { name, id } = section;
+
+  const blocks =
+    useSelector((state: Store) => state.userBlocks).filter(
+      (block) => block.sectionId === id
     ) || [];
 
   const toggleSection = () => {
-    setIsSectionExpanded((previousState: boolean) => !previousState);
+    setIsSectionExpanded((previousState) => !previousState);
   };
 
   useEffect(() => {
@@ -119,7 +118,7 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
       <AccordionDetails sx={{ pt: 0 }}>
         <Stack direction="row" sx={{ flexWrap: "wrap" }}>
           {blocks
-            .sort((blockA: IUserBlock, blockB: IUserBlock) => {
+            .sort((blockA, blockB) => {
               const releaseDateA: string = blockA.releaseDate || "";
               const releaseDateB: string = blockB.releaseDate || "";
 
@@ -131,7 +130,7 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
               }
               return 0;
             })
-            .map((block: IUserBlock) => (
+            .map((block) => (
               <Block
                 key={block.id}
                 block={block}
@@ -178,7 +177,7 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
         message={snackbarState.message}
         open={snackbarState.open}
         onClose={() =>
-          setSnackbarState((previousState: ISnackbar) => ({
+          setSnackbarState((previousState: SnackbarMessage) => ({
             ...previousState,
             open: false,
           }))

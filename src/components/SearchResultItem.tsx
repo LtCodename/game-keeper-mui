@@ -22,7 +22,7 @@ export interface Props {
 }
 
 const SearchResultItem = ({ onClick, name, listName, sectionName }: Props) => {
-  const [elevation, setElevation] = useState<number>(1);
+  const [elevation, setElevation] = useState(1);
 
   return (
     <Paper
