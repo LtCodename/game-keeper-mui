@@ -28,12 +28,7 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import type {
-  AddSectionForm,
-  SnackbarMessage,
-  Store,
-  UserSection,
-} from "types";
+import type { AddSectionForm, Store, UserSection } from "types";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -43,9 +38,9 @@ import db from "api/firebase";
 
 import { SECTIONS_SET } from "redux/actions";
 
-import Toast from "components/Toast";
-
 import { SNACKBAR_SUCCESS } from "config";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 export interface Props {
   open: boolean;
@@ -65,14 +60,10 @@ const validationSchema = yup.object().shape({
 });
 
 const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
-  const dispatch = useDispatch();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
+
+  const dispatch = useDispatch();
+  const snackbar = useSnackbar();
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const userLists = useSelector((state: Store) => state.userLists) || [];
@@ -107,9 +98,8 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -187,18 +177,6 @@ const AddSectionDialog = ({ open, handleClose, listId, callback }: Props) => {
           )}
         </Formik>
       </Box>
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Dialog>
   );
 };

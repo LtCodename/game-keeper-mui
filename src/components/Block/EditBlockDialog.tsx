@@ -23,7 +23,7 @@ import {
   Typography,
 } from "@mui/material/";
 
-import type { SnackbarMessage, Store, UserBlock } from "types";
+import type { GameMeta, Store, UserBlock } from "types";
 
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
@@ -33,7 +33,6 @@ import SaveIcon from "@mui/icons-material/Save";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import Toast from "components/Toast";
 import WarningDialog from "components/WarningDialog";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -50,18 +49,14 @@ import { getGameInformation } from "api/rawgApi";
 
 import { SNACKBAR_SUCCESS } from "config";
 
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
+
 interface Props {
   block: UserBlock;
   open: boolean;
   handleClose: () => void;
   listId?: string;
   callback: (isError: boolean, message: string) => void;
-}
-
-interface IGameMeta {
-  developers: string;
-  releaseDate: string;
-  name: string;
 }
 
 const EditBlockDialog = ({
@@ -71,26 +66,20 @@ const EditBlockDialog = ({
   listId,
   callback,
 }: Props) => {
-  const dispatch = useDispatch();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
   const [listSelectorValue, setListSelectorValue] = useState(listId);
   const [sectionSelectorValue, setSectionSelectorValue] = useState(
     block?.sectionId
   );
-
-  const [gameMeta, setGameMeta] = useState<IGameMeta>({
+  const [gameMeta, setGameMeta] = useState<GameMeta>({
     developers: block?.developers || "",
     releaseDate: block?.releaseDate || "",
     name: block?.name || "",
   });
 
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
+  const dispatch = useDispatch();
+  const snackbar = useSnackbar();
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
@@ -108,22 +97,18 @@ const EditBlockDialog = ({
           name: data.name,
         });
 
-        setSnackbarState({
-          isError: false,
-          open: true,
+        snackbar.setMessage({
+          severity: "success",
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch(() => {
-        setSnackbarState({
-          open: true,
-          isError: true,
+        snackbar.setMessage({
+          severity: "error",
           message: "RAWG failed to return game details",
         });
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
   const beforeClosing = () => {
@@ -167,9 +152,8 @@ const EditBlockDialog = ({
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            isError: true,
-            open: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -216,17 +200,15 @@ const EditBlockDialog = ({
           payload: blocksCopy,
         });
 
-        setSnackbarState({
-          isError: false,
-          open: true,
+        snackbar.setMessage({
+          severity: "success",
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            isError: true,
-            open: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -338,18 +320,6 @@ const EditBlockDialog = ({
         message="You're about to delete this game. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteBlock()}
-      />
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
       />
     </Dialog>
   );

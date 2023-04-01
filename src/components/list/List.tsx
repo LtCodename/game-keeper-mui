@@ -30,9 +30,10 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AddSectionDialog from "components/AddDialogs/AddSectionDialog";
 import EditListDialog from "components/List/EditListDialog";
 import Section from "components/Section/Section";
-import Toast from "components/Toast";
 
-import type { SnackbarMessage, SpeedDialItem, Store } from "types";
+import type { SpeedDialItem, Store } from "types";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 const speedDialActions: SpeedDialItem[] = [
   { icon: <AddIcon />, name: "Add section" },
@@ -40,18 +41,12 @@ const speedDialActions: SpeedDialItem[] = [
 ];
 
 const List = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
+  const navigate = useNavigate();
+  const location = useLocation();
+  const snackbar = useSnackbar();
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const listId = location.pathname.replace(/[/]/, "");
@@ -68,11 +63,11 @@ const List = () => {
     }
 
     if (!list) {
-      setSnackbarState({
-        open: true,
-        isError: true,
+      snackbar.setMessage({
+        severity: "error",
         message: "Wrong route or list ID, redirecting...",
       });
+
       navigate("/", { replace: true });
     }
   }, [userData, list]);
@@ -89,10 +84,9 @@ const List = () => {
             section={section}
             listId={list?.id || ""}
             deleteSectionCallback={(isError, message) =>
-              setSnackbarState({
-                isError,
+              snackbar.setMessage({
+                severity: isError ? "error" : "success",
                 message,
-                open: true,
               })
             }
           />
@@ -131,10 +125,9 @@ const List = () => {
           handleClose={() => setIsAddDialogOpen(false)}
           listId={listId}
           callback={(isError, message) =>
-            setSnackbarState({
-              isError,
+            snackbar.setMessage({
+              severity: isError ? "error" : "success",
               message,
-              open: true,
             })
           }
         />
@@ -147,18 +140,6 @@ const List = () => {
           listId={listId}
         />
       )}
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Box>
   );
 };

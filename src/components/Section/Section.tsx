@@ -24,14 +24,15 @@ import {
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import type { SnackbarMessage, Store, UserSection } from "types";
+import type { Store, UserSection } from "types";
 
 import AddBlockDialog from "components/AddDialogs/AddBlockDialog/AddBlockDialog";
 import Block from "components/Block/Block";
 import EditSectionDialog from "components/Section/EditSectionDialog";
-import Toast from "components/Toast";
 
 import { useTheme } from "@mui/material/styles";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 interface Props {
   section: UserSection;
@@ -43,13 +44,9 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
   const [isSectionExpanded, setIsSectionExpanded] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
 
   const theme = useTheme();
+  const snackbar = useSnackbar();
   const { name, id } = section;
 
   const blocks =
@@ -136,10 +133,9 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
                 block={block}
                 listId={listId}
                 deleteBlockCallback={(isError, message) =>
-                  setSnackbarState({
-                    isError,
+                  snackbar.setMessage({
+                    severity: isError ? "error" : "success",
                     message,
-                    open: true,
                   })
                 }
               />
@@ -153,10 +149,9 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
           handleClose={() => setIsAddDialogOpen(false)}
           sectionId={id}
           callback={(isError, message) =>
-            setSnackbarState({
-              isError,
+            snackbar.setMessage({
+              severity: isError ? "error" : "success",
               message,
-              open: true,
             })
           }
         />
@@ -171,18 +166,6 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
           deleteSectionCallback={deleteSectionCallback}
         />
       )}
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Accordion>
   );
 };

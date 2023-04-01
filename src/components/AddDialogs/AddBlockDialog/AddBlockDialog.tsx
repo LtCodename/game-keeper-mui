@@ -33,12 +33,7 @@ import * as yup from "yup";
 
 import { ErrorMessage, Form, Formik } from "formik";
 
-import type {
-  RawgSearchResponse,
-  SnackbarMessage,
-  Store,
-  UserBlock,
-} from "types";
+import type { RawgSearchResponse, Store, UserBlock } from "types";
 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -49,7 +44,8 @@ import { BLOCKS_SET } from "redux/actions";
 import { getGameInformation, searchGamesByName } from "api/rawgApi";
 
 import AddBlockSearchSection from "components/AddDialogs/AddBlockDialog/AddBlockSearchSection";
-import Toast from "components/Toast";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 import { formatReleaseDate, processDevelopers } from "sharedLogic";
 
@@ -73,19 +69,15 @@ const validationSchema = yup.object().shape({
 });
 
 const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
-  const dispatch = useDispatch();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchResults, setSearchResults] = useState<RawgSearchResponse>();
   const [isResultDisplayed, setIsResultDisplayed] = useState(false);
   const [isSearchInProgress, setIsSearchInProgress] = useState(false);
   const [gameToAdd, setGameToAdd] = useState<UserBlock>();
   const [isAdditionalInfo, setIsAdditionalInfo] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
+
+  const dispatch = useDispatch();
+  const snackbar = useSnackbar();
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const userLists = useSelector((state: Store) => state.userLists) || [];
@@ -100,9 +92,8 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
 
   const submitForm = async () => {
     if (!gameToAdd) {
-      setSnackbarState({
-        open: true,
-        isError: true,
+      snackbar.setMessage({
+        severity: "error",
         message: "RAWG failed to return game details",
       });
 
@@ -138,9 +129,8 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -157,9 +147,8 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
         setIsResultDisplayed(true);
       })
       .catch(() => {
-        setSnackbarState({
-          open: true,
-          isError: true,
+        snackbar.setMessage({
+          severity: "error",
           message: "RAWG failed to return search results",
         });
       })
@@ -183,9 +172,8 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
         });
       })
       .catch(() => {
-        setSnackbarState({
-          open: true,
-          isError: true,
+        snackbar.setMessage({
+          severity: "error",
           message: "RAWG failed to return game details",
         });
       });
@@ -295,18 +283,6 @@ const AddBlockDialog = ({ open, handleClose, sectionId, callback }: Props) => {
           )}
         </Formik>
       </Box>
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
-      />
     </Dialog>
   );
 };

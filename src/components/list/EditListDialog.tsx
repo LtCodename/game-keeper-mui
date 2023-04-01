@@ -41,14 +41,15 @@ import { doc, setDoc } from "firebase/firestore";
 
 import db from "api/firebase";
 
-import Toast from "components/Toast";
 import WarningDialog from "components/WarningDialog";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET } from "redux/actions";
 
 import { SNACKBAR_SUCCESS } from "config";
 
-import type { EditListForm, SnackbarMessage, Store } from "types";
+import type { EditListForm, Store } from "types";
+
+import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
 export interface Props {
   open: boolean;
@@ -67,18 +68,14 @@ const validationSchema = yup.object().shape({
 });
 
 const EditListDialog = ({ open, handleClose, listId }: Props) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentListIndex, setCurrentListIndex] = useState(0);
   const [isLastAlertDisplayed, setIsLastAlertDisplayed] = useState(false);
   const [isDeleteAlertDisplayed, setIsDeleteAlertDisplayed] = useState(false);
-  const [snackbarState, setSnackbarState] = useState<SnackbarMessage>({
-    open: false,
-    isError: false,
-    message: "",
-  });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const snackbar = useSnackbar();
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const userLists = useSelector((state: Store) => state.userLists) || [];
@@ -116,17 +113,15 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           payload: listsCopy,
         });
 
-        setSnackbarState({
-          open: true,
-          isError: false,
+        snackbar.setMessage({
+          severity: "success",
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -192,9 +187,8 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -223,17 +217,15 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
           payload: listsCopy,
         });
 
-        setSnackbarState({
-          open: true,
-          isError: false,
+        snackbar.setMessage({
+          severity: "success",
           message: SNACKBAR_SUCCESS.toString(),
         });
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
-          setSnackbarState({
-            open: true,
-            isError: true,
+          snackbar.setMessage({
+            severity: "error",
             message: error.toString(),
           });
         }
@@ -350,18 +342,6 @@ const EditListDialog = ({ open, handleClose, listId }: Props) => {
         message="You're about to delete the whole list. All the sections and games within it will be gone. Are you sure about it?"
         open={isDeleteAlertDisplayed}
         onAction={() => deleteList()}
-      />
-
-      <Toast
-        isError={snackbarState.isError}
-        message={snackbarState.message}
-        open={snackbarState.open}
-        onClose={() =>
-          setSnackbarState((previousState: SnackbarMessage) => ({
-            ...previousState,
-            open: false,
-          }))
-        }
       />
     </Dialog>
   );
