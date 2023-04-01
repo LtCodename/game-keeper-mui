@@ -8,11 +8,13 @@
  * https://ltcodename.com
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material/";
+import { AppBar, Box, IconButton, Switch, Toolbar } from "@mui/material/";
 
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import HelpIcon from "@mui/icons-material/Help";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -32,6 +34,10 @@ import { ReactComponent as Logo } from "assets/logo.svg";
 
 import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
+import { Theme } from "types";
+
+import { THEME_KEY } from "config";
+
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,6 +45,12 @@ const Header = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
+  const [theme, setTheme] = useState(Theme.Light);
+
+  useEffect(() => {
+    // @ts-ignore
+    setTheme(localStorage.getItem(THEME_KEY) || Theme.Light);
+  }, []);
 
   const clearStore = () => {
     dispatch({
@@ -84,6 +96,16 @@ const Header = () => {
       });
   };
 
+  const handleThemeChange = () => {
+    if (theme === Theme.Light) {
+      setTheme(Theme.Dark);
+      localStorage.setItem(THEME_KEY, Theme.Dark);
+    } else {
+      setTheme(Theme.Light);
+      localStorage.setItem(THEME_KEY, Theme.Light);
+    }
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -110,13 +132,22 @@ const Header = () => {
           <HeaderSearchBar />
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
+            {theme === Theme.Light ? <LightModeIcon /> : <DarkModeIcon />}
+
+            <Switch
+              checked={theme === Theme.Dark}
+              onChange={handleThemeChange}
+            />
+
             <IconButton
               aria-label="help"
               color="inherit"
               onClick={() => setIsInfoDisplayed(true)}
+              sx={{ pl: 0 }}
             >
               <HelpIcon />
             </IconButton>
+
             <IconButton aria-label="logout" color="inherit" onClick={logout}>
               <LogoutIcon />
             </IconButton>

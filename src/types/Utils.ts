@@ -13,3 +13,8 @@ export interface GameMeta {
   releaseDate: string;
   name: string;
 }
+
+export enum Theme {
+  Light = "light",
+  Dark = "dark",
+}
