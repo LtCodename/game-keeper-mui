@@ -43,7 +43,7 @@ import db from "api/firebase";
 
 import { BLOCKS_SET } from "redux/actions";
 
-import { formatReleaseDate, processDevelopers, trimName } from "sharedLogic";
+import { formatReleaseDate, processDevelopers, trimName } from "logic";
 
 import { getGameInformation } from "api/rawgApi";
 

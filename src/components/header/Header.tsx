@@ -22,7 +22,13 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signOut } from "firebase/auth";
 
-import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
+import {
+  BLOCKS_SET,
+  LISTS_SET,
+  SECTIONS_SET,
+  THEME_SET,
+  USER_SET,
+} from "redux/actions";
 
 import { useDispatch } from "react-redux";
 
@@ -48,8 +54,18 @@ const Header = () => {
   const [theme, setTheme] = useState(Theme.Light);
 
   useEffect(() => {
+    const getTheme = (theme: string) =>
+      theme === Theme.Light ? Theme.Light : Theme.Dark;
+
     // @ts-ignore
-    setTheme(localStorage.getItem(THEME_KEY) || Theme.Light);
+    const storageTheme = localStorage.getItem(THEME_KEY) || Theme.Light;
+
+    setTheme(getTheme(storageTheme));
+
+    dispatch({
+      type: THEME_SET,
+      payload: getTheme(storageTheme),
+    });
   }, []);
 
   const clearStore = () => {
@@ -100,9 +116,17 @@ const Header = () => {
     if (theme === Theme.Light) {
       setTheme(Theme.Dark);
       localStorage.setItem(THEME_KEY, Theme.Dark);
+      dispatch({
+        type: THEME_SET,
+        payload: Theme.Dark,
+      });
     } else {
       setTheme(Theme.Light);
       localStorage.setItem(THEME_KEY, Theme.Light);
+      dispatch({
+        type: THEME_SET,
+        payload: Theme.Light,
+      });
     }
   };
 

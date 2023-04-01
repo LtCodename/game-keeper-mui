@@ -14,7 +14,7 @@ import { SECTIONS_SET } from "../actions";
 
 const initState: UserSection[] = [];
 
-const userSectionsReducer = (
+const UserSectionsReducer = (
   // eslint-disable-next-line @typescript-eslint/default-param-last
   state = initState,
   action: Action
@@ -27,4 +27,4 @@ const userSectionsReducer = (
   }
 };
 
-export default userSectionsReducer;
+export default UserSectionsReducer;

@@ -15,7 +15,7 @@ import { LISTS_SET } from "../actions";
 const initState: UserList[] = [];
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
-const userListsReducer = (state = initState, action: Action) => {
+const UserListsReducer = (state = initState, action: Action) => {
   switch (action.type) {
     case LISTS_SET:
       return action.payload;
@@ -24,4 +24,4 @@ const userListsReducer = (state = initState, action: Action) => {
   }
 };
 
-export default userListsReducer;
+export default UserListsReducer;

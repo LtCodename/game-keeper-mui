@@ -14,7 +14,7 @@ import { Card, CardContent, Typography } from "@mui/material/";
 
 import type { UserBlock } from "types";
 
-import { formatReleaseDate, trimName } from "sharedLogic";
+import { formatReleaseDate, trimName } from "logic";
 
 import EditBlockDialog from "components/Block/EditBlockDialog";
 
