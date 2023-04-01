@@ -49,7 +49,7 @@ const Header = () => {
     setIsDrawerOpen((previousState: boolean) => !previousState);
   };
 
-  const clearStore = (): void => {
+  const clearStore = () => {
     dispatch({
       type: LISTS_SET,
       payload: [],
@@ -71,7 +71,7 @@ const Header = () => {
     });
   };
 
-  const logout = (): void => {
+  const logout = () => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {

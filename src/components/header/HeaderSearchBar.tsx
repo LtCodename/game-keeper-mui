@@ -62,7 +62,7 @@ const HeaderSearchBar = () => {
     setSearchResults(filtered);
   };
 
-  const onGameSelect = (id: string): void => {
+  const onGameSelect = (id: string) => {
     const block = userBlocks.find((block) => block.id === id);
     const section = userSections.find(
       (section) => section.id === block?.sectionId
