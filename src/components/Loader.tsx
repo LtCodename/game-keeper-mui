@@ -114,7 +114,10 @@ const Loader = () => {
     <>
       {!isLoading ? (
         <Stack
-          sx={{ height: "100vh", background: theme.palette.background.default }}
+          sx={{
+            minHeight: "100vh",
+            background: theme.palette.background.default,
+          }}
         >
           <Header />
           <Routes>
