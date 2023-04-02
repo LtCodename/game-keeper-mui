@@ -10,17 +10,19 @@
 
 import { combineReducers } from "redux";
 
-import ThemeReducer from "./reducers/ThemeReducer";
-import UserBlocksReducer from "./reducers/UserBlocksReducer";
-import UserListsReducer from "./reducers/UserListsReducer";
-import UserReducer from "./reducers/UserReducer";
-import UserSectionsReducer from "./reducers/UserSectionsReducer";
+import {
+  ThemeReducer,
+  User,
+  UserBlocks,
+  UserLists,
+  UserSections,
+} from "./reducers";
 
 const rootReducer = combineReducers({
-  userLists: UserListsReducer,
-  userSections: UserSectionsReducer,
-  userBlocks: UserBlocksReducer,
-  userData: UserReducer,
+  userLists: UserLists,
+  userSections: UserSections,
+  userBlocks: UserBlocks,
+  userData: User,
   theme: ThemeReducer,
 });
 

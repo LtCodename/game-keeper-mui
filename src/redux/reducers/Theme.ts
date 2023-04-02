@@ -10,18 +10,18 @@
 
 import type { Action } from "types";
 
-import { USER_SET } from "../actions";
+import { Theme } from "types";
 
-const initState = null;
+import { THEME_SET } from "../actions";
 
-// eslint-disable-next-line @typescript-eslint/default-param-last
-const UserReducer = (state = initState, action: Action) => {
+const initState: Theme = Theme.Light;
+
+// eslint-disable-next-line @typescript-eslint/default-param-last, import/prefer-default-export
+export const ThemeReducer = (state = initState, action: Action) => {
   switch (action.type) {
-    case USER_SET:
+    case THEME_SET:
       return action.payload;
     default:
       return state;
   }
 };
-
-export default UserReducer;

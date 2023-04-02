@@ -8,25 +8,18 @@
  * https://ltcodename.com
  */
 
-import type { Action } from "types";
+import type { Action, UserSection } from "types";
 
-import { Theme } from "types";
+import { SECTIONS_SET } from "../actions";
 
-import { THEME_SET } from "../actions";
+const initState: UserSection[] = [];
 
-const initState: Theme = Theme.Light;
-
-const ThemeReducer = (
-  // eslint-disable-next-line @typescript-eslint/default-param-last
-  state = initState,
-  action: Action
-) => {
+// eslint-disable-next-line @typescript-eslint/default-param-last, import/prefer-default-export
+export const UserSections = (state = initState, action: Action) => {
   switch (action.type) {
-    case THEME_SET:
+    case SECTIONS_SET:
       return action.payload;
     default:
       return state;
   }
 };
-
-export default ThemeReducer;
