@@ -30,7 +30,7 @@ import {
   USER_SET,
 } from "redux/actions";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import HeaderSearchBar from "components/Header/HeaderSearchBar";
 import InfoDialog from "components/InfoDialog";
@@ -40,7 +40,7 @@ import { ReactComponent as Logo } from "assets/logo.svg";
 
 import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
-import { Theme } from "types";
+import { Store, Theme } from "types";
 
 import { THEME_KEY } from "config";
 
@@ -51,7 +51,14 @@ const Header = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentTheme, setCurrentTheme] = useState(Theme.Dark);
+
+  const userData = useSelector((state: Store) => state.userData) || null;
+
+  useEffect(() => {
+    setIsLoggedIn(!!userData);
+  }, [userData]);
 
   useEffect(() => {
     const getTheme = (theme: string) =>
@@ -140,45 +147,51 @@ const Header = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              sx={{ mr: 2 }}
-              onClick={() =>
-                setIsDrawerOpen((previousState: boolean) => !previousState)
-              }
-            >
-              <MenuIcon />
-            </IconButton>
+            {isLoggedIn && (
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                sx={{ mr: 2 }}
+                onClick={() =>
+                  setIsDrawerOpen((previousState: boolean) => !previousState)
+                }
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
 
             <Box sx={{ width: 80, mt: "4px", mr: 1 }}>
               <Logo />
             </Box>
           </Box>
 
-          <HeaderSearchBar />
+          {isLoggedIn && <HeaderSearchBar />}
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            {currentTheme === Theme.Light ? (
-              <LightModeIcon />
-            ) : (
-              <DarkModeIcon />
+            {isLoggedIn && (
+              <>
+                {currentTheme === Theme.Light ? (
+                  <LightModeIcon />
+                ) : (
+                  <DarkModeIcon />
+                )}
+
+                <Switch
+                  checked={currentTheme === Theme.Dark}
+                  onChange={handleThemeChange}
+                />
+
+                <IconButton
+                  aria-label="help"
+                  color="inherit"
+                  onClick={() => setIsInfoDisplayed(true)}
+                >
+                  <HelpIcon />
+                </IconButton>
+              </>
             )}
-
-            <Switch
-              checked={currentTheme === Theme.Dark}
-              onChange={handleThemeChange}
-            />
-
-            <IconButton
-              aria-label="help"
-              color="inherit"
-              onClick={() => setIsInfoDisplayed(true)}
-            >
-              <HelpIcon />
-            </IconButton>
 
             <IconButton aria-label="logout" color="inherit" onClick={logout}>
               <LogoutIcon />
