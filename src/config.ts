@@ -8,7 +8,7 @@
  * https://ltcodename.com
  */
 
-const APP_VERSION = 1.003;
+const APP_VERSION = 1.2;
 const DRAWER_WIDTH = 320;
 const NAME_LENGTH = 40;
 const DEVELOPER_LENGTH = 59;
