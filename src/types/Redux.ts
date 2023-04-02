@@ -10,6 +10,8 @@
 
 import type { User } from "firebase/auth";
 
+import { Theme } from "types";
+
 export interface UserList {
   id: string;
   name: string;
@@ -33,11 +35,12 @@ export interface UserBlock {
 }
 export interface Action {
   type: string;
-  payload: UserList[] | UserSection[] | UserBlock[] | User;
+  payload: UserList[] | UserSection[] | UserBlock[] | User | Theme;
 }
 export interface Store {
   userLists: UserList[];
   userSections: UserSection[];
   userBlocks: UserBlock[];
   userData: User;
+  theme: Theme;
 }

@@ -8,7 +8,5 @@
  * https://ltcodename.com
  */
 
-export * from "./Form";
-export * from "./RawgApi";
-export * from "./Utils";
-export * from "./Redux";
+export * from "./Light";
+export * from "./Dark";

@@ -68,7 +68,6 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
       onChange={toggleSection}
       sx={{
         backgroundColor: theme.palette.secondary.light,
-        color: theme.palette.common.white,
       }}
     >
       <AccordionSummary
@@ -84,7 +83,11 @@ const Section = ({ section, listId, deleteSectionCallback }: Props) => {
             width: "100%",
           }}
         >
-          <Typography fontSize="1.5rem" fontWeight={600}>
+          <Typography
+            color={theme.palette.text.primary}
+            fontSize="1.25rem"
+            fontWeight={600}
+          >
             {name}
           </Typography>
           <Box>

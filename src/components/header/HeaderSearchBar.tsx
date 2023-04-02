@@ -20,17 +20,13 @@ import SearchResultItem from "components/SearchResultItem";
 
 import { Box, Stack } from "@mui/material";
 
-import { grey } from "@mui/material/colors";
+import { alpha, useTheme } from "@mui/material/styles";
 
 import { useNavigate } from "react-router-dom";
-
-import { SHADE_OF_GREY } from "config";
 
 import { Search, SearchIconWrapper, StyledInputBase } from "./styles";
 
 const HeaderSearchBar = () => {
-  const navigate = useNavigate();
-
   const [searchResults, setSearchResults] = useState<UserBlock[]>([]);
   const [searchInputValue, setSearchInputValue] = useState("");
   const [isResultDisplayed, setIsResultDisplayed] = useState(false);
@@ -38,6 +34,9 @@ const HeaderSearchBar = () => {
   const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
   const userSections = useSelector((state: Store) => state.userSections) || [];
   const userLists = useSelector((state: Store) => state.userLists) || [];
+
+  const navigate = useNavigate();
+  const theme = useTheme();
 
   const filter = () => {
     const filtered = userBlocks
@@ -124,7 +123,7 @@ const HeaderSearchBar = () => {
             left: 0,
             width: 1,
             height: 1,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: alpha(theme.palette.common.black, 0.5),
             zIndex: 999,
           }}
         >
@@ -134,11 +133,11 @@ const HeaderSearchBar = () => {
               pl: 2,
               pt: 2,
               pb: 1,
-              backgroundColor: grey[SHADE_OF_GREY],
+              background: theme.palette.grey[500],
               borderRadius: "4px",
               width: 400,
-              left: 100,
-              top: 50,
+              left: 0,
+              top: 60,
               right: 0,
               my: 0,
               mx: "auto",
@@ -151,6 +150,7 @@ const HeaderSearchBar = () => {
                 overflowY: "auto",
                 maxHeight: 600,
                 pr: 2,
+                mb: 1,
               }}
             >
               {searchResults.map((block) => (

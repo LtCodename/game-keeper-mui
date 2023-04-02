@@ -12,8 +12,6 @@ import React, { useState } from "react";
 
 import { Paper, Typography } from "@mui/material/";
 
-import { grey } from "@mui/material/colors";
-
 export interface Props {
   onClick: () => void;
   name: string;
@@ -35,9 +33,7 @@ const SearchResultItem = ({ onClick, name, listName, sectionName }: Props) => {
       <Typography>{name}</Typography>
 
       {listName && sectionName && (
-        <Typography fontSize={16} sx={{ color: grey[700] }}>
-          {`${listName} / ${sectionName}`}
-        </Typography>
+        <Typography fontSize={16}>{`${listName} / ${sectionName}`}</Typography>
       )}
     </Paper>
   );

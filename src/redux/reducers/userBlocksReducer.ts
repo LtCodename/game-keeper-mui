@@ -14,7 +14,7 @@ import { BLOCKS_SET } from "../actions";
 
 const initState: UserBlock[] = [];
 
-const userBlocksReducer = (
+const UserBlocksReducer = (
   // eslint-disable-next-line @typescript-eslint/default-param-last
   state = initState,
   action: Action
@@ -27,4 +27,4 @@ const userBlocksReducer = (
   }
 };
 
-export default userBlocksReducer;
+export default UserBlocksReducer;

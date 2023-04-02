@@ -47,7 +47,7 @@ import AddBlockSearchSection from "components/AddDialogs/AddBlockDialog/AddBlock
 
 import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
-import { formatReleaseDate, processDevelopers } from "sharedLogic";
+import { formatReleaseDate, processDevelopers } from "logic";
 
 import { ADD_GAME_WINDOW_WIDTH, SNACKBAR_SUCCESS } from "config";
 

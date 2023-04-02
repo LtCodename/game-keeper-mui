@@ -62,10 +62,15 @@ const ListSelector = ({ open, onClose }: Props) => {
     >
       <DrawerHeader>
         <Typography
-          variant="h6"
           noWrap
+          fontSize="1.5rem"
+          fontWeight={600}
           component="div"
-          sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" }, ml: 1 }}
+          sx={{
+            flexGrow: 1,
+            display: { xs: "none", sm: "flex" },
+            ml: 1,
+          }}
         >
           Lists
         </Typography>

@@ -9,16 +9,19 @@
  */
 
 import { combineReducers } from "redux";
-import userBlocksReducer from "./reducers/userBlocksReducer";
-import userListsReducer from "./reducers/userListsReducer";
-import userReducer from "./reducers/userReducer";
-import userSectionsReducer from "./reducers/userSectionsReducer";
+
+import ThemeReducer from "./reducers/ThemeReducer";
+import UserBlocksReducer from "./reducers/UserBlocksReducer";
+import UserListsReducer from "./reducers/UserListsReducer";
+import UserReducer from "./reducers/UserReducer";
+import UserSectionsReducer from "./reducers/UserSectionsReducer";
 
 const rootReducer = combineReducers({
-  userLists: userListsReducer,
-  userSections: userSectionsReducer,
-  userBlocks: userBlocksReducer,
-  userData: userReducer,
+  userLists: UserListsReducer,
+  userSections: UserSectionsReducer,
+  userBlocks: UserBlocksReducer,
+  userData: UserReducer,
+  theme: ThemeReducer,
 });
 
 export default rootReducer;

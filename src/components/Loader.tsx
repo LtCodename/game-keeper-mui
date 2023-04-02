@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2022 Yevhen Chernenko.
+ * All rights reserved.
+ *
+ * https://github.com/LtCodename/game-keeper-mui
+ * https://gamekeeper.ltcodename.com
+ * https://www.linkedin.com/in/yevhen-chernenko
+ * https://ltcodename.com
+ */
+
 import React, { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -10,17 +20,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
 
-/**
- * Copyright (c) 2022 Yevhen Chernenko.
- * All rights reserved.
- *
- * https://github.com/LtCodename/game-keeper-mui
- * https://gamekeeper.ltcodename.com
- * https://www.linkedin.com/in/yevhen-chernenko
- * https://ltcodename.com
- */
+import { Backdrop, CircularProgress, Stack } from "@mui/material/";
 
-import { Backdrop, CircularProgress } from "@mui/material/";
+import { useTheme } from "@mui/material/styles";
 
 import { Route, Routes } from "react-router-dom";
 
@@ -36,6 +38,7 @@ import { useSnackbar } from "./Snackbar/SnackbarContext";
 const Loader = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  const theme = useTheme();
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
   const userData = useSelector((state: Store) => state.userData) || null;
@@ -110,18 +113,23 @@ const Loader = () => {
   return (
     <>
       {!isLoading ? (
-        <>
+        <Stack
+          sx={{ height: "100vh", background: theme.palette.background.default }}
+        >
           <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path=":listId" element={<List />} />
             <Route path="login" element={<Login />} />
           </Routes>
-        </>
+        </Stack>
       ) : null}
 
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{
+          color: theme.palette.common.white,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
         open={isLoading}
       >
         <CircularProgress color="inherit" />

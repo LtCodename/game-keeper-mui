@@ -8,7 +8,14 @@
  * https://ltcodename.com
  */
 
-export * from "./Form";
-export * from "./RawgApi";
-export * from "./Utils";
-export * from "./Redux";
+import { createTheme } from "@mui/material/styles";
+
+// eslint-disable-next-line import/prefer-default-export
+export const Dark = createTheme({
+  palette: {
+    mode: "dark",
+    secondary: {
+      main: "#001e3c",
+    },
+  },
+});

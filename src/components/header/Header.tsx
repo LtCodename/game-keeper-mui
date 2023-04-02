@@ -8,11 +8,13 @@
  * https://ltcodename.com
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material/";
+import { AppBar, Box, IconButton, Switch, Toolbar } from "@mui/material/";
 
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import HelpIcon from "@mui/icons-material/Help";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -20,7 +22,13 @@ import { useNavigate } from "react-router-dom";
 
 import { getAuth, signOut } from "firebase/auth";
 
-import { BLOCKS_SET, LISTS_SET, SECTIONS_SET, USER_SET } from "redux/actions";
+import {
+  BLOCKS_SET,
+  LISTS_SET,
+  SECTIONS_SET,
+  THEME_SET,
+  USER_SET,
+} from "redux/actions";
 
 import { useDispatch } from "react-redux";
 
@@ -32,6 +40,10 @@ import { ReactComponent as Logo } from "assets/logo.svg";
 
 import { useSnackbar } from "components/Snackbar/SnackbarContext";
 
+import { Theme } from "types";
+
+import { THEME_KEY } from "config";
+
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,6 +51,22 @@ const Header = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(Theme.Dark);
+
+  useEffect(() => {
+    const getTheme = (theme: string) =>
+      theme === Theme.Light ? Theme.Light : Theme.Dark;
+
+    // @ts-ignore
+    const storageTheme = localStorage.getItem(THEME_KEY) || Theme.Light;
+
+    setCurrentTheme(getTheme(storageTheme));
+
+    dispatch({
+      type: THEME_SET,
+      payload: getTheme(storageTheme),
+    });
+  }, []);
 
   const clearStore = () => {
     dispatch({
@@ -84,10 +112,33 @@ const Header = () => {
       });
   };
 
+  const handleThemeChange = () => {
+    if (currentTheme === Theme.Light) {
+      setCurrentTheme(Theme.Dark);
+      localStorage.setItem(THEME_KEY, Theme.Dark);
+      dispatch({
+        type: THEME_SET,
+        payload: Theme.Dark,
+      });
+    } else {
+      setCurrentTheme(Theme.Light);
+      localStorage.setItem(THEME_KEY, Theme.Light);
+      dispatch({
+        type: THEME_SET,
+        payload: Theme.Light,
+      });
+    }
+  };
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <>
       <AppBar position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               size="large"
@@ -110,6 +161,17 @@ const Header = () => {
           <HeaderSearchBar />
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
+            {currentTheme === Theme.Light ? (
+              <LightModeIcon />
+            ) : (
+              <DarkModeIcon />
+            )}
+
+            <Switch
+              checked={currentTheme === Theme.Dark}
+              onChange={handleThemeChange}
+            />
+
             <IconButton
               aria-label="help"
               color="inherit"
@@ -117,6 +179,7 @@ const Header = () => {
             >
               <HelpIcon />
             </IconButton>
+
             <IconButton aria-label="logout" color="inherit" onClick={logout}>
               <LogoutIcon />
             </IconButton>
@@ -135,7 +198,7 @@ const Header = () => {
           onClose={() => setIsInfoDisplayed(false)}
         />
       )}
-    </Box>
+    </>
   );
 };
 
