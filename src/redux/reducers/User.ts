@@ -8,23 +8,18 @@
  * https://ltcodename.com
  */
 
-import type { Action, UserBlock } from "types";
+import type { Action } from "types";
 
-import { BLOCKS_SET } from "../actions";
+import { USER_SET } from "../actions";
 
-const initState: UserBlock[] = [];
+const initState = null;
 
-const UserBlocksReducer = (
-  // eslint-disable-next-line @typescript-eslint/default-param-last
-  state = initState,
-  action: Action
-) => {
+// eslint-disable-next-line @typescript-eslint/default-param-last, import/prefer-default-export
+export const User = (state = initState, action: Action) => {
   switch (action.type) {
-    case BLOCKS_SET:
+    case USER_SET:
       return action.payload;
     default:
       return state;
   }
 };
-
-export default UserBlocksReducer;
