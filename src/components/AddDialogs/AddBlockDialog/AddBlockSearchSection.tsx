@@ -14,9 +14,7 @@ import { Stack } from "@mui/material/";
 
 import SearchResultItem from "components/SearchResultItem";
 
-import { ADD_GAME_WINDOW_WIDTH, SHADE_OF_GREY } from "config";
-
-import { grey } from "@mui/material/colors";
+import { ADD_GAME_WINDOW_WIDTH } from "config";
 
 import type { RawgSearchResponse, RawgSearchResult } from "types";
 
@@ -35,7 +33,6 @@ const AddBlockSearchSection = ({ onGameSelect, searchResults }: Props) => (
       overflowY: "auto",
       maxHeight: 300,
       width: ADD_GAME_WINDOW_WIDTH,
-      backgroundColor: grey[SHADE_OF_GREY],
     }}
   >
     {searchResults?.results?.map((searchResult: RawgSearchResult) => (

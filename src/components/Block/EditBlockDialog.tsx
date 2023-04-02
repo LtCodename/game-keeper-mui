@@ -47,6 +47,8 @@ import { formatReleaseDate, processDevelopers, trimName } from "logic";
 
 import { getGameInformation } from "api/rawgApi";
 
+import { useTheme } from "@mui/material/styles";
+
 import { SNACKBAR_SUCCESS } from "config";
 
 import { useSnackbar } from "components/Snackbar/SnackbarContext";
@@ -80,6 +82,7 @@ const EditBlockDialog = ({
 
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
+  const theme = useTheme();
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const userBlocks = useSelector((state: Store) => state.userBlocks) || [];
@@ -249,8 +252,10 @@ const EditBlockDialog = ({
           width: 400,
         }}
       >
-        <Typography color="text.secondary">{gameMeta?.developers}</Typography>
-        <Typography color="text.secondary" sx={{ mb: 1 }}>
+        <Typography color={theme.palette.text.secondary}>
+          {gameMeta?.developers}
+        </Typography>
+        <Typography color={theme.palette.text.secondary} sx={{ mb: 1 }}>
           {formatReleaseDate(gameMeta?.releaseDate)}
         </Typography>
         <FormControl variant="filled" sx={{ width: `100%`, mb: 2 }}>

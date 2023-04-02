@@ -45,7 +45,6 @@ const ListItem = ({ list, onClose }: Props) => {
         sx={{
           p: 2,
           backgroundColor: theme.palette.secondary.light,
-          color: theme.palette.common.white,
         }}
       >
         <Typography fontSize="1rem" fontWeight={600}>

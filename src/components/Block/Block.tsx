@@ -12,6 +12,8 @@ import React, { useState } from "react";
 
 import { Card, CardContent, Typography } from "@mui/material/";
 
+import { useTheme } from "@mui/material/styles";
+
 import type { UserBlock } from "types";
 
 import { formatReleaseDate, trimName } from "logic";
@@ -25,14 +27,20 @@ interface Props {
 }
 
 const Block = ({ block, listId, deleteBlockCallback }: Props) => {
-  const { name, releaseDate } = block;
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { name, releaseDate } = block;
+  const theme = useTheme();
 
   return (
     <>
       <Card
-        sx={{ width: 260, mr: 2, mb: 2, p: 2 }}
+        sx={{
+          width: 260,
+          mr: 2,
+          mb: 2,
+          p: 2,
+        }}
         onClick={() => setIsModalOpen(true)}
       >
         <CardContent
@@ -44,10 +52,18 @@ const Block = ({ block, listId, deleteBlockCallback }: Props) => {
             },
           }}
         >
-          <Typography variant="h6" component="div">
+          <Typography
+            color={theme.palette.text.primary}
+            fontSize="1.5rem"
+            fontWeight={600}
+          >
             {trimName(name)}
           </Typography>
-          <Typography sx={{ mb: 0 }} color="text.secondary" gutterBottom>
+          <Typography
+            sx={{ mb: 0 }}
+            color={theme.palette.text.secondary}
+            gutterBottom
+          >
             {formatReleaseDate(releaseDate)}
           </Typography>
         </CardContent>

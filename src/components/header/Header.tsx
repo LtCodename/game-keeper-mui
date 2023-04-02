@@ -51,7 +51,7 @@ const Header = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInfoDisplayed, setIsInfoDisplayed] = useState(false);
-  const [theme, setTheme] = useState(Theme.Light);
+  const [currentTheme, setCurrentTheme] = useState(Theme.Dark);
 
   useEffect(() => {
     const getTheme = (theme: string) =>
@@ -60,7 +60,7 @@ const Header = () => {
     // @ts-ignore
     const storageTheme = localStorage.getItem(THEME_KEY) || Theme.Light;
 
-    setTheme(getTheme(storageTheme));
+    setCurrentTheme(getTheme(storageTheme));
 
     dispatch({
       type: THEME_SET,
@@ -113,15 +113,15 @@ const Header = () => {
   };
 
   const handleThemeChange = () => {
-    if (theme === Theme.Light) {
-      setTheme(Theme.Dark);
+    if (currentTheme === Theme.Light) {
+      setCurrentTheme(Theme.Dark);
       localStorage.setItem(THEME_KEY, Theme.Dark);
       dispatch({
         type: THEME_SET,
         payload: Theme.Dark,
       });
     } else {
-      setTheme(Theme.Light);
+      setCurrentTheme(Theme.Light);
       localStorage.setItem(THEME_KEY, Theme.Light);
       dispatch({
         type: THEME_SET,
@@ -131,9 +131,14 @@ const Header = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <>
       <AppBar position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               size="large"
@@ -156,10 +161,14 @@ const Header = () => {
           <HeaderSearchBar />
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            {theme === Theme.Light ? <LightModeIcon /> : <DarkModeIcon />}
+            {currentTheme === Theme.Light ? (
+              <LightModeIcon />
+            ) : (
+              <DarkModeIcon />
+            )}
 
             <Switch
-              checked={theme === Theme.Dark}
+              checked={currentTheme === Theme.Dark}
               onChange={handleThemeChange}
             />
 
@@ -167,7 +176,6 @@ const Header = () => {
               aria-label="help"
               color="inherit"
               onClick={() => setIsInfoDisplayed(true)}
-              sx={{ pl: 0 }}
             >
               <HelpIcon />
             </IconButton>
@@ -190,7 +198,7 @@ const Header = () => {
           onClose={() => setIsInfoDisplayed(false)}
         />
       )}
-    </Box>
+    </>
   );
 };
 

@@ -14,6 +14,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 
+import { useTheme } from "@mui/material/styles";
+
 import {
   Box,
   SpeedDial,
@@ -47,6 +49,7 @@ const List = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const snackbar = useSnackbar();
+  const theme = useTheme();
 
   const userData = useSelector((state: Store) => state.userData) || null;
   const listId = location.pathname.replace(/[/]/, "");
@@ -64,8 +67,8 @@ const List = () => {
 
     if (!list) {
       snackbar.setMessage({
-        severity: "error",
-        message: "Wrong route or list ID, redirecting...",
+        severity: "info",
+        message: "You were redirected to a valid route!",
       });
 
       navigate("/", { replace: true });
@@ -74,7 +77,12 @@ const List = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h5" sx={{ mb: 1 }}>
+      <Typography
+        color={theme.palette.text.primary}
+        fontSize="1.5rem"
+        fontWeight={600}
+        sx={{ mb: 2 }}
+      >
         {list?.name}
       </Typography>
       <Stack direction="column" spacing={2}>
@@ -94,7 +102,11 @@ const List = () => {
       </Stack>
       <SpeedDial
         ariaLabel="list actions"
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+        }}
         icon={<SettingsIcon />}
         openIcon={<CloseIcon />}
       >

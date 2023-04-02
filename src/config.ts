@@ -13,7 +13,6 @@ const DRAWER_WIDTH = 320;
 const NAME_LENGTH = 40;
 const DEVELOPER_LENGTH = 59;
 const ADD_GAME_WINDOW_WIDTH = 320;
-const SHADE_OF_GREY = 300;
 const DEMO_EMAIL = "ltcodename92@gmail.com";
 const DEMO_PASSWORD = "22121992";
 const SNACKBAR_SUCCESS = "Success!";
@@ -28,6 +27,5 @@ export {
   DEMO_EMAIL,
   DEMO_PASSWORD,
   SNACKBAR_SUCCESS,
-  SHADE_OF_GREY,
   THEME_KEY,
 };

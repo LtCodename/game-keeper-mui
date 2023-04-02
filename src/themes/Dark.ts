@@ -13,12 +13,9 @@ import { createTheme } from "@mui/material/styles";
 // eslint-disable-next-line import/prefer-default-export
 export const Dark = createTheme({
   palette: {
-    mode: "light",
-    primary: {
-      main: "#746455",
-    },
+    mode: "dark",
     secondary: {
-      main: "#836457",
+      main: "#001e3c",
     },
   },
 });
